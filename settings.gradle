@@ -1,0 +1,8 @@
+rootProject.name = 'bebee'
+
+include 'common'
+include 'member-service'
+include 'match-service'
+include 'chat-service'
+include 'payment-service'
+include 'notification-service'
