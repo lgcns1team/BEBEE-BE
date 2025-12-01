@@ -1,3 +1,4 @@
+// api 명령을 사용하기 위해
 plugins {
     id 'java-library'
 }
@@ -10,6 +11,13 @@ jar {
     enabled = true
 }
 
+/*
+* api: 하위 모듈에서도 해당 라이브러리에 대한 의존성이 추가되어 사용할 수 있다.
+* implementation: 하위 모듈에 의존성이 추가되지 않아 사용할 수 없다.
+*/
 dependencies {
     api 'org.springframework.boot:spring-boot-starter-web'
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation "io.hypersistence:hypersistence-utils-hibernate-63:3.12.0"
 }
