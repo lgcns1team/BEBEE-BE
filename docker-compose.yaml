@@ -1,0 +1,58 @@
+# ========================================
+# Bebee 개발 환경 Docker Compose 설정
+# ========================================
+#
+# 이 파일은 Bebee 개발에 필요한 인프라 서비스들을 정의합니다.
+# MySQL과 Redis를 Docker 컨테이너로 실행하여 개발 환경을 구성합니다.
+#
+# 환경 변수 사용:
+# - .env 파일에서 환경 변수를 읽어와서 사용
+# - 환경 변수가 없으면 기본값 사용
+#
+# 실행 방법:
+#   docker-compose up -d    # 백그라운드에서 실행
+#   docker-compose down     # 컨테이너 중지 및 삭제
+#   docker-compose logs     # 로그 확인
+
+# Docker Compose 버전
+version: '3.8'
+
+# 프로젝트 이름 지정
+name: bebee
+
+# 서비스 정의
+services:
+  # ========================================
+  # MySQL 데이터베이스 서비스
+  # ========================================
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      # 환경 변수 설정 (.env 파일에서 읽어오거나 기본값 사용)
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root1234}      # MySQL root 사용자 비밀번호
+      MYSQL_USER: ${DB_USERNAME:-bebee}                    # 생성할 사용자 이름
+      MYSQL_PASSWORD: ${DB_PASSWORD:-bebee1234}            # 생성할 사용자 비밀번호
+    ports:
+      - "3306:3306"
+    volumes:
+      # 데이터 영속성
+      - mysql_data:/var/lib/mysql
+      # 초기화 스크립트 마운트
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - bebee-network
+
+# ========================================
+# 볼륨 정의 (Volumes)
+# ========================================
+volumes:
+  mysql_data:
+    driver: local
+
+# ========================================
+# 네트워크 정의 (Networks)
+# ========================================
+networks:
+  bebee-network:
+    driver: bridge

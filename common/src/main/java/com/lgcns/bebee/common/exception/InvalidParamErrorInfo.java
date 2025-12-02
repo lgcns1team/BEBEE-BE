@@ -1,0 +1,13 @@
+package com.lgcns.bebee.common.exception;
+
+public interface InvalidParamErrorInfo {
+    String getDesc();
+    String getField();
+
+    default String getCode() {
+        return ((Enum<?>) this).name();
+    }
+    default String getMessage() {
+        return "[" + getCode() + "] " + getDesc() + " (" + getField() + ")";
+    }
+}
