@@ -1,3 +1,18 @@
+# ========================================
+# Chat Service 애플리케이션 공통 설정 파일
+# ========================================
+#
+# 이 파일은 Chat Service의 공통 설정만 정의합니다.
+# 환경별 설정은 application-local.yml, application-prod.yml에서 관리합니다.
+#
+# 환경 변수 사용:
+# - ${환경변수명}: 기본값 없이 환경 변수 사용
+# - ${환경변수명:기본값}: 환경 변수가 없을 때 기본값 사용
+
 spring:
   application:
     name: chat-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  config:
+    import: optional:file:.env[.properties]
