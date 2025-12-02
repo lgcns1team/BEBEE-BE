@@ -22,5 +22,9 @@ dependencies {
     // JPA (Java Persistence API) - 데이터베이스 ORM
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+    // QueryDSL - JPA 쿼리 작성을 위한 런타임 라이브러리
+    api 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+
+    // Hibernate 유틸리티 - TSID 를 포함한 JPA 매핑 확장
     implementation "io.hypersistence:hypersistence-utils-hibernate-63:3.12.0"
 }
