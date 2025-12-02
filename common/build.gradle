@@ -16,7 +16,10 @@ jar {
 * implementation: 하위 모듈에 의존성이 추가되지 않아 사용할 수 없다.
 */
 dependencies {
+    // Spring Web - REST API 개발
     api 'org.springframework.boot:spring-boot-starter-web'
+
+    // JPA (Java Persistence API) - 데이터베이스 ORM
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     implementation "io.hypersistence:hypersistence-utils-hibernate-63:3.12.0"
