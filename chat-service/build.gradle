@@ -11,6 +11,10 @@ dependencies {
 
 	// Spring Actuator - 어플리케이 모니터링 및 관리 엔드포인트를 제공
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// flyway - DB migration tool, DB 스키 관리를 자동화하 체계적으로 수행할 수 있게 도와준다.
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
