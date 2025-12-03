@@ -43,8 +43,8 @@ docker-compose ps
 │   └── src
 ├── docker
 │   └── mysql
-└── build.gradle
-└── settings.gradle
+├── build.gradle
+├── settings.gradle
 ├── docker-compose.yaml
-├── env.example
+└── env.example
 ```
