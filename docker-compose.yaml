@@ -43,11 +43,28 @@ services:
     networks:
       - bebee-network
 
+  # ========================================
+  # Redis 데이터베이스 서비스
+  # ========================================
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis-db
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      # 데이터 영속성
+      - redis_data:/data
+    networks:
+      - bebee-network
+
 # ========================================
 # 볼륨 정의 (Volumes)
 # ========================================
 volumes:
   mysql_data:
+    driver: local
+  redis_data:
     driver: local
 
 # ========================================

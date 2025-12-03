@@ -47,6 +47,37 @@ spring:
           # 가독성을 위해 들여쓰기 적용
           format_sql: ${FORMAT_SQL:true}show
 
+  # Redis 설정
+  data:
+    redis:
+      # Redis Host
+      host: ${REDIS_HOST:localhost}
+      # Redis Port
+      port: ${REDIS_PORT:6379}
+
+  # Flyway 설정
+  flyway:
+    # Flyway 활성화
+    enabled: true
+    # 마이그레이션 파일 위치
+    locations:
+      - classpath:db/migration
+      - classpath:db/seed
+    # 파일 인코딩
+    encoding: UTF-8
+    # 기존 DB에 적용 시 baseline 생성
+    baseline-on-migrate: true
+    # Baseline 버전
+    baseline-version: 0
+    # 마이그레이션 전 검증
+    validate-on-migrate: true
+    # 순서 엄격히 지킴
+    out-of-order: false
+    # 플레이스홀더 비활성화
+    placeholder-replacement: false
+    # clean 명령 비활성화 (안전)
+    # clean-disabled: true
+
 # 로깅 설정
 logging:
   level:
