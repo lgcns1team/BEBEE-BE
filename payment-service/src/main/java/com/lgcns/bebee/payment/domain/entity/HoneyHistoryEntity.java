@@ -2,11 +2,15 @@ package com.lgcns.bebee.payment.domain.entity;
 
 import com.lgcns.bebee.payment.domain.entity.vo.HoneyHistoryType;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HoneyHistoryEntity {
     @Id
     private Long honey_history_id;
