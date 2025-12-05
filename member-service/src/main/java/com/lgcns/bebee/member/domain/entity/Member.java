@@ -1,26 +1,26 @@
 package com.lgcns.bebee.member.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.member.domain.entity.vo.Gender;
 import com.lgcns.bebee.member.domain.entity.vo.MemberStatus;
 import com.lgcns.bebee.member.domain.entity.vo.Role;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberEntity {
+public class Member extends BaseTimeEntity {
 
     @Id
+    @Tsid
     private Long memberId;
 
     @Column(nullable = false, length = 30, unique = true)
@@ -73,12 +73,5 @@ public class MemberEntity {
 
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal sweetness = BigDecimal.valueOf(40.00);
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }
 

@@ -1,31 +1,23 @@
 package com.lgcns.bebee.member.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "disability_category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DisabilityCategoryEntity {
+public class DisabilityCategory extends BaseTimeEntity {
 
     @Id
+    @Tsid
     private Long disabilityCategoryId;
 
     @Column(nullable = false, length = 10, unique = true)
     private String type;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }
 

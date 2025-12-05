@@ -1,22 +1,21 @@
 package com.lgcns.bebee.member.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.member.domain.entity.vo.CareerType;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "helper_career")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HelperCareerEntity {
+public class HelperCareer extends BaseTimeEntity {
 
     @Id
+    @Tsid
     private Long helpCareerId;
 
     @Enumerated(EnumType.STRING)
@@ -33,13 +32,6 @@ public class HelperCareerEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private MemberEntity member;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private Member member;
 }
 

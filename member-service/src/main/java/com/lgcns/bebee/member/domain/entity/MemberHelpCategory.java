@@ -1,19 +1,16 @@
 package com.lgcns.bebee.member.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "member_help_category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberHelpCategoryEntity {
+public class MemberHelpCategory extends BaseTimeEntity {
 
     @EmbeddedId
     private MemberHelpCategoryId id;
@@ -21,17 +18,11 @@ public class MemberHelpCategoryEntity {
     @MapsId("helpCategoryId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "help_category_id", nullable = false)
-    private HelpCategoryEntity helpCategory;
+    private HelpCategory helpCategory;
 
     @MapsId("memberId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private MemberEntity member;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private Member member;
 }
+
