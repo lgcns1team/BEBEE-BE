@@ -7,15 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HoneyWalletEntity extends BaseTimeEntity {
+public class HoneyWallet extends BaseTimeEntity {
     @Id
     @Tsid
     private Long honey_wallet_id;

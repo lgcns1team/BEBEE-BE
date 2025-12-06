@@ -6,21 +6,17 @@ import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HoneyHistoryEntity extends BaseTimeEntity {
+public class HoneyHistory extends BaseTimeEntity {
     @Id
     @Tsid
     private Long honey_history_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private HoneyWalletEntity honeyWallet;
+    private HoneyWallet honeyWallet;
 
     @Column(nullable = false)
     private Long target_member_id;
