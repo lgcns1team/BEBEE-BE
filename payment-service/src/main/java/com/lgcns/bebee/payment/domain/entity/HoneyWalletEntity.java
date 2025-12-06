@@ -1,5 +1,7 @@
 package com.lgcns.bebee.payment.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HoneyWalletEntity {
+public class HoneyWalletEntity extends BaseTimeEntity {
     @Id
     private Long honey_wallet_id;
 
@@ -22,11 +24,4 @@ public class HoneyWalletEntity {
 
     @Column(nullable = false)
     private Long balance = 0L;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }

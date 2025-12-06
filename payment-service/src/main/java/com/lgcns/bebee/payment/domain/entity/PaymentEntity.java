@@ -1,5 +1,6 @@
 package com.lgcns.bebee.payment.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.payment.domain.entity.vo.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PaymentEntity {
+public class PaymentEntity extends BaseTimeEntity {
     @Id
     private Long payment_id;
 
@@ -30,11 +31,4 @@ public class PaymentEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentStatus status;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }

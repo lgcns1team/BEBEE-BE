@@ -1,6 +1,8 @@
 package com.lgcns.bebee.payment.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.payment.domain.entity.vo.HoneyHistoryType;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HoneyHistoryEntity {
+public class HoneyHistoryEntity extends BaseTimeEntity {
     @Id
     private Long honey_history_id;
 
@@ -28,11 +30,4 @@ public class HoneyHistoryEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private HoneyHistoryType type;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }
