@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HoneyHistoryEntity extends BaseTimeEntity {
     @Id
+    @Tsid
     private Long honey_history_id;
 
     @ManyToOne(fetch = FetchType.LAZY)

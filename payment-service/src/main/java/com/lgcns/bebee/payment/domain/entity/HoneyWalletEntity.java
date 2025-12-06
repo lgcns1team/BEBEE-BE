@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HoneyWalletEntity extends BaseTimeEntity {
     @Id
+    @Tsid
     private Long honey_wallet_id;
 
     @Column(nullable = false, unique = true)

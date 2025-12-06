@@ -26,5 +26,5 @@ dependencies {
     api 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 
     // Hibernate 유틸리티 - TSID 를 포함한 JPA 매핑 확장
-    implementation "io.hypersistence:hypersistence-utils-hibernate-63:3.12.0"
+    api "io.hypersistence:hypersistence-utils-hibernate-63:3.12.0"
 }

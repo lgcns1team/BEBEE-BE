@@ -2,6 +2,7 @@ package com.lgcns.bebee.payment.domain.entity;
 
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.payment.domain.entity.vo.PaymentStatus;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PaymentEntity extends BaseTimeEntity {
     @Id
+    @Tsid
     private Long payment_id;
 
     @Column(nullable = false)
