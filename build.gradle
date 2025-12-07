@@ -30,8 +30,12 @@ subprojects {
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 
-	sourceCompatibility = '17'
-	targetCompatibility = '17'
+	java {
+		// Java Toolchain 설정: Gradle 빌드 환경 Java 버전 명시적으로 지정
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
 
 	dependencies{
 		compileOnly 'org.projectlombok:lombok'
