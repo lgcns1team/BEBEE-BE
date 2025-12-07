@@ -1,8 +1,21 @@
+// Gradle 빌드 스크립트 자체 실행될 필요한 종속성을 로드한다.
+buildscript {
+    dependencies {
+        classpath 'org.flywaydb:flyway-mysql:11.18.0'
+        classpath 'com.mysql:mysql-connector-j:9.5.0'
+    }
+}
+
+plugins {
+    // flyway 플러그인
+    id "org.flywaydb.flyway" version "11.18.0"
+}
+
 dependencies {
     implementation project(":common")
 
     // MySQL Connector - MySQL 데이터베이스 연결
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'com.mysql:mysql-connector-j:9.5.0'
 
     // QueryDSL - Q-클래스 생성 및 JPA 환경 인식을 위한 Annotation Processor 설정
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
@@ -10,10 +23,11 @@ dependencies {
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 
     // flyway - DB migration tool, DB 스키 관리를 자동화하 체계적으로 수행할 수 있게 도와준다.
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.flywaydb:flyway-core:11.18.0'
+    implementation 'org.flywaydb:flyway-mysql:11.18.0'
 }
 
+// QueryDSL 관련 설정
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
 
 sourceSets {
@@ -26,4 +40,12 @@ tasks.withType(JavaCompile){
 
 clean {
     delete file(querydslDir)
+}
+
+// flyway 설정 정보
+flyway {
+    url = "jdbc:mysql://${System.getenv('DB_HOST') ?: '127.0.0.1'}:${System.getenv('DB_PORT') ?: '3306'}/${System.getenv('MEMBER_DB_NAME') ?: 'bebee_member'}?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8"
+    user = System.getenv('DB_USERNAME') ?: 'bebee'
+    password = System.getenv('DB_PASSWORD') ?: 'bebee1234'
+    cleanDisabled = false
 }
