@@ -74,6 +74,29 @@ services:
     networks:
       - bebee-network
 
+  # ========================================
+  # LocalStack 서비스
+  # ========================================
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:3
+    ports:
+      - "4566:4566" # LocalStack Gateway (모든 AWS 서비스)
+#      - "4510-4559:4510-4559" # 필요하다면
+    environment:
+      - AWS_DEFAULT_REGION=ap-northeast-2
+      - SERVICES=sqs,sns,s3
+      - DATA_DIR=/tmp/localstack/data
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - EAGER_SERVICE_LOADING=1
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./docker/localstack/init:/etc/localstack/init/ready.d"
+    networks:
+      - bebee-network
+
 # ========================================
 # 볼륨 정의 (Volumes)
 # ========================================
@@ -81,6 +104,7 @@ volumes:
   mysql_data:
   redis_data:
   mongo_data:
+  localstack_data:
 
 # ========================================
 # 네트워크 정의 (Networks)
