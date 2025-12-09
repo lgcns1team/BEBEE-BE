@@ -58,14 +58,53 @@ services:
     networks:
       - bebee-network
 
+  # ========================================
+  # MongoDB 데이터베이스 서비스
+  # ========================================
+  mongodb:
+    image: mongo:8.0
+    container_name: mongo-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bebee
+      MONGO_INITDB_ROOT_PASSWORD: bebee1234
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - bebee-network
+
+  # ========================================
+  # LocalStack 서비스
+  # ========================================
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:3
+    ports:
+      - "4566:4566" # LocalStack Gateway (모든 AWS 서비스)
+#      - "4510-4559:4510-4559" # 필요하다면
+    environment:
+      - AWS_DEFAULT_REGION=ap-northeast-2
+      - SERVICES=sqs,sns,s3
+      - DATA_DIR=/tmp/localstack/data
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - EAGER_SERVICE_LOADING=1
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./docker/localstack/init:/etc/localstack/init/ready.d"
+    networks:
+      - bebee-network
+
 # ========================================
 # 볼륨 정의 (Volumes)
 # ========================================
 volumes:
   mysql_data:
-    driver: local
   redis_data:
-    driver: local
+  mongo_data:
+  localstack_data:
 
 # ========================================
 # 네트워크 정의 (Networks)

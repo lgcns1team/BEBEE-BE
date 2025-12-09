@@ -47,13 +47,20 @@ spring:
           # 가독성을 위해 들여쓰기 적용
           format_sql: ${FORMAT_SQL:true}show
 
-  # Redis 설정
   data:
+    # Redis 설정
     redis:
       # Redis Host
       host: ${REDIS_HOST:localhost}
       # Redis Port
       port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PORT:}
+
+    # Mongodb 설정
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/bebee}
+      auto-index-creation: ${AUTO_INDEX_CREATION:false}
 
   # MongoDB 설정
     mongodb:
@@ -83,13 +90,25 @@ spring:
     # clean-disabled: true
 
 
+websocket:
+  stomp:
+    allowed-origin-patterns: "${STOMP_ALLOWED_PATTERNS:http://localhost:[*],https://localhost:[*]}"
+
+
 # 로깅 설정
 logging:
   level:
     # 루트 로그 레벨 설정 (환경 변수에서 가져오거나 기본값 info 사용)
-    root: ${LOGGING_LEVEL_ROOT:info}
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+
     # Hibernate SQL 쿼리 로그 레벨 (debug: 상세한 쿼리 정보 출력)
-    org.hibernate.SQL: debug
+    org.hibernate.SQL: DEBUG
+
     # Hibernate 파라미터 바인딩 로그 레벨 (trace: 모든 파라미터 값 출력)
-    org.hibernate.type: trace
-    com.lgcns.bebee.chat: ${LOGGING_LEVEL_SERVICE:info}
+    org.hibernate.type: TRACE
+
+    # Spring Data MongoDB Template 로그 레벨 (DEBUG: MongoDB 쿼리 정보 출력)
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+
+    # 애플리케이션 서비스 패키지 로그 레벨
+    com.lgcns.bebee.chat: ${LOGGING_LEVEL_SERVICE:INFO}

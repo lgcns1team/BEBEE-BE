@@ -18,6 +18,9 @@ docker-compose up -d
 
 # 서비스 상태 확인
 docker-compose ps
+
+# 특정 서비스 중지 및 삭제
+docker-compose rm -sf ${서비스명}  # ex) 서비스 명: localstack
 ```
 
 ## flyway 관련 명령
