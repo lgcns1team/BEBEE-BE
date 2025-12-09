@@ -14,16 +14,28 @@ dependencies {
 	implementation 'org.flywaydb:flyway-mysql'
 }
 
+// Querydsl Q-Class 생성 경로
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+// common 모듈 Q-Class 경로
+def commonQuerydslDir = project(':common').file('build/generated/querydsl')
 
+// sourceSets 블록을 수정하, 현재 모듈의 경로 common 모듈의 경로 모두 포함한다.
 sourceSets {
-	main.java.srcDirs += querydslDir
+	main {
+		java {
+			srcDirs += querydslDir
+			srcDirs += commonQuerydslDir
+		}
+	}
 }
 
-tasks.withType(JavaCompile){
-	options.generatedSourceOutputDirectory = file(querydslDir)
+// Q-Class 생성 위치 Annotation Processor의 Output으로 지정한다.
+tasks.named('compileJava') {
+	options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
+// Clean 태스크 정의 - QClass 삭제
 clean {
 	delete file(querydslDir)
+	delete commonQuerydslDir
 }

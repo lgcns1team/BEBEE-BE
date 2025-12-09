@@ -58,14 +58,29 @@ services:
     networks:
       - bebee-network
 
+  # ========================================
+  # MongoDB 데이터베이스 서비스
+  # ========================================
+  mongodb:
+    image: mongo:8.0
+    container_name: mongo-db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: bebee
+      MONGO_INITDB_ROOT_PASSWORD: bebee1234
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - bebee-network
+
 # ========================================
 # 볼륨 정의 (Volumes)
 # ========================================
 volumes:
   mysql_data:
-    driver: local
   redis_data:
-    driver: local
+  mongo_data:
 
 # ========================================
 # 네트워크 정의 (Networks)
