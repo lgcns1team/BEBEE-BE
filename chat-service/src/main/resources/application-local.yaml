@@ -84,6 +84,11 @@ spring:
     # clean-disabled: true
 
 
+websocket:
+  stomp:
+    allowed-origin-patterns: "${STOMP_ALLOWED_PATTERNS:http://localhost:[*],https://localhost:[*]}"
+
+
 # 로깅 설정
 logging:
   level:
