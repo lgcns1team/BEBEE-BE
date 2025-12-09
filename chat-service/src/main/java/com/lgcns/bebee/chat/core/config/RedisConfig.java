@@ -1,7 +1,7 @@
 package com.lgcns.bebee.chat.core.config;
 
 import com.lgcns.bebee.chat.core.properties.RedisProperties;
-import com.lgcns.bebee.chat.infrastructure.redis.RedisSubscriber;
+import com.lgcns.bebee.chat.infrastructure.redis.RedisMessageListener;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
@@ -27,7 +27,7 @@ public class RedisConfig {
     @Bean
     public StatefulRedisPubSubConnection<String, String> redisPubSubConnection(
             RedisClient redisClient,
-            RedisSubscriber redisSubscriber
+            RedisMessageListener redisSubscriber
     ) {
         StatefulRedisPubSubConnection<String, String> pubSubConnection = redisClient.connectPubSub();
         pubSubConnection.addListener(redisSubscriber);

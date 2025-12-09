@@ -14,7 +14,7 @@ import static com.lgcns.bebee.chat.infrastructure.redis.RedisUtils.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RedisPublisher {
+public class RedisMessagePublisher {
     private final RedisPubSubAsyncCommands<String, String> asyncCommands;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
