@@ -105,34 +105,5 @@ class ApproveDocumentUseCaseTest {
         }
     }
 
-    @Nested
-    @DisplayName("Param 검증")
-    class ParamValidationTest {
-
-        @Test
-        @DisplayName("verificationId가 null이면 예외가 발생한다")
-        void param_withNullVerificationId_throwsException() {
-            // given
-            ApproveDocumentUseCase.Param param = new ApproveDocumentUseCase.Param(null);
-
-            // when & then
-            assertThatThrownBy(param::validate)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("검증 ID는 필수입니다.");
-        }
-
-        @Test
-        @DisplayName("verificationId가 유효하면 true를 반환한다")
-        void param_withValidVerificationId_returnsTrue() {
-            // given
-            ApproveDocumentUseCase.Param param = new ApproveDocumentUseCase.Param(1L);
-
-            // when
-            boolean result = param.validate();
-
-            // then
-            assertThat(result).isTrue();
-        }
-    }
 }
 

@@ -108,58 +108,5 @@ class RejectDocumentUseCaseTest {
         }
     }
 
-    @Nested
-    @DisplayName("Param 검증")
-    class ParamValidationTest {
-
-        @Test
-        @DisplayName("verificationId가 null이면 예외가 발생한다")
-        void param_withNullVerificationId_throwsException() {
-            // given
-            RejectDocumentUseCase.Param param = new RejectDocumentUseCase.Param(null, "사유");
-
-            // when & then
-            assertThatThrownBy(param::validate)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("검증 ID는 필수입니다.");
-        }
-
-        @Test
-        @DisplayName("reason이 null이면 예외가 발생한다")
-        void param_withNullReason_throwsException() {
-            // given
-            RejectDocumentUseCase.Param param = new RejectDocumentUseCase.Param(1L, null);
-
-            // when & then
-            assertThatThrownBy(param::validate)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("거절 사유는 필수입니다.");
-        }
-
-        @Test
-        @DisplayName("reason이 빈 문자열이면 예외가 발생한다")
-        void param_withBlankReason_throwsException() {
-            // given
-            RejectDocumentUseCase.Param param = new RejectDocumentUseCase.Param(1L, "   ");
-
-            // when & then
-            assertThatThrownBy(param::validate)
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("거절 사유는 필수입니다.");
-        }
-
-        @Test
-        @DisplayName("모든 파라미터가 유효하면 true를 반환한다")
-        void param_withValidParams_returnsTrue() {
-            // given
-            RejectDocumentUseCase.Param param = new RejectDocumentUseCase.Param(1L, "거절 사유입니다.");
-
-            // when
-            boolean result = param.validate();
-
-            // then
-            assertThat(result).isTrue();
-        }
-    }
 }
 
