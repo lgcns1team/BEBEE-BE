@@ -3,8 +3,8 @@ package com.lgcns.bebee.member.application.usecase;
 import com.lgcns.bebee.member.application.client.FileStorageClient;
 import com.lgcns.bebee.member.domain.entity.Document;
 import com.lgcns.bebee.member.domain.entity.DocumentVerification;
-import com.lgcns.bebee.member.domain.repository.DocumentRepository;
 import com.lgcns.bebee.member.domain.repository.DocumentVerificationRepository;
+import com.lgcns.bebee.member.domain.service.DocumentManagement;
 import com.lgcns.bebee.member.domain.service.DocumentVerificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +41,7 @@ class UploadDocumentUseCaseTest {
     private DocumentVerificationService verificationService;
 
     @Mock
-    private DocumentRepository documentRepository;
+    private DocumentManagement documentManagement;
 
     @Mock
     private DocumentVerificationRepository verificationRepository;
@@ -94,8 +92,8 @@ class UploadDocumentUseCaseTest {
                     .willReturn(uploadedFileUrl);
             given(verificationService.analyze(any(MultipartFile.class)))
                     .willReturn(analysisResult);
-            given(documentRepository.findById(documentId))
-                    .willReturn(Optional.of(testDocument));
+            given(documentManagement.loadDocument(documentId))
+                    .willReturn(testDocument);
             given(verificationRepository.save(any(DocumentVerification.class)))
                     .willAnswer(invocation -> {
                         DocumentVerification v = invocation.getArgument(0);
@@ -110,7 +108,7 @@ class UploadDocumentUseCaseTest {
             assertThat(result).isEqualTo(999L);
             then(fileStorageClient).should().upload(testFile, "documents");
             then(verificationService).should().analyze(testFile);
-            then(documentRepository).should().findById(documentId);
+            then(documentManagement).should().loadDocument(documentId);
             then(verificationRepository).should().save(any(DocumentVerification.class));
         }
 
@@ -133,8 +131,8 @@ class UploadDocumentUseCaseTest {
                     .willReturn(uploadedFileUrl);
             given(verificationService.analyze(any(MultipartFile.class)))
                     .willReturn(analysisResult);
-            given(documentRepository.findById(documentId))
-                    .willReturn(Optional.of(testDocument));
+            given(documentManagement.loadDocument(documentId))
+                    .willReturn(testDocument);
             given(verificationRepository.save(any(DocumentVerification.class)))
                     .willAnswer(invocation -> {
                         DocumentVerification v = invocation.getArgument(0);
@@ -176,13 +174,13 @@ class UploadDocumentUseCaseTest {
                     .willReturn(uploadedFileUrl);
             given(verificationService.analyze(any(MultipartFile.class)))
                     .willReturn(analysisResult);
-            given(documentRepository.findById(documentId))
-                    .willReturn(Optional.empty());
+            given(documentManagement.loadDocument(documentId))
+                    .willThrow(new com.lgcns.bebee.member.common.exception.DocumentException(
+                            com.lgcns.bebee.member.common.exception.DocumentErrors.DOCUMENT_NOT_FOUND));
 
             // when & then
             assertThatThrownBy(() -> uploadDocumentUseCase.execute(param))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("문서를 찾을 수 없습니다.");
+                    .isInstanceOf(com.lgcns.bebee.member.common.exception.DocumentException.class);
         }
     }
 

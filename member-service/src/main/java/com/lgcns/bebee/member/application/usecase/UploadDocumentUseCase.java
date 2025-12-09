@@ -5,8 +5,8 @@ import com.lgcns.bebee.common.application.UseCase;
 import com.lgcns.bebee.member.application.client.FileStorageClient;
 import com.lgcns.bebee.member.domain.entity.Document;
 import com.lgcns.bebee.member.domain.entity.DocumentVerification;
-import com.lgcns.bebee.member.domain.repository.DocumentRepository;
 import com.lgcns.bebee.member.domain.repository.DocumentVerificationRepository;
+import com.lgcns.bebee.member.domain.service.DocumentManagement;
 import com.lgcns.bebee.member.domain.service.DocumentVerificationService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class UploadDocumentUseCase implements UseCase<UploadDocumentUseCase.Para
 
     private final FileStorageClient fileStorageClient;
     private final DocumentVerificationService verificationService;
-    private final DocumentRepository documentRepository;
+    private final DocumentManagement documentManagement;
     private final DocumentVerificationRepository verificationRepository;
 
     /**
@@ -44,9 +44,8 @@ public class UploadDocumentUseCase implements UseCase<UploadDocumentUseCase.Para
         // 2. 위변조 분석 (Domain Service)
         DocumentVerificationService.AnalysisResult analysis = verificationService.analyze(param.getFile());
 
-        // 3. Document 조회 (Domain)
-        Document document = documentRepository.findById(param.getDocumentId())
-                .orElseThrow(() -> new IllegalArgumentException("문서를 찾을 수 없습니다."));
+        // 3. Document 조회 (Domain Service)
+        Document document = documentManagement.loadDocument(param.getDocumentId());
 
         // 4. DocumentVerification 생성 및 분석 결과 적용
         DocumentVerification verification = DocumentVerification.of(fileUrl, document);

@@ -1,8 +1,10 @@
 package com.lgcns.bebee.member.domain.service;
 
 import com.lgcns.bebee.member.common.exception.DocumentErrors;
+import com.lgcns.bebee.member.domain.entity.Document;
 import com.lgcns.bebee.member.domain.entity.DocumentVerification;
 import com.lgcns.bebee.member.domain.entity.vo.DocumentStatus;
+import com.lgcns.bebee.member.domain.repository.DocumentRepository;
 import com.lgcns.bebee.member.domain.repository.DocumentVerificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DocumentManagement {
 
+    private final DocumentRepository documentRepository;
     private final DocumentVerificationRepository documentVerificationRepository;
+
+    /**
+     * Document 단건 조회
+     * @param documentId 문서 ID
+     * @return Document 엔티티
+     * @throws RuntimeException 문서를 찾을 수 없는 경우
+     */
+    public Document loadDocument(@NonNull Long documentId) {
+        return documentRepository.findById(documentId)
+                .orElseThrow(DocumentErrors.DOCUMENT_NOT_FOUND::toException);
+    }
 
     /**
      * 문서 검증 단건 조회

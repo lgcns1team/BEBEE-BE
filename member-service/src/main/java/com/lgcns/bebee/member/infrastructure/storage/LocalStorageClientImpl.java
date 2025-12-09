@@ -2,7 +2,7 @@ package com.lgcns.bebee.member.infrastructure.storage;
 
 import com.lgcns.bebee.member.application.client.FileStorageClient;
 import com.lgcns.bebee.member.common.exception.DocumentErrors;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,13 +17,10 @@ import java.util.UUID;
  * 개발/테스트 환경용 (운영 시 S3로 교체)
  */
 @Component
+@RequiredArgsConstructor
 public class LocalStorageClientImpl implements FileStorageClient {
 
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
-
-    @Value("${file.base-url:http://localhost:8080/files}")
-    private String baseUrl;
+    private final FileStorageProperties properties;
 
     /**
      * 파일 업로드
@@ -35,7 +32,7 @@ public class LocalStorageClientImpl implements FileStorageClient {
     public String upload(MultipartFile file, String directory) {
         try {
             // 저장 디렉토리 생성
-            Path uploadPath = Paths.get(uploadDir, directory);
+            Path uploadPath = Paths.get(properties.getUploadDir(), directory);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
@@ -50,7 +47,7 @@ public class LocalStorageClientImpl implements FileStorageClient {
             Files.copy(file.getInputStream(), filePath);
 
             // URL 반환
-            return baseUrl + "/" + directory + "/" + newFilename;
+            return properties.getBaseUrl() + "/" + directory + "/" + newFilename;
 
         } catch (IOException e) {
             throw DocumentErrors.FILE_UPLOAD_FAILED.toException();
@@ -65,8 +62,8 @@ public class LocalStorageClientImpl implements FileStorageClient {
     public void delete(String fileUrl) {
         try {
             // URL에서 파일 경로 추출
-            String relativePath = fileUrl.replace(baseUrl + "/", "");
-            Path filePath = Paths.get(uploadDir, relativePath);
+            String relativePath = fileUrl.replace(properties.getBaseUrl() + "/", "");
+            Path filePath = Paths.get(properties.getUploadDir(), relativePath);
 
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
