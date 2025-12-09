@@ -54,6 +54,8 @@ spring:
       host: ${REDIS_HOST:localhost}
       # Redis Port
       port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PORT:}
 
     # Mongodb 설정
     mongodb:
@@ -82,6 +84,11 @@ spring:
     placeholder-replacement: false
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
+
+
+websocket:
+  stomp:
+    allowed-origin-patterns: "${STOMP_ALLOWED_PATTERNS:http://localhost:[*],https://localhost:[*]}"
 
 
 # 로깅 설정
