@@ -12,7 +12,7 @@ import java.time.DayOfWeek;
 import java.util.Date;
 import java.util.EnumMap;
 
-@Entity // 이거를 왜 사용하는지 고민하기
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ActiveTimeSchedule extends BaseTimeEntity {
 

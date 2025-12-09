@@ -10,7 +10,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 
 import java.util.Date;
 
-@Entity // 이거를 왜 사용하는지 고민하기
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ActiveTimeTerm extends BaseTimeEntity {
 

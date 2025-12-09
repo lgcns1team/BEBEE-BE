@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@Entity // 이거를 왜 사용하는지 고민하기
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostHelpCategory extends BaseTimeEntity {
 
