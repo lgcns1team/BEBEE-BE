@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -44,4 +46,7 @@ public class Agreement extends BaseTimeEntity {
 
     @Column(nullable = false)
     private AgreementStatus status = AgreementStatus.BEFORE;
+
+    @OneToMany(mappedBy = "agreement")
+    private List<AgreementHelpCategory> helpCategories = new ArrayList<>();
 }
