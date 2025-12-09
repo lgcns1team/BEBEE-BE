@@ -7,6 +7,8 @@ import com.lgcns.bebee.member.domain.repository.DocumentVerificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import org.springframework.lang.NonNull;
+
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ public class DocumentManagement {
      * @return DocumentVerification 엔티티
      * @throws RuntimeException 문서를 찾을 수 없는 경우
      */
-    public DocumentVerification load(Long verificationId) {
+    public DocumentVerification load(@NonNull Long verificationId) {
         return documentVerificationRepository.findById(verificationId)
                 .orElseThrow(DocumentErrors.NOT_FOUND::toException);
     }
