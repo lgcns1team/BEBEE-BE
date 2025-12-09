@@ -13,7 +13,7 @@ public class EngagementTimeTerm extends BaseTimeEntity {
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "agreement_id", nullable = false)
     private Agreement agreement;
 
     @Column(nullable = false)

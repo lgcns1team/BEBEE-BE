@@ -14,7 +14,7 @@ import java.time.LocalTime;
 public class EngagementTimeSchedule extends BaseTimeEntity {
     @Id
     @MapsId
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "agreement_id", nullable = false)
     private Agreement agreement;
 
     @Enumerated(EnumType.ORDINAL)
