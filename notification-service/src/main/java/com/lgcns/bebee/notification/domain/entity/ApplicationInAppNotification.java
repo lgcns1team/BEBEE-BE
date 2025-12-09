@@ -18,11 +18,4 @@ import java.time.LocalDateTime;
 public class ApplicationInAppNotification extends InAppNotification {
     @Column(nullable = false)
     private Long applicationId;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }

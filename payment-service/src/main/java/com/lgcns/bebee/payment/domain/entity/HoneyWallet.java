@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 public class HoneyWallet extends BaseTimeEntity {
     @Id
     @Tsid
-    private Long honey_wallet_id;
+    private Long honeyWalletId;
 
     @Column(nullable = false, unique = true)
-    private Long member_id;
+    private Long memberId;
 
     @Column(nullable = false)
     private Long balance = 0L;

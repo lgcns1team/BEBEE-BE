@@ -17,17 +17,17 @@ import java.util.List;
 public class Agreement extends BaseTimeEntity {
     @Id
     @Tsid
-    private Long agreement_id;
+    private Long agreementId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, unique = true)
-    private Long match_id;
+    private Long matchId;
 
     @Column(nullable = false)
-    private Integer unit_honey;
+    private Integer unitHoney;
 
     @Column(nullable = false)
-    private Integer total_honey;
+    private Integer totalHoney;
 
     @Column(nullable = false, length = 50)
     private String region;
@@ -36,13 +36,13 @@ public class Agreement extends BaseTimeEntity {
     private EngagementType type;
 
     @Column(nullable = false)
-    private LocalDateTime confirmation_date;
+    private LocalDateTime confirmationDate;
 
     @Column
-    private Boolean is_day_complete = Boolean.FALSE;
+    private Boolean isDayComplete = Boolean.FALSE;
 
     @Column
-    private Boolean is_term_complete = Boolean.FALSE;
+    private Boolean isTermComplete = Boolean.FALSE;
 
     @Column(nullable = false)
     private AgreementStatus status = AgreementStatus.BEFORE;

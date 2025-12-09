@@ -1,5 +1,7 @@
 package com.lgcns.bebee.notification.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -10,20 +12,14 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PushNotificationSubscription {
+public class PushNotificationSubscription extends BaseTimeEntity {
     @Id
-    private Long web_push_notification_id;
+    @Tsid
+    private Long webPushNotificationId;
 
     @Column(nullable = false)
-    private Long subscriber_id;
+    private Long subscriberId;
 
     @Column(nullable = false)
-    private Long fcm_token_id;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private Long fcmTokenId;
 }

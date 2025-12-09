@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 public class HoneyHistory extends BaseTimeEntity {
     @Id
     @Tsid
-    private Long honey_history_id;
+    private Long honeyHistoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private HoneyWallet honeyWallet;
 
     @Column(nullable = false)
-    private Long target_member_id;
+    private Long targetMemberId;
 
     @Column(nullable = false)
     private Integer amount;

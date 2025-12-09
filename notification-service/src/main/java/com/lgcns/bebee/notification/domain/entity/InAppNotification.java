@@ -1,6 +1,8 @@
 package com.lgcns.bebee.notification.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.notification.domain.entity.vo.NotificationType;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -13,32 +15,26 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type")
-public class InAppNotification {
+public class InAppNotification extends BaseTimeEntity {
     @Id
-    private Long in_app_notification_id;
+    @Tsid
+    private Long inAppNotificationId;
 
     @Column(nullable = false)
-    private Long receiver_id;
+    private Long receiverId;
 
     @Column(nullable = false)
-    private Long sender_id;
+    private Long senderId;
 
     @Column(nullable = false)
-    private Boolean is_read;
+    private Boolean isRead;
 
     @Column
-    private LocalDateTime read_at;
+    private LocalDateTime readAt;
 
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
     @Column(nullable = false, length = 255)
-    private String redirection_url;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime created_at;
-
-    @UpdateTimestamp
-    private LocalDateTime updated_at;
+    private String redirectionUrl;
 }

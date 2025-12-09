@@ -11,21 +11,21 @@ import lombok.NoArgsConstructor;
 public class Match extends BaseTimeEntity {
     @Id
     @Tsid
-    private Long match_id;
+    private Long matchId;
 
     @Column(nullable = false)
-    private Long helper_id;
+    private Long helperId;
 
     @Column(nullable = false)
-    private Long disabled_id;
+    private Long disabledId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Long post_id;
+    private Long postId;
 
     @Column(nullable = false, length = 100)
     private String title;
 
     @Column(nullable = false)
-    private Long chat_room_id;
+    private Long chatRoomId;
 }
