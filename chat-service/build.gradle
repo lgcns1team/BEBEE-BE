@@ -12,6 +12,9 @@ dependencies {
 	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
 	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 
+	// Spring Websocket - 웹소켓 연결 및 STOMP 프로토콜 지원
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 	// Spring Actuator - 어플리케이 모니터링 및 관리 엔드포인트를 제공
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
