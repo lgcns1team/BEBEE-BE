@@ -6,26 +6,24 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.util.Date;
 
 @Entity // 이거를 왜 사용하는지 고민하기
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ActiveTimeDay extends BaseTimeEntity {
+public class PostImage extends BaseTimeEntity {
 
     @Id
     @Tsid
+    @Column(name = "image_id", nullable = false)
     private Long imageId;
 
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private HelpRequestPost post;
+    private HelpRequestPost postId;
+
+    @Column(nullable = false, length = 255)
+    private String imageUrl;
 
     @Column(nullable = false)
-    private Date engagmentDate;
-
-    @Column(nullable = false)
-    private Time engagmentTime;
+    private int sequence;
 }
