@@ -44,7 +44,7 @@ clean {
 
 // flyway 설정 정보
 flyway {
-	url = "jdbc:mysql://${System.getenv('DB_HOST') ?: '127.0.0.1'}:${System.getenv('DB_PORT') ?: '3306'}/${System.getenv('MATCH_DB_NAME') ?: 'match_notification'}?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8"
+	url = "jdbc:mysql://${System.getenv('DB_HOST') ?: '127.0.0.1'}:${System.getenv('DB_PORT') ?: '3306'}/${System.getenv('MATCH_DB_NAME') ?: 'bebee_match'}?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8"
 	user = System.getenv('DB_USERNAME') ?: 'bebee'
 	password = System.getenv('DB_PASSWORD') ?: 'bebee1234'
 	cleanDisabled = false
