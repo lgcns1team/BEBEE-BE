@@ -54,6 +54,8 @@ spring:
       host: ${REDIS_HOST:localhost}
       # Redis Port
       port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PORT:}
 
     # Mongodb 설정
     mongodb:
