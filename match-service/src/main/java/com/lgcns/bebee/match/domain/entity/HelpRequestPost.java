@@ -1,15 +1,14 @@
 package com.lgcns.bebee.match.domain.entity;
 
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.entity.vo.PostStatus;
-import com.lgcns.bebee.match.domain.entity.vo.PostType;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class HelpRequestPost extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PostType type;
+    private EngagementType type;
 
     @Column(nullable = false)
     private int unit_honey;
