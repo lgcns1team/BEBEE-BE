@@ -17,7 +17,8 @@ import java.util.List;
 public class Agreement extends BaseTimeEntity {
     @Id
     @Tsid
-    private Long agreementId;
+    @Column(name = "agreement_id")
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "match_id", nullable = false, unique = true)
