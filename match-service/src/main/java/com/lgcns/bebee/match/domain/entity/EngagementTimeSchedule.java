@@ -14,6 +14,7 @@ import java.time.LocalTime;
 public class EngagementTimeSchedule extends BaseTimeEntity {
     @Id
     @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agreement_id", nullable = false)
     private Agreement agreement;
 
