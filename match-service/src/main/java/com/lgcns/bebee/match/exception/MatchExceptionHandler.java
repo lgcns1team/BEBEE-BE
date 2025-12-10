@@ -16,7 +16,9 @@ public class MatchExceptionHandler {
             MatchErrors.NOT_FOUND, HttpStatus.NOT_FOUND
     );
 
-    // 던져진 예외(MatchException)를 잡아서 클라이언트에게 보낼 HTTP 응답으로 변환
+    /**
+     * 던져진 예외(MatchException)를 잡아서 클라이언트에게 보낼 HTTP 응답으로 변환
+     */
     @ExceptionHandler(MatchException.class)
     public ResponseEntity<ErrorResponse> handle(MatchException e){
         if (e.getCause() != null) {
