@@ -17,7 +17,8 @@ import java.util.List;
 public class HelpRequestPost extends BaseTimeEntity {
     @Id
     @Tsid
-    private Long postId;
+    @Column(name = "post_id")
+    private Long id;
 
     @Column(nullable = false)
     private Long memberId;
