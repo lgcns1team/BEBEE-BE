@@ -18,9 +18,9 @@ public class ActiveTimeTerm extends BaseTimeEntity {
     private HelpRequestPost post;
 
     @Column(nullable = false)
-    private LocalDate start_date;
+    private LocalDate startDate;
 
     @Column(nullable = false)
-    private LocalDate end_date;
+    private LocalDate endDate;
 
 }

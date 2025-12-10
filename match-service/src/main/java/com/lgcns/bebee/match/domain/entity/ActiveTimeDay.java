@@ -20,8 +20,8 @@ public class ActiveTimeDay extends BaseTimeEntity {
     private HelpRequestPost post;
 
     @Column(nullable = false)
-    private LocalDate engagment_date;
+    private LocalDate engagmentDate;
 
     @Column(nullable = false)
-    private LocalTime engagment_time;
+    private LocalTime engagmentTime;
 }

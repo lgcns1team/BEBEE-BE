@@ -24,8 +24,8 @@ public class ActiveTimeSchedule extends BaseTimeEntity {
     private DayOfWeek day;
 
     @Column(nullable = true)
-    private LocalTime start_time;
+    private LocalTime startTime;
 
     @Column(nullable = true)
-    private LocalTime end_time;
+    private LocalTime endTime;
 }

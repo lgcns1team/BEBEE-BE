@@ -15,14 +15,14 @@ public class PostImage extends BaseTimeEntity {
     @Id
     @Tsid
     @Column(name = "image_id", nullable = false)
-    private Long image_id;
+    private Long imageId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private HelpRequestPost post;
 
     @Column(nullable = false, length = 255)
-    private String image_url;
+    private String imageUrl;
 
     @Column(nullable = false)
     private int sequence;

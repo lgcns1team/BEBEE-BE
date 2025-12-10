@@ -18,10 +18,10 @@ public class HelpRequestPost extends BaseTimeEntity {
 
     @Id
     @Tsid
-    private Long post_id;
+    private Long postId;
 
     @Column(nullable = false)
-    private Long member_id;
+    private Long memberId;
 
     @Column(nullable = false, length = 50)
     private String title;
@@ -31,10 +31,10 @@ public class HelpRequestPost extends BaseTimeEntity {
     private EngagementType type;
 
     @Column(nullable = false)
-    private int unit_honey;
+    private int unitHoney;
 
     @Column(nullable = false)
-    private int total_honey;
+    private int totalHoney;
 
     @Column(nullable = false, length = 30)
     private String region;
@@ -44,7 +44,7 @@ public class HelpRequestPost extends BaseTimeEntity {
     private PostStatus status;
 
     @Column(nullable = false, length = 10)
-    private String legaldong_code;
+    private String legaldongCode;
 
     @Column(nullable = false, precision = 10, scale = 7)
     private BigDecimal latitude;
@@ -53,7 +53,7 @@ public class HelpRequestPost extends BaseTimeEntity {
     private BigDecimal longitude;
 
     @Column(nullable = true)
-    private int applicant_count;
+    private int applicantCount;
 
     @Column(nullable = true, length = 1000)
     private String content;
