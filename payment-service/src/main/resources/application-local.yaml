@@ -88,3 +88,4 @@ logging:
     # Hibernate 파라미터 바인딩 로그 레벨 (trace: 모든 파라미터 값 출력)
     org.hibernate.type: trace
     com.lgcns.bebee.payment: ${LOGGING_LEVEL_SERVICE:info}
+
