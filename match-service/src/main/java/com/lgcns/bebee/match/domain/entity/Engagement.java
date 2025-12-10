@@ -14,9 +14,8 @@ public class Engagement extends BaseTimeEntity {
     @Tsid
     private Long engagementId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "agreement_id", nullable = false)
-    private Agreement agreement;
+    @Column(nullable = false)
+    private Long agreementId;
 
     @Enumerated(EnumType.STRING)
     private EngagementType type;

@@ -19,9 +19,7 @@ public class Match extends BaseTimeEntity {
     @Column(nullable = false)
     private Long disabledId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
-//    private HelpRequestPost postId;
+    @Column(name = "post_id", nullable = false)
     private Long postId;
 
     @Column(nullable = false, length = 100)

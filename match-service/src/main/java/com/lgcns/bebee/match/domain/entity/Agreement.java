@@ -20,9 +20,8 @@ public class Agreement extends BaseTimeEntity {
     @Column(name = "agreement_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_id", nullable = false, unique = true)
-    private Match match;
+    @Column(nullable = false, unique = true)
+    private Long matchId;
 
     @Column(nullable = false)
     private Integer unitHoney;
