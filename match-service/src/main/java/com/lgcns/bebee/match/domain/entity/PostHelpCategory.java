@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostHelpCategory extends BaseTimeEntity {
-
     @EmbeddedId
     private PostHelpCategoryId id;
 
@@ -20,6 +19,4 @@ public class PostHelpCategory extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Long helpCategoryId;
-
-
 }

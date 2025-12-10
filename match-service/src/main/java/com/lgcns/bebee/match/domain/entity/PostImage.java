@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostImage extends BaseTimeEntity {
-
     @Id
     @Tsid
     @Column(name = "image_id", nullable = false)

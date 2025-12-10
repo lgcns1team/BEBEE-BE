@@ -11,8 +11,6 @@ import java.time.LocalTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HelpRequestPostEngagementTimeDay extends BaseTimeEntity {
-
-
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId

@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HelpRequestPostEngagementTimeTerm extends BaseTimeEntity {
-
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
@@ -22,5 +21,4 @@ public class HelpRequestPostEngagementTimeTerm extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDate endDate;
-
 }

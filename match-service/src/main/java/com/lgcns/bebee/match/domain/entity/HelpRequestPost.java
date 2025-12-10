@@ -15,7 +15,6 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HelpRequestPost extends BaseTimeEntity {
-
     @Id
     @Tsid
     private Long postId;
@@ -60,6 +59,4 @@ public class HelpRequestPost extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post")
     private List<PostHelpCategory> helpCategories = new ArrayList<>();
-
-
 }

@@ -4,5 +4,4 @@ public enum PostStatus {
     NON_MATCHED,
     PROCEEDING,
     MATCHED
-
 }
