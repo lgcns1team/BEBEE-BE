@@ -17,12 +17,5 @@ import java.time.LocalDateTime;
 @DiscriminatorValue("MATCH")
 public class MatchInAppNotification extends InAppNotification {
     @Column(nullable = false)
-    private Long match_id;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private Long matchId;
 }

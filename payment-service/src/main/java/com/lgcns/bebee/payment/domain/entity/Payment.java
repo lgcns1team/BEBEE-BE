@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Payment extends BaseTimeEntity {
     @Id
     @Tsid
-    private Long payment_id;
+    private Long paymentId;
 
     @Column(nullable = false)
     private Long memberId;
