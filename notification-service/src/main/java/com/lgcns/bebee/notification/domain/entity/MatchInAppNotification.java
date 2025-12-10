@@ -1,0 +1,21 @@
+package com.lgcns.bebee.notification.domain.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+
+@Entity
+@PrimaryKeyJoinColumn(name = "in_app_notification_id")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DiscriminatorValue("MATCH")
+public class MatchInAppNotification extends InAppNotification {
+    @Column(nullable = false)
+    private Long matchId;
+}

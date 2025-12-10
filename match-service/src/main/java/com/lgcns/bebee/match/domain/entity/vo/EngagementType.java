@@ -1,6 +1,6 @@
 package com.lgcns.bebee.match.domain.entity.vo;
 
-public enum PostType {
+public enum EngagementType {
     DAY,
     TERM
 }

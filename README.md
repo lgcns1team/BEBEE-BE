@@ -23,6 +23,13 @@ docker-compose ps
 docker-compose rm -sf ${서비스명}  # ex) 서비스 명: localstack
 ```
 
+## flyway 관련 명령
+### flway 초기화
+```shell
+./gradlew :member-service:flywayClean # member-service 자리에 다른 서비스 이름이 와도 된다.
+```
+
+
 ## 📁 프로젝트 구조
 ```shell
 ├── common
