@@ -9,13 +9,12 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ActiveTimeTerm extends BaseTimeEntity {
-
+public class AgreementEngagementTimeTerm extends BaseTimeEntity {
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "post_id", nullable = false)
-    private HelpRequestPost post;
+    @JoinColumn(name = "agreement_id", nullable = false)
+    private Agreement agreement;
 
     @Column(nullable = false)
     private LocalDate startDate;
@@ -23,4 +22,6 @@ public class ActiveTimeTerm extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate endDate;
 
+    @Column(nullable = false, columnDefinition = "json")
+    private String engagementTime;
 }

@@ -6,22 +6,22 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EngagementTimeTerm extends BaseTimeEntity {
+public class HelpRequestPostEngagementTimeDay extends BaseTimeEntity {
+
+
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "agreement_id", nullable = false)
-    private Agreement agreement;
+    @JoinColumn(name = "post_id", nullable = false)
+    private HelpRequestPost post;
 
     @Column(nullable = false)
-    private LocalDate startDate;
+    private LocalDate engagmentDate;
 
     @Column(nullable = false)
-    private LocalDate endDate;
-
-    @Column(nullable = false, columnDefinition = "json")
-    private String engagementTime;
+    private LocalTime engagmentTime;
 }
