@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class Agreement extends BaseTimeEntity {
     private EngagementType type;
 
     @Column(nullable = false)
-    private LocalDateTime confirmationDate;
+    private LocalDate confirmationDate;
 
     @Column
     private Boolean isDayComplete = Boolean.FALSE;
