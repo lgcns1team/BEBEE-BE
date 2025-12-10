@@ -2,7 +2,6 @@ package com.lgcns.bebee.match.domain.entity;
 
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.PostHelpCategoryId;
-import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

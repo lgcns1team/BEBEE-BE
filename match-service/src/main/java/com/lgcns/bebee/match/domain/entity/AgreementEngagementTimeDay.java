@@ -1,7 +1,6 @@
 package com.lgcns.bebee.match.domain.entity;
 
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
-import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

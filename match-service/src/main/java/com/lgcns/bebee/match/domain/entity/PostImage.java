@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostImage extends BaseTimeEntity {
