@@ -84,15 +84,13 @@ class DocumentVerificationServiceTest {
                     "file",
                     "test-image.bmp", // 지원하지 않는 확장자
                     "image/bmp",
-                    new byte[50 * 1024]
-            );
+                    new byte[50 * 1024]);
 
             MockMultipartFile supportedFile = new MockMultipartFile(
                     "file",
                     "test-image.jpg",
                     "image/jpeg",
-                    new byte[50 * 1024]
-            );
+                    new byte[50 * 1024]);
 
             // when
             DocumentVerificationService.AnalysisResult unsupportedResult = verificationService.analyze(unsupportedFile);
@@ -110,8 +108,7 @@ class DocumentVerificationServiceTest {
                     "file",
                     "test-image.png",
                     "image/png",
-                    new byte[50 * 1024]
-            );
+                    new byte[50 * 1024]);
 
             // when
             DocumentVerificationService.AnalysisResult result = verificationService.analyze(file);
@@ -129,8 +126,7 @@ class DocumentVerificationServiceTest {
                     "file",
                     "document.pdf",
                     "application/pdf",
-                    new byte[50 * 1024]
-            );
+                    new byte[50 * 1024]);
 
             // when
             DocumentVerificationService.AnalysisResult result = verificationService.analyze(file);
@@ -138,6 +134,35 @@ class DocumentVerificationServiceTest {
             // then
             assertThat(result).isNotNull();
             assertThat(result.systemFlag()).isNotNull();
+        }
+
+        @Test
+        @DisplayName("실제 업로드된 자격증 이미지 분석 테스트")
+        void analyze_withRealCertificateImage() throws java.io.IOException {
+            // given
+            java.io.File realFile = new java.io.File("src/test/resources/images/test_image_2.png");
+
+            if (!realFile.exists()) {
+                fail("❌ 테스트 파일을 찾을 수 없습니다: " + realFile.getAbsolutePath());
+            }
+
+            MockMultipartFile multipartFile = new MockMultipartFile(
+                    "file",
+                    realFile.getName(),
+                    "image/png",
+                    java.nio.file.Files.readAllBytes(realFile.toPath()));
+
+            // when
+            DocumentVerificationService.AnalysisResult result = verificationService.analyze(multipartFile);
+
+            // then
+            // PNG 스크린샷/디지털 이미지는 EXIF 데이터가 없으므로 낮은 exifScore
+            assertThat(result).isNotNull();
+            assertThat(result.exifScore()).isEqualTo(30); // EXIF 없는 이미지
+            assertThat(result.ocrScore()).isEqualTo(75);  // OCR은 현재 고정값
+            // forgeryScore = base(100)*0.3 + exif(30)*0.3 + ocr(75)*0.4 = 30+9+30 = 69
+            assertThat(result.forgeryScore()).isBetween(65, 75);
+            assertThat(result.systemFlag()).isEqualTo("MID"); // 50~80점은 MID
         }
     }
 
@@ -175,8 +200,8 @@ class DocumentVerificationServiceTest {
         @DisplayName("AnalysisResult가 올바르게 생성된다")
         void analysisResult_createsCorrectly() {
             // given & when
-            DocumentVerificationService.AnalysisResult result = 
-                    new DocumentVerificationService.AnalysisResult(80, 75, 77, "LOW");
+            DocumentVerificationService.AnalysisResult result = new DocumentVerificationService.AnalysisResult(80, 75,
+                    77, "LOW");
 
             // then
             assertThat(result.exifScore()).isEqualTo(80);
@@ -186,4 +211,3 @@ class DocumentVerificationServiceTest {
         }
     }
 }
-
