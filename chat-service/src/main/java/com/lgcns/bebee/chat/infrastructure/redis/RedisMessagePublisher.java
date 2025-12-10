@@ -19,24 +19,35 @@ public class RedisMessagePublisher {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     /**
-     * 특정 채팅방에 메시지를 발행합니다.
+     * 1:1 채팅 메시지를 발행합니다.
+     * 발신자와 수신자 모두에게 메시지를 전송하여 멀티 디바이스를 지원합니다.
      *
-     * @param chatroomId 채팅방 ID
-     * @param message 발행할 채팅 메시지
+     * @param senderId 발신자 ID
+     * @param receiverId 수신자 ID
+     * @param message 전송할 채팅 메시지
      */
-    public void publishToChatroom(Long chatroomId, ChatMessage message) {
+    public void publishToMember(Long senderId, Long receiverId, ChatMessage message) {
         try {
-            String channel = getChatroomChannel(chatroomId);
             String messageJson = objectMapper.writeValueAsString(message);
-            asyncCommands.publish(channel, messageJson)
-                    .thenAccept(receivers ->
-                        log.info("Published message to channel: {}, receivers: {}", channel, receivers))
-                    .exceptionally(throwable -> {
-                        log.error("Failed to publish message to channel: {}", channel, throwable);
-                        return null;
-                    });
+
+            // 수신자에게 메시지 발행
+            publishToChannel(getMemberChannel(receiverId), messageJson);
+
+            // 발신자에게도 메시지 발행 (멀티 디바이스 지원)
+            publishToChannel(getMemberChannel(senderId), messageJson);
+
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize chat message", e);
         }
+    }
+
+    private void publishToChannel(String channel, String messageJson) {
+        asyncCommands.publish(channel, messageJson)
+                .thenAccept(receivers ->
+                        log.info("Published message to channel: {}, receivers: {}", channel, receivers))
+                .exceptionally(throwable -> {
+                    log.error("Failed to publish message to channel: {}", channel, throwable);
+                    return null;
+                });
     }
 }

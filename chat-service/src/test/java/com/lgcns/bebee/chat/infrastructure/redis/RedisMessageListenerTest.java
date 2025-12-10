@@ -27,7 +27,7 @@ public class RedisMessageListenerTest {
     @Test
     void message_성공(){
         // given
-        String channel = "chatroom:123";
+        String channel = "member:123";
         String messageJson = """
                 {
                     "id": 1,
@@ -50,7 +50,7 @@ public class RedisMessageListenerTest {
     @Test
     void message_잘못된JSON(){
         // given
-        String channel = "chatroom:123";
+        String channel = "member:123";
         String invalidJson = "{ invalid json }";
 
         // when

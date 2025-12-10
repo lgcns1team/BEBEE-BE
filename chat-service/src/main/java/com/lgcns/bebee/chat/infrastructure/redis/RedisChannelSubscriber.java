@@ -14,12 +14,13 @@ public class RedisChannelSubscriber {
     private final RedisPubSubAsyncCommands<String, String> asyncCommands;
 
     /**
-     * 특정 채팅방 채널을 구독합니다.
+     * 특정 회원 채널을 구독합니다.
+     * 1:1 채팅에서 회원은 자신의 채널을 구독합니다.
      *
-     * @param chatroomId 채팅방 ID
+     * @param memberId 회원 ID
      */
-    public void subscribeToChatroom(Long chatroomId) {
-        String channel = getChatroomChannel(chatroomId);
+    public void subscribeToMember(Long memberId) {
+        String channel = getMemberChannel(memberId);
         asyncCommands.subscribe(channel)
                 .thenAccept(result ->
                     log.info("Subscribed to channel: {}", channel))
@@ -30,12 +31,12 @@ public class RedisChannelSubscriber {
     }
 
     /**
-     * 특정 채팅방 채널 구독을 해제합니다.
+     * 특정 회원 채널 구독을 해제합니다.
      *
-     * @param chatroomId 채팅방 ID
+     * @param memberId 회원 ID
      */
-    public void unsubscribeFromChatroom(Long chatroomId) {
-        String channel = getChatroomChannel(chatroomId);
+    public void unsubscribeFromMember(Long memberId) {
+        String channel = getMemberChannel(memberId);
         asyncCommands.unsubscribe(channel)
                 .thenAccept(result ->
                     log.info("Unsubscribed from channel: {}", channel))

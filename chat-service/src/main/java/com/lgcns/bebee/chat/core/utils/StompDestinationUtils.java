@@ -11,8 +11,8 @@ public final class StompDestinationUtils {
     /**
      * STOMP destination으로 변환합니다.
      *
-     * @param channel 채널명 (예: "chatroom:123")
-     * @return STOMP destination (예: "/sub/chatroom:123")
+     * @param channel 채널명 (예: "member:123")
+     * @return STOMP destination (예: "/sub/member:123")
      */
     public static String toDestination(String channel) {
         return SUBSCRIBE_PREFIX + "/" + channel;
