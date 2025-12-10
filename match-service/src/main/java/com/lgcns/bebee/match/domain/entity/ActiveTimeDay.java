@@ -1,31 +1,27 @@
 package com.lgcns.bebee.match.domain.entity;
 
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
-import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ActiveTimeDay extends BaseTimeEntity {
 
+
     @Id
-    @Tsid
-    private Long imageId;
-
-
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "post_id", nullable = false)
     private HelpRequestPost post;
 
     @Column(nullable = false)
-    private Date engagmentDate;
+    private LocalDate engagment_date;
 
     @Column(nullable = false)
-    private Time engagmentTime;
+    private LocalTime engagment_time;
 }

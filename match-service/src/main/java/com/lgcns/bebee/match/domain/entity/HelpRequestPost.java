@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,10 +19,10 @@ public class HelpRequestPost extends BaseTimeEntity {
 
     @Id
     @Tsid
-    private Long postId;
+    private Long post_id;
 
     @Column(nullable = false)
-    private Long memberId;
+    private Long member_id;
 
     @Column(nullable = false, length = 50)
     private String title;
@@ -30,10 +32,10 @@ public class HelpRequestPost extends BaseTimeEntity {
     private PostType type;
 
     @Column(nullable = false)
-    private int unitHoney;
+    private int unit_honey;
 
     @Column(nullable = false)
-    private int totalHoney;
+    private int total_honey;
 
     @Column(nullable = false, length = 30)
     private String region;
@@ -43,7 +45,7 @@ public class HelpRequestPost extends BaseTimeEntity {
     private PostStatus status;
 
     @Column(nullable = false, length = 10)
-    private String legaldongCode;
+    private String legaldong_code;
 
     @Column(nullable = false, precision = 10, scale = 7)
     private BigDecimal latitude;
@@ -52,10 +54,13 @@ public class HelpRequestPost extends BaseTimeEntity {
     private BigDecimal longitude;
 
     @Column(nullable = true)
-    private int applicantCount;
+    private int applicant_count;
 
     @Column(nullable = true, length = 1000)
     private String content;
+
+    @OneToMany(mappedBy = "post")
+    private List<PostHelpCategory> helpCategories = new ArrayList<>();
 
 
 }

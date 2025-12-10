@@ -1,6 +1,7 @@
 package com.lgcns.bebee.match.domain.entity;
 
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import com.lgcns.bebee.match.domain.entity.vo.PostHelpCategoryId;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,16 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostHelpCategory extends BaseTimeEntity {
 
-    @Id
-    private Long postId;
+    @EmbeddedId
+    private PostHelpCategoryId id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("postId")
     @JoinColumn(name = "post_id", nullable = false)
     private HelpRequestPost post;
 
     @Column(nullable = false)
-    private Long helpId;
+    private Long helpCategoryId;
 
 
 }
