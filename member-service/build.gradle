@@ -25,6 +25,14 @@ dependencies {
     // flyway - DB migration tool, DB 스키 관리를 자동화하 체계적으로 수행할 수 있게 도와준다.
     implementation 'org.flywaydb:flyway-core:11.18.0'
     implementation 'org.flywaydb:flyway-mysql:11.18.0'
+
+    // EXIF 메타데이터 추출
+    implementation 'com.drewnoakes:metadata-extractor:2.19.0'
+
+    // TestContainers - Integration Test용 컨테이너
+    testImplementation 'org.testcontainers:testcontainers:1.19.3'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
+    testImplementation 'org.testcontainers:mysql:1.19.3'
 }
 
 
