@@ -1,5 +1,6 @@
 package com.lgcns.bebee.match.exception;
 
+import com.lgcns.bebee.common.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,11 @@ public class MatchExceptionHandler {
      * 던져진 예외(MatchException)를 잡아서 클라이언트에게 보낼 HTTP 응답으로 변환
      */
     @ExceptionHandler(MatchException.class)
-    public ResponseEntity<ErrorResponse> handle(MatchException e){
-        if (e.getCause() != null) {
-            log.info("{} : {}", e.getCause().getClass(), e.getCause().getMessage());
-        } else {
-            log.info(e.getMessage());
-        }
+    public ResponseEntity<ErrorResponse> handleException(MatchException e){
+        log.error("Advice 내 handleException() 호출, {}", e.getMessage(), e);
 
         MatchErrors error = e.getError();
-        HttpStatus status = STATUS_MAP.getOrDefault(error, HttpStatus.BAD_REQUEST);
+        HttpStatus httpStatus = STATUS_MAP.getOrDefault(error, HttpStatus.BAD_REQUEST);
 
         ErrorResponse response = new ErrorResponse(
                 error.name(),
@@ -36,8 +33,6 @@ public class MatchExceptionHandler {
                 LocalDateTime.now()
         );
 
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(httpStatus).body(response);
     }
-
-    public record ErrorResponse(String code, String message, LocalDateTime timestamp) {}
 }
