@@ -1,5 +1,6 @@
 package com.lgcns.bebee.chat.infrastructure.redis;
 
+import com.lgcns.bebee.chat.application.client.ChannelSubscriber;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,7 @@ import static com.lgcns.bebee.chat.infrastructure.redis.RedisUtils.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RedisChannelSubscriber {
+public class RedisChannelSubscriber implements ChannelSubscriber {
     private final RedisPubSubAsyncCommands<String, String> asyncCommands;
 
     /**

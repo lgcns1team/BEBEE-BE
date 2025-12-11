@@ -3,7 +3,9 @@ package com.lgcns.bebee.chat.infrastructure.redis;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lgcns.bebee.chat.infrastructure.redis.dto.ChatMessage;
+import com.lgcns.bebee.chat.application.client.MessagePublisher;
+import com.lgcns.bebee.chat.domain.entity.Chat;
+import com.lgcns.bebee.chat.infrastructure.dto.ChatMessageDTO;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +16,7 @@ import static com.lgcns.bebee.chat.infrastructure.redis.RedisUtils.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RedisMessagePublisher {
+public class RedisMessagePublisher implements MessagePublisher {
     private final RedisPubSubAsyncCommands<String, String> asyncCommands;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
