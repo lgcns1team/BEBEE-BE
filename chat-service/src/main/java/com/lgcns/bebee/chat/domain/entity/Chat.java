@@ -3,7 +3,9 @@ package com.lgcns.bebee.chat.domain.entity;
 import com.lgcns.bebee.chat.core.exception.ChatInvalidParamErrors;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Id;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 

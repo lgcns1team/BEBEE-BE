@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static com.lgcns.bebee.chat.infrastructure.redis.RedisUtils.*;
+import static com.lgcns.bebee.chat.infrastructure.redis.RedisUtils.getMemberChannel;
 
 @Slf4j
 @Component

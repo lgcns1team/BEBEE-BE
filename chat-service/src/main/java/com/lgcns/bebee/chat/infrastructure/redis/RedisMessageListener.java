@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
-import static com.lgcns.bebee.chat.core.utils.StompDestinationUtils.*;
+import static com.lgcns.bebee.chat.core.utils.StompDestinationUtils.toDestination;
 
 @Slf4j
 @Component

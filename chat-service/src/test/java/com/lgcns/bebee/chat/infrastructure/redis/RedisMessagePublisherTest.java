@@ -1,18 +1,20 @@
 package com.lgcns.bebee.chat.infrastructure.redis;
 
 import com.lgcns.bebee.chat.domain.entity.Chat;
-import com.lgcns.bebee.chat.infrastructure.dto.ChatMessageDTO;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
