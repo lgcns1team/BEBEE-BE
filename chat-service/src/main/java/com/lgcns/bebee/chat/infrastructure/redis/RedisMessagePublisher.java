@@ -24,11 +24,13 @@ public class RedisMessagePublisher {
      *
      * @param senderId 발신자 ID
      * @param receiverId 수신자 ID
-     * @param message 전송할 채팅 메시지
+     * @param chat 전송할 채팅 도메인 객체
      */
-    public void publishToMember(Long senderId, Long receiverId, ChatMessage message) {
+    public void publishToMember(Long senderId, Long receiverId, Chat chat) {
         try {
-            String messageJson = objectMapper.writeValueAsString(message);
+            ChatMessageDTO chatMessageDTO = ChatMessageDTO.from(chat);
+
+            String messageJson = objectMapper.writeValueAsString(chatMessageDTO);
 
             // 수신자에게 메시지 발행
             publishToChannel(getMemberChannel(receiverId), messageJson);
