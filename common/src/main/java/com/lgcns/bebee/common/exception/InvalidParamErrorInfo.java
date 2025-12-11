@@ -10,4 +10,6 @@ public interface InvalidParamErrorInfo {
     default String getMessage() {
         return "[" + getCode() + "] " + getDesc() + " (" + getField() + ")";
     }
+
+    default InvalidParamException toException(){return new InvalidParamException(this);}
 }

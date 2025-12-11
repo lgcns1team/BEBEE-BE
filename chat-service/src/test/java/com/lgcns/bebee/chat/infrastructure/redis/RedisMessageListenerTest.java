@@ -1,13 +1,16 @@
 package com.lgcns.bebee.chat.infrastructure.redis;
 
-import com.lgcns.bebee.chat.infrastructure.redis.dto.ChatMessage;
+import com.lgcns.bebee.chat.infrastructure.dto.ChatMessageDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,12 +25,12 @@ public class RedisMessageListenerTest {
     private ArgumentCaptor<String> channelCaptor;
 
     @Captor
-    private ArgumentCaptor<ChatMessage> messageCaptor;
+    private ArgumentCaptor<ChatMessageDTO> messageCaptor;
 
     @Test
     void message_성공(){
         // given
-        String channel = "chatroom:123";
+        String channel = "member:123";
         String messageJson = """
                 {
                     "id": 1,
@@ -44,19 +47,19 @@ public class RedisMessageListenerTest {
         // then
         verify(messagingTemplate).convertAndSend(channelCaptor.capture(), messageCaptor.capture());
         assertThat(channelCaptor.getValue()).endsWith(channel);
-        assertThat(messageCaptor.getValue().getTextContent()).isEqualTo("Hello");
+        assertThat(messageCaptor.getValue().textContent()).isEqualTo("Hello");
     }
 
     @Test
     void message_잘못된JSON(){
         // given
-        String channel = "chatroom:123";
+        String channel = "member:123";
         String invalidJson = "{ invalid json }";
 
         // when
         redisSubscriber.message(channel, invalidJson);
 
         // then
-        verify(messagingTemplate, never()).convertAndSend(anyString(), any(ChatMessage.class));
+        verify(messagingTemplate, never()).convertAndSend(anyString(), any(ChatMessageDTO.class));
     }
 }

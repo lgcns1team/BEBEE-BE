@@ -2,14 +2,14 @@ package com.lgcns.bebee.chat.infrastructure.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lgcns.bebee.chat.infrastructure.redis.dto.ChatMessage;
+import com.lgcns.bebee.chat.infrastructure.dto.ChatMessageDTO;
 import io.lettuce.core.pubsub.RedisPubSubListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
-import static com.lgcns.bebee.chat.core.utils.StompDestinationUtils.*;
+import static com.lgcns.bebee.chat.core.utils.StompDestinationUtils.toDestination;
 
 @Slf4j
 @Component
@@ -27,7 +27,7 @@ public class RedisMessageListener implements RedisPubSubListener<String, String>
     @Override
     public void message(String channel, String message) {
         try {
-            ChatMessage chatMessage = objectMapper.readValue(message, ChatMessage.class);
+            ChatMessageDTO chatMessage = objectMapper.readValue(message, ChatMessageDTO.class);
             log.info("Received message from channel: {}, message: {}", channel, chatMessage);
 
             // WebSocket을 통해 구독자들에게 메시지 전송

@@ -16,12 +16,12 @@ public class RedisChannelSubscriberTest {
     private RedisPubSubAsyncCommands<String, String> asyncCommands;
 
     @InjectMocks
-    private RedisChannelSubscriber redisSubscriptionManager;
+    private RedisChannelSubscriber redisChannelSubscriber;
 
     @Test
-    void subscribeToChatroom_성공(){
+    void subscribeToMember_성공(){
         // given
-        Long chatroomId = 123L;
+        Long memberId = 123L;
 
         RedisFuture<Void> future = mock(RedisFuture.class);
         when(asyncCommands.subscribe(anyString())).thenReturn(future);
@@ -29,7 +29,7 @@ public class RedisChannelSubscriberTest {
         when(future.exceptionally(any())).thenReturn(future);
 
         // when
-        redisSubscriptionManager.subscribeToChatroom(chatroomId);
+        redisChannelSubscriber.subscribeToMember(memberId);
 
         // then
         verify(asyncCommands).subscribe(any());
