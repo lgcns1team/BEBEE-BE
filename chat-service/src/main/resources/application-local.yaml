@@ -62,10 +62,6 @@ spring:
       uri: ${MONGODB_URI:mongodb://localhost:27017/bebee}
       auto-index-creation: ${AUTO_INDEX_CREATION:false}
 
-  # MongoDB 설정
-    mongodb:
-      database:
-
   # Flyway 설정
   flyway:
     # Flyway 활성화
