@@ -1,6 +1,6 @@
 package com.lgcns.bebee.chat.infrastructure.redis;
 
-import com.lgcns.bebee.chat.infrastructure.redis.dto.ChatMessage;
+import com.lgcns.bebee.chat.infrastructure.dto.ChatMessageDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -22,7 +22,7 @@ public class RedisMessageListenerTest {
     private ArgumentCaptor<String> channelCaptor;
 
     @Captor
-    private ArgumentCaptor<ChatMessage> messageCaptor;
+    private ArgumentCaptor<ChatMessageDTO> messageCaptor;
 
     @Test
     void message_성공(){
@@ -44,7 +44,7 @@ public class RedisMessageListenerTest {
         // then
         verify(messagingTemplate).convertAndSend(channelCaptor.capture(), messageCaptor.capture());
         assertThat(channelCaptor.getValue()).endsWith(channel);
-        assertThat(messageCaptor.getValue().getTextContent()).isEqualTo("Hello");
+        assertThat(messageCaptor.getValue().textContent()).isEqualTo("Hello");
     }
 
     @Test
@@ -57,6 +57,6 @@ public class RedisMessageListenerTest {
         redisSubscriber.message(channel, invalidJson);
 
         // then
-        verify(messagingTemplate, never()).convertAndSend(anyString(), any(ChatMessage.class));
+        verify(messagingTemplate, never()).convertAndSend(anyString(), any(ChatMessageDTO.class));
     }
 }

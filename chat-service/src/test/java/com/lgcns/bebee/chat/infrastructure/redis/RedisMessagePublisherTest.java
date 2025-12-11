@@ -1,7 +1,7 @@
 package com.lgcns.bebee.chat.infrastructure.redis;
 
 import com.lgcns.bebee.chat.domain.entity.Chat;
-import com.lgcns.bebee.chat.infrastructure.redis.dto.ChatMessage;
+import com.lgcns.bebee.chat.infrastructure.dto.ChatMessageDTO;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
 import org.junit.jupiter.api.Test;
@@ -34,14 +34,24 @@ public class RedisMessagePublisherTest {
         // given
         Long senderId = 1L;
         Long receiverId = 2L;
-        ChatMessage message = ChatMessage.builder()
-                .id(1L)
-                .chatroomId(1L)
-                .senderId(1L)
-                .textContent("Hello")
-                .type(Chat.ChatType.TEXT)
-                .createdAt(LocalDateTime.now())
-                .build();
+        Chat chat = Chat.create(
+                1L, // chatroomId
+                senderId, // senderId
+                "Hello", // textContent
+                "TEXT", // type
+                null, // attachments
+                null, // agreementId
+                null, // startDate
+                null, // endDate
+                null, // scheduleDays
+                null, // scheduleStartTimes
+                null, // scheduleEndTimes
+                null, // location
+                null, // unitPoints
+                null, // totalPoints
+                null, // matchStatus
+                LocalDateTime.now() // createdAt
+        );
 
         RedisFuture<Long> longFuture = mock(RedisFuture.class);
         RedisFuture<Void> voidFuture = mock(RedisFuture.class);
@@ -51,7 +61,7 @@ public class RedisMessagePublisherTest {
         when(voidFuture.exceptionally(any())).thenReturn(voidFuture);
 
         // when
-        redisPublisher.publishToMember(senderId, receiverId, message);
+        redisPublisher.publishToMember(senderId, receiverId, chat);
 
         // then
         verify(asyncCommands, times(2)).publish(channelCaptor.capture(), messageCaptor.capture());
