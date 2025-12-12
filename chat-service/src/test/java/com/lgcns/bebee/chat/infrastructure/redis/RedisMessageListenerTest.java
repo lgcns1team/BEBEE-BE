@@ -1,6 +1,7 @@
 package com.lgcns.bebee.chat.infrastructure.redis;
 
 import com.lgcns.bebee.chat.infrastructure.dto.ChatMessageDTO;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Redis 메시지 리스너 테스트")
 public class RedisMessageListenerTest {
     @Mock
     private SimpMessageSendingOperations messagingTemplate;

@@ -12,10 +12,12 @@ public record ChatMessageDTO(
         Long id,
         Long chatroomId,
         Long senderId,
+        Long receiverId,
         String textContent,
-        String type,
+        String chatType,
         List<String> attachments,
         Long agreementId,
+        String matchType,
         String startDate,
         String endDate,
         List<String> scheduleDays,
@@ -27,11 +29,12 @@ public record ChatMessageDTO(
         String matchStatus,
         LocalDateTime createdAt
 ){
-    public static ChatMessageDTO from(Chat chat) {
+    public static ChatMessageDTO from(Long receiverId, Chat chat) {
         Chat.MatchConfirmationContent matchConfirmation = chat.getMatchConfirmationContent();
 
         // MatchConfirmationContent가 없는 경우 처리
         Long agreementId = null;
+        String matchType = null;
         String startDate = null;
         String endDate = null;
         List<String> scheduleDays = null;
@@ -44,6 +47,7 @@ public record ChatMessageDTO(
 
         if (matchConfirmation != null) {
             agreementId = matchConfirmation.getAgreementId();
+            matchType = matchConfirmation.getType().name();
             startDate = matchConfirmation.getStartDate();
             endDate = matchConfirmation.getEndDate();
             location = matchConfirmation.getLocation();
@@ -77,10 +81,12 @@ public record ChatMessageDTO(
                 chat.getId(),
                 chat.getChatroomId(),
                 chat.getSenderId(),
+                receiverId,
                 chat.getTextContent(),
                 chat.getType().name(),
                 chat.getAttachments(),
                 agreementId,
+                matchType,
                 startDate,
                 endDate,
                 scheduleDays,

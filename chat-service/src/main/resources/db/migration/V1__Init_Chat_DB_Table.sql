@@ -9,14 +9,14 @@ DROP TABLE IF EXISTS chat_room_help_category;
 -- 1. Chatroom 테이블
 CREATE TABLE chatroom(
     chatroom_id BIGINT NOT NULL PRIMARY KEY,
-    disabled_id BIGINT NOT NULL,
-    helper_id BIGINT NOT NULL,
+    member1_id BIGINT NOT NULL,
+    member2_id BIGINT NOT NULL,
     title VARCHAR(50) NOT NULL,
 
     created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT uk_chatroom_members UNIQUE (disabled_id, helper_id)
+    CONSTRAINT uk_chatroom_members UNIQUE (member1_id, member2_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- 2. Chatroom Help Category 테이블

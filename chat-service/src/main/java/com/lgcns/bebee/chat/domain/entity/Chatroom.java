@@ -14,7 +14,7 @@ import lombok.*;
     uniqueConstraints = {
         @UniqueConstraint(
             name = "uk_chatroom_members",
-            columnNames = {"disabled_id", "helper_id"}
+            columnNames = {"member1_id", "member2_id"}
         )
     }
 )
@@ -23,12 +23,22 @@ public class Chatroom extends BaseTimeEntity {
     @Column(name = "chatroom_id")
     private Long id;
 
-    @Column(name = "disabled_id", nullable = false)
-    private Long disabledId;
+    @Column(name = "member1_id", nullable = false)
+    private Long member1Id;
 
-    @Column(name = "helper_id", nullable = false)
-    private Long helperId;
+    @Column(name = "member2_id", nullable = false)
+    private Long member2Id;
 
     @Column(length = 50)
     private String title;
+
+    public static Chatroom create(Long member1Id, Long member2Id){
+        Chatroom chatroom = new Chatroom();
+        chatroom.member1Id = member1Id;
+        chatroom.member2Id = member2Id;
+
+        // 게시글 제목을 title로 설정
+
+        return chatroom;
+    }
 }
