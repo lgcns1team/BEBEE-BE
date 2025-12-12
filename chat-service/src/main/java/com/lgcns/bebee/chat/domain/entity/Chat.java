@@ -40,7 +40,8 @@ public class Chat{
     private LocalDateTime createdAt;
 
     @Getter
-    public static class MatchConfirmationContent{
+    public static class MatchConfirmationContent {
+        private MatchType type;
         private Long agreementId;
         @Field("start_date") private String startDate;
         @Field("end_date") private String endDate;
@@ -76,6 +77,18 @@ public class Chat{
         }
     }
 
+    public enum MatchType{
+        DAY, TERM;
+
+        private static MatchType from(String type){
+            try{
+                return valueOf(type.toUpperCase());
+            }catch(IllegalArgumentException e){
+                throw ChatInvalidParamErrors.INVALID_CHAT_TYPE.toException();
+            }
+        }
+    }
+
     public enum MatchStatus{
         PENDING, REJECTED, ACCEPTED;
 
@@ -94,9 +107,10 @@ public class Chat{
      * @param chatroomId 채팅방 ID
      * @param senderId 발신자 ID
      * @param textContent 텍스트 내용
-     * @param type 채팅 타입 (String)
+     * @param chatType 채팅 타입 (String)
      * @param attachments 첨부파일 목록
      * @param agreementId 계약 ID (매칭 확인 시)
+     * @param matchType 매칭 타입 (String)
      * @param startDate 일정 시작일 (YYYY.MM.DD 형식)
      * @param endDate 일정 종료일 (YYYY.MM.DD 형식)
      * @param scheduleDays 일정 요일 목록
@@ -113,9 +127,10 @@ public class Chat{
             Long chatroomId,
             Long senderId,
             String textContent,
-            String type,
+            String chatType,
             List<String> attachments,
             Long agreementId,
+            String matchType,
             String startDate,
             String endDate,
             List<String> scheduleDays,
@@ -131,13 +146,14 @@ public class Chat{
         chat.chatroomId = chatroomId;
         chat.senderId = senderId;
         chat.textContent = textContent;
-        chat.type = ChatType.from(type);
+        chat.type = ChatType.from(chatType);
         chat.attachments = attachments;
 
         // MatchConfirmationContent가 필요한 경우에만 생성
         if (agreementId != null){
             MatchConfirmationContent content = new MatchConfirmationContent();
             content.agreementId = agreementId;
+            content.type = MatchType.from(matchType);
             content.startDate = startDate;
             content.endDate = endDate;
             content.schedule = (scheduleDays != null && !scheduleDays.isEmpty()) ? createSchedules(scheduleDays, scheduleStartTimes, scheduleEndTimes) : null;
