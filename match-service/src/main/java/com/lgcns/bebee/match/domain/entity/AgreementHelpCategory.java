@@ -18,4 +18,18 @@ public class AgreementHelpCategory {
 
     @Column(name = "help_category_id", insertable = false, updatable = false)
     private Long helpCategoryId;
+
+    public static AgreementHelpCategory create(Long helpCategoryId) {
+        AgreementHelpCategory category = new AgreementHelpCategory();
+        category.helpCategoryId = helpCategoryId;
+        category.id = new AgreementHelpCategoryId(null, helpCategoryId);
+        return category;
+    }
+
+    public void setAgreement(Agreement agreement) {
+        this.agreement = agreement;
+        if (this.id != null) {
+            this.id = new AgreementHelpCategoryId(agreement.getId(), this.helpCategoryId);
+        }
+    }
 }

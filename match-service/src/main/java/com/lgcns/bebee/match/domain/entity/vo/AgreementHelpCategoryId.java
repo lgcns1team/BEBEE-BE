@@ -24,5 +24,12 @@ public class AgreementHelpCategoryId {
         return Objects.hash(agreementId, helpCategoryId);
     }
 
-    public AgreementHelpCategoryId() {}
+    public AgreementHelpCategoryId() {
+
+    }
+
+    public AgreementHelpCategoryId(Long agreementId, Long helpCategoryId) {
+        this.agreementId = agreementId;
+        this.helpCategoryId = helpCategoryId;
+    }
 }
