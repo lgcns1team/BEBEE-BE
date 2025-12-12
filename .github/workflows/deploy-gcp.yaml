@@ -91,7 +91,7 @@ jobs:
           workload_identity_provider: '${{ secrets.GCP_WIF_PROVIDER }}'
           service_account: '${{ secrets.GCP_SA_EMAIL }}'
 
-      - name: Print OIDC token claims (Debug)
+      - name: Print OIDC token claims (Debug!!)
         if: steps.changes.outputs.src == 'true'
         run: |
           echo "Requesting OIDC token..."
