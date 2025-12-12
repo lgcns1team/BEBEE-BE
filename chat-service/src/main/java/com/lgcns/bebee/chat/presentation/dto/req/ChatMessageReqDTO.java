@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record ChatMessageReqDTO(
+    Long chatroomId,
     Long receiverId,
     String textContent,
-    String type,
+    String chatType,
     List<String> attachments,
     Long agreementId,
+    String matchType,
     String startDate,
     String endDate,
     List<String> scheduleDays,
@@ -21,6 +23,6 @@ public record ChatMessageReqDTO(
     LocalDateTime createdAt
 ) {
     public ChatMessageReqDTO{
-        if(type == null) type = "TEXT";
+        if(chatType == null) chatType = "TEXT";
     }
 }

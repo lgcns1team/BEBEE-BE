@@ -17,7 +17,7 @@ public class ChatController {
     private final SendChatMessageUseCase sendChatMessageUseCase;
 
     /**
-     * 클라이언트로부터 채팅 메시지를 수신하고 Redis를 통해 발행합니다.
+     * 클라이언트로부터 채팅 메시지를 수신하고 메시지 채널을 통해 발행합니다.
      *
      * @param request 채팅 메시지 요청
      * @param principal WebSocket 인증을 통해 주입된 MemberPrincipal 객체 (회원 ID 포함)
@@ -27,12 +27,13 @@ public class ChatController {
         Long senderId = Long.parseLong(principal.getName());
 
         SendChatMessageUseCase.Param param = new SendChatMessageUseCase.Param(
+                request.chatroomId(),
                 senderId,
                 request.receiverId(),
                 request.textContent(),
-                request.type(),
+                request.chatType(),
                 request.attachments(),
-                request.agreementId(), request.startDate(), request.endDate(),
+                request.agreementId(), request.matchType(), request.startDate(), request.endDate(),
                 request.scheduleDays(), request.scheduleStartTimes(), request.scheduleEndTimes(),
                 request.location(),
                 request.unitPoints(), request.totalPoints(),
