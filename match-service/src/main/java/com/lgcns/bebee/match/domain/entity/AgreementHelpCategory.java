@@ -1,8 +1,10 @@
 package com.lgcns.bebee.match.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementHelpCategoryId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity

@@ -71,7 +71,7 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
     @Getter
     @RequiredArgsConstructor
     public static class Param implements Params {
-        private final Long memberId;  // 작성자 확인용
+        private final Long memberId;
         private final Long matchId;
         private final EngagementType type;
         private final Boolean isVolunteer;
