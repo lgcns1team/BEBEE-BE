@@ -3,6 +3,7 @@ package com.lgcns.bebee.chat.infrastructure.redis;
 import com.lgcns.bebee.chat.domain.entity.Chat;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Redis 메시지 발행 테스트")
 public class RedisMessagePublisherTest {
     @Mock
     private RedisPubSubAsyncCommands<String, String> asyncCommands;
@@ -42,7 +44,8 @@ public class RedisMessagePublisherTest {
                 "Hello", // textContent
                 "TEXT", // type
                 null, // attachments
-                null, // agreementId
+                null, // agreementId,
+                null,
                 null, // startDate
                 null, // endDate
                 null, // scheduleDays
@@ -71,13 +74,24 @@ public class RedisMessagePublisherTest {
         List<String> capturedChannels = channelCaptor.getAllValues();
         List<String> capturedMessages = messageCaptor.getAllValues();
 
-
+        // 채널 검증
         assertThat(capturedChannels).hasSize(2);
-        assertThat(capturedChannels.get(0)).contains(String.valueOf(receiverId));
-        assertThat(capturedChannels.get(1)).contains(String.valueOf(senderId));
+        assertThat(capturedChannels.get(0)).isEqualTo("member:2"); // 수신자 채널
+        assertThat(capturedChannels.get(1)).isEqualTo("member:1"); // 발신자 채널
 
-        assertThat(channelCaptor.getValue()).isEqualTo("member:1");
-        assertThat(messageCaptor.getValue()).contains("\"textContent\":\"Hello\"");
+        // 메시지 내용 검증
+        String messageForReceiver = capturedMessages.get(0);
+        String messageForSender = capturedMessages.get(1);
+
+        // 수신자에게 보낸 메시지 - receiverId는 발신자(상대방)
+        assertThat(messageForReceiver).contains("\"textContent\":\"Hello\"");
+        assertThat(messageForReceiver).contains("\"senderId\":1");
+        assertThat(messageForReceiver).contains("\"receiverId\":2"); // 상대방 = senderId
+
+        // 발신자에게 보낸 메시지 - receiverId는 수신자(상대방)
+        assertThat(messageForSender).contains("\"textContent\":\"Hello\"");
+        assertThat(messageForSender).contains("\"senderId\":1");
+        assertThat(messageForSender).contains("\"receiverId\":1"); // 상대방 = receiverId
     }
 
     @Test
