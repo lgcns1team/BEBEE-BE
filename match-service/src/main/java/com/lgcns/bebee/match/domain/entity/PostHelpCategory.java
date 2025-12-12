@@ -16,7 +16,4 @@ public class PostHelpCategory extends BaseTimeEntity {
     @MapsId("postId")
     @JoinColumn(name = "post_id", nullable = false)
     private HelpRequestPost post;
-
-    @Column(nullable = false)
-    private Long helpCategoryId;
 }

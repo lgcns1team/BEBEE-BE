@@ -19,13 +19,13 @@ public class AgreementHelpCategory {
     @JoinColumn(name = "agreement_id")
     private Agreement agreement;
 
-    @Column(name = "help_category_id", insertable = false, updatable = false)
-    private Long helpCategoryId;
+//    @Column(name = "help_category_id", insertable = false, updatable = false)
+//    private Long helpCategoryId;
 
     public static AgreementHelpCategory create(Long helpCategoryId) {
         AgreementHelpCategory category = new AgreementHelpCategory();
         category.id = new AgreementHelpCategoryId(null, helpCategoryId);
-        category.helpCategoryId = helpCategoryId;
+//        category.helpCategoryId = helpCategoryId;
         return category;
     }
 
