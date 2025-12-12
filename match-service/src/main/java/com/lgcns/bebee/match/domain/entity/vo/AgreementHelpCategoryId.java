@@ -1,13 +1,23 @@
 package com.lgcns.bebee.match.domain.entity.vo;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 import java.util.Objects;
 
 @Embeddable
+@Getter
 public class AgreementHelpCategoryId {
     private Long agreementId;
     private Long helpCategoryId;
+
+    public void setAgreementId(Long agreementId) {
+        this.agreementId = agreementId;
+    }
+
+    public void setHelpCategoryId(Long helpCategoryId) {
+        this.helpCategoryId = helpCategoryId;
+    }
 
     @Override
     public boolean equals(Object o) {

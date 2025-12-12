@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AgreementHelpCategory {
     @EmbeddedId
@@ -23,15 +24,15 @@ public class AgreementHelpCategory {
 
     public static AgreementHelpCategory create(Long helpCategoryId) {
         AgreementHelpCategory category = new AgreementHelpCategory();
-        category.helpCategoryId = helpCategoryId;
         category.id = new AgreementHelpCategoryId(null, helpCategoryId);
+        category.helpCategoryId = helpCategoryId;
         return category;
     }
 
     public void setAgreement(Agreement agreement) {
         this.agreement = agreement;
-        if (this.id != null) {
-            this.id = new AgreementHelpCategoryId(agreement.getId(), this.helpCategoryId);
+        if (this.id != null && agreement != null) {
+            this.id.setAgreementId(agreement.getId());
         }
     }
 }

@@ -32,10 +32,10 @@ public class AgreementCreateReqDTO {
                 matchId,
                 type,
                 isVolunteer,
-                helpCategoryIds,
                 unitHoney,
                 totalHoney,
-                region
+                region,
+                helpCategoryIds
         );
     }
 }

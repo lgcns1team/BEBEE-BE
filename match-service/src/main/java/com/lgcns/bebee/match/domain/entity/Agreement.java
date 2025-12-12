@@ -50,15 +50,10 @@ public class Agreement extends BaseTimeEntity {
     private AgreementStatus status = AgreementStatus.BEFORE;
 
     @OneToMany(mappedBy = "agreement", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AgreementHelpCategory> helpCategories = new ArrayList<>();
+    private List<AgreementHelpCategory> helpCategories= new ArrayList<>();
 
     @Column
     private Boolean isVolunteer;
-
-    public void addHelpCategory(AgreementHelpCategory category) {
-        this.helpCategories.add(category);
-        category.setAgreement(this);
-    }
 
     public static Agreement create(
             Long matchId,
@@ -66,7 +61,8 @@ public class Agreement extends BaseTimeEntity {
             Boolean isVolunteer,
             Integer unitHoney,
             Integer totalHoney,
-            String region
+            String region,
+            List<Long> helpCategoryIds
     ) {
         Agreement agreement = new Agreement();
         agreement.matchId = matchId;
@@ -79,6 +75,13 @@ public class Agreement extends BaseTimeEntity {
         agreement.status = AgreementStatus.BEFORE;
         agreement.isDayComplete = Boolean.FALSE;
         agreement.isTermComplete = Boolean.FALSE;
+
+        helpCategoryIds.forEach(helpCategoryId -> {
+            AgreementHelpCategory agreementHelpCategory = AgreementHelpCategory.create(helpCategoryId);
+            agreement.helpCategories.add(agreementHelpCategory);
+            agreementHelpCategory.setAgreement(agreement);
+        });
+
         return agreement;
     }
 }

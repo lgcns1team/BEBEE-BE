@@ -9,11 +9,9 @@ import com.lgcns.bebee.match.domain.entity.AgreementHelpCategory;
 import com.lgcns.bebee.match.domain.entity.Match;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
 import com.lgcns.bebee.match.domain.repository.MatchRepository;
-import com.lgcns.bebee.match.domain.service.AgreementManagement;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.exception.MatchErrors;
-import com.lgcns.bebee.match.exception.MatchException;
 import com.lgcns.bebee.match.exception.MatchInvalidParamErrors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -29,7 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Param, CreateAgreementUseCase.Result> {
     private final AgreementRepository agreementRepository;
-    private final AgreementManagement agreementManagement;
     private final MatchRepository matchRepository;
 
     @Transactional
@@ -47,22 +44,17 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         }
 
         // 3. 매칭 확인서 생성
-        Agreement agreement = agreementManagement.createAgreement(
+        Agreement agreement = Agreement.create(
                 param.getMatchId(),
                 param.getType(),
                 param.getIsVolunteer(),
                 param.getUnitHoney(),
                 param.getTotalHoney(),
-                param.getRegion()
+                param.getRegion(),
+                param.getHelpCategoryIds()
         );
 
-        // 4. 도움 카테고리 추가
-        param.getHelpCategoryIds().forEach(categoryId -> {
-            AgreementHelpCategory category = AgreementHelpCategory.create(categoryId);
-            agreement.addHelpCategory(category);
-        });
-
-        // 5. 매칭 확인서 저장 (CascadeType.ALL로 helpCategories도 자동 저장)
+        // 4. 매칭 확인서 저장
         Agreement savedAgreement = agreementRepository.save(agreement);
 
         return Result.from(savedAgreement);
@@ -75,10 +67,10 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         private final Long matchId;
         private final EngagementType type;
         private final Boolean isVolunteer;
-        private final List<Long> helpCategoryIds;
         private final Integer unitHoney;
         private final Integer totalHoney;
         private final String region;
+        private final List<Long> helpCategoryIds;
 
         @Override
         public boolean validate() {
