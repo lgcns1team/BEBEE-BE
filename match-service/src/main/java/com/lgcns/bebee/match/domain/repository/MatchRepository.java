@@ -1,9 +1,7 @@
 package com.lgcns.bebee.match.domain.repository;
 
 import com.lgcns.bebee.match.domain.entity.Match;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
-public interface MatchRepository {
-    Optional<Match> findById(long id);
+public interface MatchRepository extends JpaRepository<Match, Long> {
 }
