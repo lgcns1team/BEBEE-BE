@@ -10,7 +10,7 @@
 # - ${환경변수명:기본값}: 환경 변수가 없을 때 기본값 사용
 
 server:
-  port: ${CHAT_SERVICE_PORT:8081}
+  port: ${CHAT_SERVICE_PORT:8080}
 
 spring:
   datasource:
