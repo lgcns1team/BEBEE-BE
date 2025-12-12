@@ -21,7 +21,7 @@ public class WebSocketEventListener {
     
     /**
      * 클라이언트가 STOMP SUBSCRIBE 프레임을 전송했을 때 호출됩니다.
-     * 구독 요청 시 해당 회원의 Redis 채널을 구독합니다.
+     * 구독 요청 시 해당 회원의 채널을 구독합니다.
      *
      * @param event STOMP SUBSCRIBE 이벤트
      */
