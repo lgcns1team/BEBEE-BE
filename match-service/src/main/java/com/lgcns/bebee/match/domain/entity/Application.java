@@ -15,8 +15,7 @@ public class Application extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-//    private HelpRequestPost post;
-    private Long post;
+    private HelpRequestPost post;
 
     @Column(nullable = false)
     private Long applicantId;
