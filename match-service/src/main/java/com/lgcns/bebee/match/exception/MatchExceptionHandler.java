@@ -14,7 +14,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class MatchExceptionHandler {
     private static final Map<MatchErrors, HttpStatus> STATUS_MAP = Map.of(
-            MatchErrors.NOT_FOUND, HttpStatus.NOT_FOUND
+            MatchErrors.MATCH_NOT_FOUND, HttpStatus.NOT_FOUND
     );
 
     /**
