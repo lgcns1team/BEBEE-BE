@@ -23,6 +23,7 @@ public class RedisMessagePublisher implements MessagePublisher {
     /**
      * 1:1 채팅 메시지를 발행합니다.
      * 발신자와 수신자 모두에게 메시지를 전송하여 멀티 디바이스를 지원합니다.
+     * 각 클라이언트는 상대방의 ID를 receiverId 필드로 받습니다.
      *
      * @param senderId 발신자 ID
      * @param receiverId 수신자 ID
@@ -30,15 +31,15 @@ public class RedisMessagePublisher implements MessagePublisher {
      */
     public void publishToMember(Long senderId, Long receiverId, Chat chat) {
         try {
-            ChatMessageDTO chatMessageDTO = ChatMessageDTO.from(chat);
+            // 수신자에게 보낼 메시지 - receiverId는 발신자(상대방)
+            ChatMessageDTO messageForReceiver = ChatMessageDTO.from(receiverId, chat);
+            String messageForReceiverJson = objectMapper.writeValueAsString(messageForReceiver);
+            publishToChannel(getMemberChannel(receiverId), messageForReceiverJson);
 
-            String messageJson = objectMapper.writeValueAsString(chatMessageDTO);
-
-            // 수신자에게 메시지 발행
-            publishToChannel(getMemberChannel(receiverId), messageJson);
-
-            // 발신자에게도 메시지 발행 (멀티 디바이스 지원)
-            publishToChannel(getMemberChannel(senderId), messageJson);
+            // 발신자에게 보낼 메시지 - receiverId는 수신자(상대방)
+            ChatMessageDTO messageForSender = ChatMessageDTO.from(senderId, chat);
+            String messageForSenderJson = objectMapper.writeValueAsString(messageForSender);
+            publishToChannel(getMemberChannel(senderId), messageForSenderJson);
 
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize chat message", e);
