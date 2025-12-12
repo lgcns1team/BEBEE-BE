@@ -1,4 +1,4 @@
-package com.lgcns.bebee.chatservice;
+package com.lgcns.bebee.chat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
