@@ -14,7 +14,7 @@ public enum ChatErrors implements ErrorInfo {
 
     @Override
     public String getDesc() {
-        return "";
+        return this.desc;
     }
 
     @Override
