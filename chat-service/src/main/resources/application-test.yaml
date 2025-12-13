@@ -85,6 +85,22 @@ spring:
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
 
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+  api:
+    host: "${SPRINGDOC_API_HOST:http://localhost:8081}"
+    desc: "${SPRINGDOC_API_DESC:로컬 서버}"
+
 tsid:
   node:
     id: ${NODE_ID:0}
