@@ -41,10 +41,12 @@ public class ChatroomManagement {
 
         // chatroomId가 없으면 senderId와 receiverId로 채팅방 조회 또는 생성
         // member1은 항상 작은 ID, member2는 큰 ID로 정렬하여 일관성 유지
-        Long member1 = Math.min(senderId, receiverId);
-        Long member2 = Math.max(senderId, receiverId);
+        Long member1Id = Math.min(senderId, receiverId);
+        Long member2Id = Math.max(senderId, receiverId);
 
-        return chatroomRepository.findChatroom(member1, member2)
-                .orElseGet(() -> Chatroom.create(member1, member2));
+        return chatroomRepository.findChatroom(member1Id, member2Id)
+                .orElseGet(() ->
+                        chatroomRepository.save(Chatroom.create(member1Id, member2Id))
+                );
     }
 }

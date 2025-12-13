@@ -3,7 +3,6 @@ package com.lgcns.bebee.chat.domain.repository;
 import com.lgcns.bebee.chat.domain.entity.Chatroom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 

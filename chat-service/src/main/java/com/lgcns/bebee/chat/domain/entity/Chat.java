@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Chat{
     @Id
-    @Tsid
     private Long id;
 
     @Field(name = "chatroom_id")
