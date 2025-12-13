@@ -28,7 +28,7 @@ public class SendChatMessageUseCase implements UseCase<SendChatMessageUseCase.Pa
         Chatroom chatroom = chatroomManagement.openChatroom(param.chatroomId, param.senderId, param.receiverId);
 
         Chat chat = Chat.create(
-                param.chatroomId,
+                chatroom.getId(),
                 param.senderId,
                 param.textContent,
                 param.chatType,
