@@ -31,3 +31,5 @@ CREATE TABLE chatroom_help_category(
     CONSTRAINT `FK_chatroom_help_category_TO_chatroom` FOREIGN KEY (`help_category_id`) REFERENCES `chatroom` (`chatroom_id`) #,
     # CONSTRAINT `FK_chatroom_help_category_TO_chat_help_category_sync` FOREIGN KEY (`help_category_id`) REFERENCES `chat_help_category_sync` (`help_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+SET FOREIGN_KEY_CHECKS = 1;
