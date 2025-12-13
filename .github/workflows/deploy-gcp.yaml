@@ -120,3 +120,6 @@ jobs:
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             REDIS_HOST=${{ secrets.REDIS_HOST }}
             REDIS_PORT=6379
+            SPRINGDOC_API_HOST=${{ secrets.SERVER_HOST}}
+            SPRINGDOC_API_DESC="임시 GCP 개발 서버"
+            

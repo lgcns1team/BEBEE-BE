@@ -45,7 +45,7 @@ spring:
         hibernate:
           # SQL 쿼리 포맷팅 설정 (환경 변수에서 가져오거나 기본값 true 사용)
           # 가독성을 위해 들여쓰기 적용
-          format_sql: ${FORMAT_SQL:true}show
+          format_sql: ${FORMAT_SQL:true}
 
   data:
     # Redis 설정
@@ -84,6 +84,23 @@ spring:
     placeholder-replacement: false
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+  api:
+    host: "${SPRINGDOC_API_HOST:http://localhost:8081}"
+    desc: "${SPRINGDOC_API_DESC:로컬 서버}"
+
 
 # TSID Node 아이디
 tsid:
