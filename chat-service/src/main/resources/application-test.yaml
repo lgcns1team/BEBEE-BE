@@ -59,7 +59,7 @@ spring:
 
     # Mongodb 설정
     mongodb:
-      uri: ${MONGODB_URI:mongodb://bebee:bebee1234@${MONGODB_HOST:mongo-db}:27017/bebee?authSource=admin}
+      uri: ${MONGODB_URI:mongodb://${MONGODB_USERNAME:bebee}:${MONGODB_PASSWORD:bebee1234}@${MONGODB_HOST:mongo-db}:27017/bebee?authSource=admin}
       auto-index-creation: ${AUTO_INDEX_CREATION:false}
 
   # Flyway 설정ㅇ
@@ -84,6 +84,10 @@ spring:
     placeholder-replacement: false
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
+
+tsid:
+  node:
+    id: ${NODE_ID:0}
 
 # WebSocket Handshake를 허용할 클라이언트 출처 패턴 목록
 websocket:
