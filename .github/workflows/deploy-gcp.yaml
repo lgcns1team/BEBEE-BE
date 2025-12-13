@@ -118,6 +118,7 @@ jobs:
             DB_PORT=3306
             DB_USERNAME=${{ secrets.DB_USERNAME }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            MONGODB_HOST=${{ secrets.MONGODB_HOST }}
             REDIS_HOST=${{ secrets.REDIS_HOST }}
             REDIS_PORT=6379
             SPRINGDOC_API_HOST=${{ secrets.SERVER_HOST}}
