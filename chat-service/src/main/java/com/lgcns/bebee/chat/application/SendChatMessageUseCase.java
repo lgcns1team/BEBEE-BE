@@ -3,6 +3,7 @@ package com.lgcns.bebee.chat.application;
 import com.lgcns.bebee.chat.application.client.MessagePublisher;
 import com.lgcns.bebee.chat.domain.entity.Chat;
 import com.lgcns.bebee.chat.domain.entity.Chatroom;
+import com.lgcns.bebee.chat.domain.repository.ChatRepository;
 import com.lgcns.bebee.chat.domain.service.ChatroomManagement;
 import com.lgcns.bebee.common.application.Params;
 import com.lgcns.bebee.common.application.UseCase;
@@ -17,7 +18,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SendChatMessageUseCase implements UseCase<SendChatMessageUseCase.Param, Void> {
     private final MessagePublisher messagePublisher;
+
     private final ChatroomManagement chatroomManagement;
+    private final ChatRepository chatRepository;
 
     @Override
     @Transactional
@@ -40,6 +43,8 @@ public class SendChatMessageUseCase implements UseCase<SendChatMessageUseCase.Pa
 
         // Redis를 통해 발신자와 수신자에게 메시지 발행
         messagePublisher.publishToMember(param.senderId, param.receiverId, chat);
+
+        chatRepository.save(chat);
 
         return null;
     }
