@@ -1,7 +1,7 @@
 package com.lgcns.bebee.chat.presentation;
 
 import com.lgcns.bebee.chat.application.SendChatMessageUseCase;
-import com.lgcns.bebee.chat.presentation.dto.req.ChatMessageReqDTO;
+import com.lgcns.bebee.chat.presentation.dto.req.ChatMessageSendReqDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,7 +13,7 @@ import java.security.Principal;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class ChatController {
+public class ChatStreamController {
     private final SendChatMessageUseCase sendChatMessageUseCase;
 
     /**
@@ -23,7 +23,7 @@ public class ChatController {
      * @param principal WebSocket 인증을 통해 주입된 MemberPrincipal 객체 (회원 ID 포함)
      */
     @MessageMapping("/chats")
-    public void sendMessage(@Payload ChatMessageReqDTO request, Principal principal) {
+    public void sendMessage(@Payload ChatMessageSendReqDTO request, Principal principal) {
         Long senderId = Long.parseLong(principal.getName());
 
         SendChatMessageUseCase.Param param = new SendChatMessageUseCase.Param(

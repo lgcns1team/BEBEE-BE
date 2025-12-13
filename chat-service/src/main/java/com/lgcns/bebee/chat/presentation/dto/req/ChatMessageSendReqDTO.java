@@ -3,7 +3,7 @@ package com.lgcns.bebee.chat.presentation.dto.req;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record ChatMessageReqDTO(
+public record ChatMessageSendReqDTO(
     Long chatroomId,
     Long receiverId,
     String textContent,
@@ -22,7 +22,7 @@ public record ChatMessageReqDTO(
     String matchStatus,
     LocalDateTime createdAt
 ) {
-    public ChatMessageReqDTO{
+    public ChatMessageSendReqDTO {
         if(chatType == null) chatType = "TEXT";
     }
 }
