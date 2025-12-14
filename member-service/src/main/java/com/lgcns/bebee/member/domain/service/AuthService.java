@@ -11,6 +11,7 @@ import com.lgcns.bebee.member.domain.entity.vo.Role;
 import com.lgcns.bebee.member.domain.repository.MemberRepository;
 import com.lgcns.bebee.member.infrastructure.security.JwtTokenProvider;
 import com.lgcns.bebee.member.infrastructure.security.JwtTokenProvider.TokenPair;
+import com.lgcns.bebee.member.infrastructure.security.RefreshTokenBlacklistService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,7 @@ public class AuthService {
     private final PasswordPolicyValidator passwordPolicyValidator;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenBlacklistService refreshTokenBlacklistService;
 
     @Transactional
     public TokenPair signup(SignupCommand command) {
@@ -74,11 +76,26 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public TokenPair reissue(String refreshToken) {
+        // 블랙리스트 확인
+        if (refreshTokenBlacklistService.isBlacklisted(refreshToken)) {
+            throw AuthErrors.INVALID_CREDENTIALS.toException();
+        }
+
         var claims = jwtTokenProvider.parseClaims(refreshToken);
         String email = claims.getSubject();
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(AuthErrors.INVALID_CREDENTIALS::toException);
         return jwtTokenProvider.reissueTokens(member, refreshToken);
+    }
+
+    /**
+     * 로그아웃 처리
+     * 리프레시 토큰을 블랙리스트에 추가하여 재사용을 방지합니다.
+     *
+     * @param refreshToken 블랙리스트에 추가할 리프레시 토큰
+     */
+    public void logout(String refreshToken) {
+        refreshTokenBlacklistService.addToBlacklist(refreshToken);
     }
 
     private Role parseRole(String role) {
