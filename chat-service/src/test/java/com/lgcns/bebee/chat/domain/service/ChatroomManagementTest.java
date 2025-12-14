@@ -2,8 +2,8 @@ package com.lgcns.bebee.chat.domain.service;
 
 import com.lgcns.bebee.chat.core.exception.ChatException;
 import com.lgcns.bebee.chat.domain.entity.Chatroom;
+import com.lgcns.bebee.chat.domain.entity.MemberSync;
 import com.lgcns.bebee.chat.domain.repository.ChatroomRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,16 +29,6 @@ class ChatroomManagementTest {
     @InjectMocks
     private ChatroomManagement chatroomManagement;
 
-    private Chatroom chatroom;
-
-    @BeforeEach
-    void setUp() {
-        chatroom = Chatroom.builder()
-                .member1Id(1L)
-                .member2Id(2L)
-                .build();
-    }
-
     @Nested
     @DisplayName("getExistingChatroom 테스트")
     class GetExistingChatroomTest {
@@ -48,6 +38,7 @@ class ChatroomManagementTest {
         void success() {
             // given
             Long chatroomId = 1L;
+            Chatroom chatroom = mock(Chatroom.class);
             when(chatroomRepository.findById(chatroomId)).thenReturn(Optional.of(chatroom));
 
             // when
@@ -74,6 +65,47 @@ class ChatroomManagementTest {
     }
 
     @Nested
+    @DisplayName("findChatroom 테스트")
+    class FindChatroomTest {
+
+        @Test
+        @DisplayName("chatroomId와 memberId들로 채팅방을 성공적으로 조회한다")
+        void success() {
+            // given
+            Long chatroomId = 1L;
+            Long currentMemberId = 10L;
+            Long otherMemberId = 20L;
+            Chatroom chatroom = mock(Chatroom.class);
+            when(chatroomRepository.findChatroomWithMembers(chatroomId, currentMemberId, otherMemberId))
+                    .thenReturn(Optional.of(chatroom));
+
+            // when
+            Chatroom result = chatroomManagement.findChatroom(chatroomId, currentMemberId, otherMemberId);
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result).isEqualTo(chatroom);
+            verify(chatroomRepository, times(1)).findChatroomWithMembers(chatroomId, currentMemberId, otherMemberId);
+        }
+
+        @Test
+        @DisplayName("채팅방이 존재하지 않으면 예외를 발생시킨다")
+        void throwsException_WhenChatroomNotFound() {
+            // given
+            Long chatroomId = 999L;
+            Long currentMemberId = 10L;
+            Long otherMemberId = 20L;
+            when(chatroomRepository.findChatroomWithMembers(chatroomId, currentMemberId, otherMemberId))
+                    .thenReturn(Optional.empty());
+
+            // when & then
+            assertThatThrownBy(() -> chatroomManagement.findChatroom(chatroomId, currentMemberId, otherMemberId))
+                    .isInstanceOf(ChatException.class);
+            verify(chatroomRepository, times(1)).findChatroomWithMembers(chatroomId, currentMemberId, otherMemberId);
+        }
+    }
+
+    @Nested
     @DisplayName("openChatroom 테스트")
     class OpenChatroomTest {
 
@@ -82,78 +114,67 @@ class ChatroomManagementTest {
         void success_WithChatroomId() {
             // given
             Long chatroomId = 1L;
-            Long senderId = 100L;
-            Long receiverId = 200L;
+            MemberSync sender = mock(MemberSync.class);
+            MemberSync receiver = mock(MemberSync.class);
+            Chatroom chatroom = mock(Chatroom.class);
             when(chatroomRepository.findById(chatroomId)).thenReturn(Optional.of(chatroom));
 
             // when
-            Chatroom result = chatroomManagement.openChatroom(chatroomId, senderId, receiverId);
+            Chatroom result = chatroomManagement.openChatroom(chatroomId, sender, receiver);
 
             // then
             assertThat(result).isNotNull();
             assertThat(result).isEqualTo(chatroom);
             verify(chatroomRepository, times(1)).findById(chatroomId);
-            verify(chatroomRepository, never()).findChatroom(any(), any());
-            verify(chatroomRepository, never()).save(any());
+            verify(chatroomRepository, never()).findChatroom(any(MemberSync.class), any(MemberSync.class));
+            verify(chatroomRepository, never()).save(any(MemberSync.class), any(MemberSync.class));
         }
 
         @Test
         @DisplayName("chatroomId가 null이고 기존 채팅방이 있으면 기존 채팅방을 반환한다")
         void success_WithoutChatroomId_ExistingChatroom() {
             // given
-            Long senderId = 1L;
-            Long receiverId = 2L;
-            Long member1 = Math.min(senderId, receiverId);
-            Long member2 = Math.max(senderId, receiverId);
-            when(chatroomRepository.findChatroom(member1, member2)).thenReturn(Optional.of(chatroom));
+            MemberSync sender = mock(MemberSync.class);
+            MemberSync receiver = mock(MemberSync.class);
+
+            Chatroom chatroom = mock(Chatroom.class);
+            when(chatroomRepository.findChatroom(sender, receiver)).thenReturn(Optional.of(chatroom));
 
             // when
-            Chatroom result = chatroomManagement.openChatroom(null, senderId, receiverId);
+            Chatroom result = chatroomManagement.openChatroom(null, sender, receiver);
 
             // then
             assertThat(result).isNotNull();
             assertThat(result).isEqualTo(chatroom);
-            verify(chatroomRepository, times(1)).findChatroom(member1, member2);
-            verify(chatroomRepository, never()).save(any());
+            verify(chatroomRepository, times(1)).findChatroom(sender, receiver);
+            verify(chatroomRepository, never()).save(any(MemberSync.class), any(MemberSync.class));
         }
 
         @Test
         @DisplayName("chatroomId가 null이고 기존 채팅방이 없으면 새 채팅방을 생성한다")
         void success_WithoutChatroomId_NewChatroom() {
             // given
-            Long senderId = 1L;
-            Long receiverId = 2L;
-            Long member1 = Math.min(senderId, receiverId);
-            Long member2 = Math.max(senderId, receiverId);
-            when(chatroomRepository.findChatroom(member1, member2)).thenReturn(Optional.empty());
+            MemberSync sender = mock(MemberSync.class);
+            MemberSync receiver = mock(MemberSync.class);
+            when(sender.getId()).thenReturn(1L);
+            when(receiver.getId()).thenReturn(2L);
+
+            Chatroom newChatroom = mock(Chatroom.class);
+            when(newChatroom.getMember1()).thenReturn(sender);
+            when(newChatroom.getMember2()).thenReturn(receiver);
+
+            when(chatroomRepository.findChatroom(sender, receiver)).thenReturn(Optional.empty());
+            when(chatroomRepository.save(sender, receiver)).thenReturn(newChatroom);
 
             // when
-            Chatroom result = chatroomManagement.openChatroom(null, senderId, receiverId);
+            Chatroom result = chatroomManagement.openChatroom(null, sender, receiver);
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getMember1Id()).isEqualTo(member1);
-            assertThat(result.getMember2Id()).isEqualTo(member2);
-            verify(chatroomRepository, times(1)).findChatroom(member1, member2);
-        }
-
-        @Test
-        @DisplayName("senderId와 receiverId의 순서와 관계없이 일관된 member1, member2를 유지한다")
-        void maintainsConsistentMemberOrder() {
-            // given
-            Long senderId = 2L;
-            Long receiverId = 1L;
-            Long member1 = 1L; // 작은 값
-            Long member2 = 2L; // 큰 값
-            when(chatroomRepository.findChatroom(member1, member2)).thenReturn(Optional.empty());
-
-            // when
-            Chatroom result = chatroomManagement.openChatroom(null, senderId, receiverId);
-
-            // then
-            assertThat(result.getMember1Id()).isEqualTo(member1);
-            assertThat(result.getMember2Id()).isEqualTo(member2);
-            verify(chatroomRepository, times(1)).findChatroom(member1, member2);
+            assertThat(result.getMember1().getId()).isEqualTo(1L);
+            assertThat(result.getMember2().getId()).isEqualTo(2L);
+            verify(chatroomRepository, times(1)).findChatroom(sender, receiver);
+            verify(chatroomRepository, times(1)).save(sender, receiver);
         }
     }
 }
