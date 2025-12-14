@@ -1,6 +1,7 @@
 package com.lgcns.bebee.chat.domain.service;
 
 import com.lgcns.bebee.chat.core.exception.ChatException;
+import com.lgcns.bebee.chat.domain.entity.Chat;
 import com.lgcns.bebee.chat.domain.entity.Chatroom;
 import com.lgcns.bebee.chat.domain.entity.MemberSync;
 import com.lgcns.bebee.chat.domain.repository.ChatroomRepository;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -175,6 +177,177 @@ class ChatroomManagementTest {
             assertThat(result.getMember2().getId()).isEqualTo(2L);
             verify(chatroomRepository, times(1)).findChatroom(sender, receiver);
             verify(chatroomRepository, times(1)).save(sender, receiver);
+        }
+    }
+
+    @Nested
+    @DisplayName("updateLastMessage 테스트")
+    class UpdateLastMessageTest {
+
+        @Test
+        @DisplayName("TEXT 타입 - 31자 미만의 텍스트는 그대로 저장된다")
+        void success_TextType_LessThan31Characters() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            String textContent = "안녕하세요, 반갑습니다!";
+            Chat chat = Chat.create(
+                    1L, 100L, textContent, "TEXT", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, times(1)).updateLastMessage(textContent);
+        }
+
+        @Test
+        @DisplayName("TEXT 타입 - 정확히 31자인 텍스트는 그대로 저장된다")
+        void success_TextType_Exactly31Characters() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            String textContent = "1234567890123456789012345678901"; // 31자
+            Chat chat = Chat.create(
+                    1L, 100L, textContent, "TEXT", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, times(1)).updateLastMessage(textContent);
+        }
+
+        @Test
+        @DisplayName("TEXT 타입 - 31자 초과 텍스트는 31자로 잘려서 저장된다")
+        void success_TextType_MoreThan31Characters() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            String textContent = "12345678901234567890123456789012345"; // 35자
+            String expected = "1234567890123456789012345678901"; // 앞 31자
+            Chat chat = Chat.create(
+                    1L, 100L, textContent, "TEXT", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, times(1)).updateLastMessage(expected);
+        }
+
+        @Test
+        @DisplayName("TEXT 타입 - null 텍스트는 빈 문자열로 저장된다")
+        void success_TextType_NullContent() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            Chat chat = Chat.create(
+                    1L, 100L, null, "TEXT", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, times(1)).updateLastMessage("");
+        }
+
+        @Test
+        @DisplayName("TEXT 타입 - 빈 문자열은 빈 문자열로 저장된다")
+        void success_TextType_EmptyContent() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            Chat chat = Chat.create(
+                    1L, 100L, "", "TEXT", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, times(1)).updateLastMessage("");
+        }
+
+        @Test
+        @DisplayName("IMAGE 타입 - '(이미지)'로 저장된다")
+        void success_ImageType() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            Chat chat = Chat.create(
+                    1L, 100L, null, "IMAGE", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, times(1)).updateLastMessage("(이미지)");
+        }
+
+        @Test
+        @DisplayName("MATCH_CONFIRMATION 타입 - '(매칭 확인서)'로 저장된다")
+        void success_MatchConfirmationType() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            Chat chat = Chat.create(
+                    1L, 100L, null, "MATCH_CONFIRMATION", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, times(1)).updateLastMessage("(매칭 확인서)");
+        }
+
+        @Test
+        @DisplayName("MATCH_SUCCESS 타입 - 업데이트하지 않는다")
+        void success_MatchSuccessType_DoesNotUpdate() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            Chat chat = Chat.create(
+                    1L, 100L, null, "MATCH_SUCCESS", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, never()).updateLastMessage(any());
+        }
+
+        @Test
+        @DisplayName("MATCH_FAILURE 타입 - 업데이트하지 않는다")
+        void success_MatchFailureType_DoesNotUpdate() {
+            // given
+            Chatroom chatroom = mock(Chatroom.class);
+            Chat chat = Chat.create(
+                    1L, 100L, null, "MATCH_FAILURE", null,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, LocalDateTime.now()
+            );
+
+            // when
+            chatroomManagement.updateLastMessage(chatroom, chat);
+
+            // then
+            verify(chatroom, never()).updateLastMessage(any());
         }
     }
 }
