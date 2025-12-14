@@ -91,19 +91,6 @@ jobs:
           workload_identity_provider: '${{ secrets.GCP_WIF_PROVIDER }}'
           service_account: '${{ secrets.GCP_SA_EMAIL }}'
 
-      - name: Print OIDC token claims (Debug!!)
-        if: steps.changes.outputs.src == 'true'
-        run: |
-          echo "Requesting OIDC token..."
-          TOKEN_RESPONSE=$(curl -H "Authorization: Bearer $ACTIONS_ID_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=cloud-run")
-          
-          ID_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r '.id_token')
-          HEADER=$(echo "$ID_TOKEN" | cut -d'.' -f1 | base64 -d 2>/dev/null || true)
-          PAYLOAD=$(echo "$ID_TOKEN" | cut -d'.' -f2 | base64 -d 2>/dev/null || true)
-
-          echo "HEADER: $HEADER"
-          echo "PAYLOAD: $PAYLOAD"
-
       - name: Deploy to Cloud Run
         if: steps.changes.outputs.src == 'true'
         uses: google-github-actions/deploy-cloudrun@v2
