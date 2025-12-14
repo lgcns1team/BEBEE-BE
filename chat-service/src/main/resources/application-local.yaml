@@ -35,7 +35,7 @@ spring:
       # create: 애플리케이션 시작 시 테이블을 새로 생성 (기존 데이터 삭제)
       # validate: 엔티티와 데이터베이스 스키마 일치 여부만 검증
       # none: 자동 스키마 생성 비활성화
-      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+      ddl-auto: ${HIBERNATE_DDL_AUTO:none}
 
       # SQL 쿼리 로그 출력 설정 (환경 변수에서 가져오거나 기본값 true 사용)
       show-sql: ${SHOW_SQL:true}

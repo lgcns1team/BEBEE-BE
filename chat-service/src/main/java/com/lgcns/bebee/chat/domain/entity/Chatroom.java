@@ -23,19 +23,21 @@ public class Chatroom extends BaseTimeEntity {
     @Column(name = "chatroom_id")
     private Long id;
 
-    @Column(name = "member1_id", nullable = false)
-    private Long member1Id;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member1_id")
+    private MemberSync member1;
 
-    @Column(name = "member2_id", nullable = false)
-    private Long member2Id;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member2_id")
+    private MemberSync member2;
 
     @Column(length = 50)
     private String title;
 
-    public static Chatroom create(Long member1Id, Long member2Id){
+    public static Chatroom create(MemberSync member1, MemberSync member2){
         Chatroom chatroom = new Chatroom();
-        chatroom.member1Id = member1Id;
-        chatroom.member2Id = member2Id;
+        chatroom.member1 = member1;
+        chatroom.member2 = member2;
 
         // 게시글 제목을 title로 설정
 
