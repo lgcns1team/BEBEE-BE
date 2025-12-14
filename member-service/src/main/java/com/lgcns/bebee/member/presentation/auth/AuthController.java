@@ -61,7 +61,17 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse response) {
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 쿠키에서 리프레시 토큰 추출 (없어도 로그아웃은 처리)
+        try {
+            String refreshToken = extractRefreshToken(request);
+            authService.logout(refreshToken);
+        } catch (Exception e) {
+            // 리프레시 토큰이 없거나 유효하지 않아도 로그아웃은 처리
+            // (이미 만료된 토큰이거나 쿠키가 없는 경우)
+        }
+
+        // 쿠키 만료
         ResponseCookie expired = ResponseCookie.from(jwtProperties.getRefreshCookieName(), "")
                 .httpOnly(true)
                 .secure(jwtProperties.isRefreshCookieSecure())
