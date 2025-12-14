@@ -2,6 +2,7 @@ package com.lgcns.bebee.chat.domain.service;
 
 import com.lgcns.bebee.chat.core.exception.ChatErrors;
 import com.lgcns.bebee.chat.domain.entity.Chatroom;
+import com.lgcns.bebee.chat.domain.entity.MemberSync;
 import com.lgcns.bebee.chat.domain.repository.ChatroomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class ChatroomManagement {
     private final ChatroomRepository chatroomRepository;
 
     /**
-     * 기존 채팅방을 조회합니다.
+     * ID로 채팅방을 조회합니다.
      *
      * @param chatroomId 조회할 채팅방 ID
      * @return 조회된 채팅방 엔티티
@@ -25,28 +26,43 @@ public class ChatroomManagement {
     }
 
     /**
-     * 채팅방을 검증하거나 생성합니다.
+     * 채팅방을 조회합니다.
+     * - chatroomId로 조회하거나
+     * - member1Id, member2Id로 조회
+     *
+     * @param chatroomId 채팅방 ID (nullable)
+     * @param currentMemberId 현재 회원 ID (nullable)
+     * @param otherMemberId 상대 회원 ID (nullable)
+     * @return 조회된 채팅방 엔티티
+     * @throws com.lgcns.bebee.chat.core.exception.ChatException 채팅방이 존재하지 않을 경우
+     */
+    @Transactional(readOnly = true)
+    public Chatroom findChatroom(Long chatroomId, Long currentMemberId, Long otherMemberId) {
+        return chatroomRepository.findChatroomWithMembers(chatroomId, currentMemberId, otherMemberId)
+                .orElseThrow(ChatErrors.CHATROOM_NOT_FOUND::toException);
+    }
+
+    /**
+     * 채팅방을 열거나 생성합니다.
+     * - chatroomId가 있으면 해당 채팅방을 조회합니다.
+     * - chatroomId가 없으면 sender와 receiver로 채팅방을 찾거나 새로 생성합니다.
      *
      * @param chatroomId 기존 채팅방 ID (nullable)
-     * @param senderId 발신자 ID
-     * @param receiverId 수신자 ID
-     * @return 검증되거나 생성된 채팅방
+     * @param sender 발신자
+     * @param receiver 수신자
+     * @return 조회되거나 생성된 채팅방
      */
     @Transactional
-    public Chatroom openChatroom(Long chatroomId, Long senderId, Long receiverId) {
-        // chatroomId가 있으면 Chatroom 조회
+    public Chatroom openChatroom(Long chatroomId, MemberSync sender, MemberSync receiver) {
+        // chatroomId가 있으면 기존 채팅방 조회
         if (chatroomId != null) {
             return getExistingChatroom(chatroomId);
         }
 
-        // chatroomId가 없으면 senderId와 receiverId로 채팅방 조회 또는 생성
-        // member1은 항상 작은 ID, member2는 큰 ID로 정렬하여 일관성 유지
-        Long member1Id = Math.min(senderId, receiverId);
-        Long member2Id = Math.max(senderId, receiverId);
-
-        return chatroomRepository.findChatroom(member1Id, member2Id)
+        // sender와 receiver로 채팅방을 찾거나 생성
+        return chatroomRepository.findChatroom(sender, receiver)
                 .orElseGet(() ->
-                        chatroomRepository.save(Chatroom.create(member1Id, member2Id))
+                        chatroomRepository.save(sender, receiver)
                 );
     }
 }
