@@ -32,6 +32,9 @@ dependencies {
     // Hibernate 유틸리티 - TSID 를 포함한 JPA 매핑 확장
     api "io.hypersistence:hypersistence-utils-hibernate-63:3.12.0"
 
+    // P6Spy - SQL 로깅 및 파라미터 바인딩 라이브러리
+    api 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
+
     // MongoDB BSON - ObjectId 벤치마크 테스트
     implementation "org.mongodb:bson:5.6.1"
 

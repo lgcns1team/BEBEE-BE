@@ -52,6 +52,8 @@ public class SendChatMessageUseCase implements UseCase<SendChatMessageUseCase.Pa
 
         chatRepository.save(chat);
 
+        chatroomManagement.updateLastMessage(chatroom, chat);
+
         return null;
     }
 

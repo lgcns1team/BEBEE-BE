@@ -34,6 +34,9 @@ public class Chatroom extends BaseTimeEntity {
     @Column(length = 50)
     private String title;
 
+    @Column(length = 31)
+    private String lastMessage;
+
     public static Chatroom create(MemberSync member1, MemberSync member2){
         Chatroom chatroom = new Chatroom();
         chatroom.member1 = member1;
@@ -42,5 +45,9 @@ public class Chatroom extends BaseTimeEntity {
         // 게시글 제목을 title로 설정
 
         return chatroom;
+    }
+
+    public void updateLastMessage(String lastMessage){
+        this.lastMessage = lastMessage;
     }
 }

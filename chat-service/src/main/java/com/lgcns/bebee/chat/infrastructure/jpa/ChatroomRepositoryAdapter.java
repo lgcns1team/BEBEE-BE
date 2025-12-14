@@ -5,8 +5,10 @@ import com.lgcns.bebee.chat.domain.entity.MemberSync;
 import com.lgcns.bebee.chat.domain.repository.ChatroomRepository;
 import com.lgcns.bebee.chat.infrastructure.jpa.dto.ChatroomSearchCond;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -55,5 +57,10 @@ public class ChatroomRepositoryAdapter implements ChatroomRepository {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public List<Chatroom> findChatroomsWithCursor(MemberSync member, Long lastChatroomId, int limit) {
+        return chatroomJpaRepository.findByMemberWithCursor(member, lastChatroomId, Limit.of(limit));
     }
 }

@@ -1,6 +1,7 @@
 package com.lgcns.bebee.chat.domain.service;
 
 import com.lgcns.bebee.chat.core.exception.ChatErrors;
+import com.lgcns.bebee.chat.domain.entity.Chat;
 import com.lgcns.bebee.chat.domain.entity.Chatroom;
 import com.lgcns.bebee.chat.domain.entity.MemberSync;
 import com.lgcns.bebee.chat.domain.repository.ChatroomRepository;
@@ -62,7 +63,46 @@ public class ChatroomManagement {
         // sender와 receiver로 채팅방을 찾거나 생성
         return chatroomRepository.findChatroom(sender, receiver)
                 .orElseGet(() ->
-                        chatroomRepository.save(sender, receiver)
-                );
+                    chatroomRepository.save(sender, receiver));
+    }
+
+    /**
+     * 채팅방의 마지막 메시지를 업데이트합니다.
+     *
+     * @param chatroom 업데이트할 채팅방
+     * @param chat 새로운 채팅 메시지
+     */
+    @Transactional
+    public void updateLastMessage(Chatroom chatroom, Chat chat) {
+        String lastMessage = determineLastMessage(chat);
+
+        // MATCH_SUCCESS, MATCH_FAILURE는 업데이트하지 않음
+        if (lastMessage != null) {
+            chatroom.updateLastMessage(lastMessage);
+        }
+    }
+
+    /**
+     * 채팅 타입에 따라 저장할 마지막 메시지를 결정합니다.
+     *
+     * @param chat 채팅 메시지
+     * @return 저장할 마지막 메시지 (MATCH_SUCCESS, MATCH_FAILURE인 경우 null)
+     */
+    private String determineLastMessage(Chat chat) {
+        return switch (chat.getType()) {
+            case TEXT -> {
+                // TEXT 타입: 32자로 제한
+                String textContent = chat.getTextContent();
+                if (textContent == null || textContent.isEmpty()) {
+                    yield "";
+                }
+                yield textContent.length() > 31
+                        ? textContent.substring(0, 31)
+                        : textContent;
+            }
+            case IMAGE -> "(이미지)";
+            case MATCH_CONFIRMATION -> "(매칭 확인서)";
+            case MATCH_SUCCESS, MATCH_FAILURE -> null; // 업데이트하지 않음
+        };
     }
 }

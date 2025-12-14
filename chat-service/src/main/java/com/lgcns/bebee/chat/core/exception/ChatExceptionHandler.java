@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import static com.lgcns.bebee.chat.core.exception.ChatErrors.*;
-import static org.springframework.http.HttpStatus.*;
+import static com.lgcns.bebee.chat.core.exception.ChatErrors.CHATROOM_NOT_FOUND;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
 public class ChatExceptionHandler {

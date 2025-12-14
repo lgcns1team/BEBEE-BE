@@ -39,7 +39,7 @@ public class RedisMessageListenerTest {
                     "chatroomId": 123,
                     "senderId": 1,
                     "textContent": "Hello",
-                    "type": "TEXT",
+                    "chatType": "TEXT",
                     "createdAt": "2025-01-01T10:00:00"
                 }
                 """;
