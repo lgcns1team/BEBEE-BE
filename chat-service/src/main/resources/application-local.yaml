@@ -37,15 +37,14 @@ spring:
       # none: 자동 스키마 생성 비활성화
       ddl-auto: ${HIBERNATE_DDL_AUTO:none}
 
-      # SQL 쿼리 로그 출력 설정 (환경 변수에서 가져오거나 기본값 true 사용)
-      show-sql: ${SHOW_SQL:true}
+      # SQL 쿼리 로그 출력 설정 (p6spy 사용으로 비활성화)
+      show-sql: ${SHOW_SQL:false}
 
       # Hibernate 추가 속성 설정
       properties:
         hibernate:
-          # SQL 쿼리 포맷팅 설정 (환경 변수에서 가져오거나 기본값 true 사용)
-          # 가독성을 위해 들여쓰기 적용
-          format_sql: ${FORMAT_SQL:true}
+          # SQL 쿼리 포맷팅 설정 (p6spy 사용으로 비활성화)
+          format_sql: ${FORMAT_SQL:false}
 
   data:
     # Redis 설정
@@ -118,11 +117,8 @@ logging:
     # 루트 로그 레벨 설정 (환경 변수에서 가져오거나 기본값 info 사용)
     root: ${LOGGING_LEVEL_ROOT:INFO}
 
-    # Hibernate SQL 쿼리 로그 레벨 (debug: 상세한 쿼리 정보 출력)
-    org.hibernate.SQL: DEBUG
-
-    # Hibernate 파라미터 바인딩 로그 레벨 (trace: 모든 파라미터 값 출력)
-    org.hibernate.type: TRACE
+    # P6Spy SQL 로그 레벨
+    p6spy: INFO
 
     # Spring Data MongoDB Template 로그 레벨 (DEBUG: MongoDB 쿼리 정보 출력)
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
