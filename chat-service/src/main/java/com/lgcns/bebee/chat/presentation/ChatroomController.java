@@ -2,8 +2,10 @@ package com.lgcns.bebee.chat.presentation;
 
 import com.lgcns.bebee.chat.application.GetChatMessagesUseCase;
 import com.lgcns.bebee.chat.application.GetChatroomUseCase;
+import com.lgcns.bebee.chat.application.GetChatroomsUseCase;
 import com.lgcns.bebee.chat.presentation.dto.res.ChatMessagesGetResDTO;
 import com.lgcns.bebee.chat.presentation.dto.res.ChatroomGetResDTO;
+import com.lgcns.bebee.chat.presentation.dto.res.ChatroomsGetResDTO;
 import com.lgcns.bebee.chat.presentation.swagger.ChatroomSwagger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class ChatroomController implements ChatroomSwagger {
     private final GetChatMessagesUseCase getChatMessagesUseCase;
     private final GetChatroomUseCase getChatroomUseCase;
+    private final GetChatroomsUseCase getChatroomsUseCase;
 
     @GetMapping("/chats")
     public ResponseEntity<ChatMessagesGetResDTO> getChatMessages(
@@ -30,6 +33,20 @@ public class ChatroomController implements ChatroomSwagger {
                 result.isHasNext(),
                 result.getNextChatId()
         );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<ChatroomsGetResDTO> getChatrooms(
+            @RequestParam Long currentMemberId,
+            @RequestParam(required = false) Long lastChatroomId,
+            @RequestParam(defaultValue = "20") Integer count
+    ) {
+        GetChatroomsUseCase.Param param = new GetChatroomsUseCase.Param(currentMemberId, lastChatroomId, count);
+        GetChatroomsUseCase.Result result = getChatroomsUseCase.execute(param);
+
+        ChatroomsGetResDTO response = ChatroomsGetResDTO.from(result, currentMemberId);
 
         return ResponseEntity.ok(response);
     }
