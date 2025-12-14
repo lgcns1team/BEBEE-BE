@@ -1,7 +1,6 @@
 package com.lgcns.bebee.chat.domain.entity;
 
 import com.lgcns.bebee.chat.core.exception.ChatInvalidParamErrors;
-import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
