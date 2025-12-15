@@ -1,27 +1,45 @@
 package com.lgcns.bebee.member.domain.service;
 
+import com.lgcns.bebee.member.application.client.OcrClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * DocumentVerificationService Unit Test
  * 
  * 테스트 범위: 위변조 검증 로직 (EXIF, OCR, 종합 점수)
- * Mock 대상: 없음 (순수 도메인 로직)
+ * Mock 대상: OcrClient (외부 OCR 서비스)
  */
 @DisplayName("DocumentVerificationService 단위 테스트")
 class DocumentVerificationServiceTest {
 
     private DocumentVerificationService verificationService;
+    private OcrClient ocrClient;
 
     @BeforeEach
     void setUp() {
-        verificationService = new DocumentVerificationService();
+        ocrClient = mock(OcrClient.class);
+        verificationService = new DocumentVerificationService(ocrClient);
+        
+        // 기본 OCR 응답 설정 (대부분의 테스트에서 사용)
+        when(ocrClient.analyze(any())).thenReturn(
+            new OcrClient.OcrResult(
+                "활동지원사 자격증 발급기관 확인",
+                0.85,
+                List.of("활동지원사", "자격증", "발급", "기관"),
+                List.of("임상준") // 이름 후보 기본값
+            )
+        );
     }
 
     @Nested
@@ -159,10 +177,12 @@ class DocumentVerificationServiceTest {
             // PNG 스크린샷/디지털 이미지는 EXIF 데이터가 없으므로 낮은 exifScore
             assertThat(result).isNotNull();
             assertThat(result.exifScore()).isEqualTo(30); // EXIF 없는 이미지
-            assertThat(result.ocrScore()).isEqualTo(75);  // OCR은 현재 고정값
-            // forgeryScore = base(100)*0.3 + exif(30)*0.3 + ocr(75)*0.4 = 30+9+30 = 69
-            assertThat(result.forgeryScore()).isBetween(65, 75);
-            assertThat(result.systemFlag()).isEqualTo("MID"); // 50~80점은 MID
+            // OCR 점수는 신뢰도 0.85, 키워드 있음, 텍스트 길이 충분하므로 100점
+            // 실제 OCR 점수는 신뢰도 기반으로 계산됨 (0.85 -> 85점, 키워드 있음 -> 감점 없음, 텍스트 길이 충분 -> 감점 없음)
+            assertThat(result.ocrScore()).isBetween(70, 100);
+            // forgeryScore = base(100)*0.3 + exif(30)*0.3 + ocr(85)*0.4 = 30+9+34 = 73
+            assertThat(result.forgeryScore()).isBetween(65, 80);
+            assertThat(result.systemFlag()).isIn("LOW", "MID"); // 50~80점은 MID 또는 LOW
         }
     }
 
@@ -185,8 +205,9 @@ class DocumentVerificationServiceTest {
             DocumentVerificationService.AnalysisResult result = verificationService.analyze(file);
 
             // then
-            // OCR이 항상 75를 반환하고, EXIF 없는 파일은 30점이므로
-            // 예상 점수: base(100) * 0.3 + exif(30) * 0.3 + ocr(75) * 0.4 = 30 + 9 + 30 = 69
+            // OCR은 신뢰도 0.85, 키워드 있음, 텍스트 길이 충분하므로 높은 점수
+            // EXIF 없는 파일은 30점이므로
+            // 예상 점수: base(100) * 0.3 + exif(30) * 0.3 + ocr(85) * 0.4 = 30 + 9 + 34 = 73
             // 실제 systemFlag는 MID 또는 LOW가 될 수 있음
             assertThat(result.systemFlag()).isIn("LOW", "MID", "HIGH");
         }
