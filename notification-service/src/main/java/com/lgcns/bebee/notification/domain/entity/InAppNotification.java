@@ -6,8 +6,6 @@ import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +30,8 @@ public class InAppNotification extends BaseTimeEntity {
     @Column
     private LocalDateTime readAt;
 
+    // 해당 필드를 삽입, 수정이 불가능하게 해야 한다.
+    @Column(name = "type", insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
