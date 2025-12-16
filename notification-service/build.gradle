@@ -25,6 +25,9 @@ dependencies {
 	// flyway - DB migration tool, DB 스키 관리를 자동화하 체계적으로 수행할 수 있게 도와준다.
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'
+
+	// firebase admin sdk - FCM 웹 푸시 메시지 전송
+	implementation 'com.google.firebase:firebase-admin:9.7.0'
 }
 
 // Querydsl Q-Class 생성 경로

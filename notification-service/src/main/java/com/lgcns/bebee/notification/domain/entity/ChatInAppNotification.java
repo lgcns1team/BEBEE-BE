@@ -1,14 +1,12 @@
 package com.lgcns.bebee.notification.domain.entity;
 
-import com.lgcns.bebee.common.domain.BaseTimeEntity;
-import com.lgcns.bebee.notification.domain.entity.vo.NotificationType;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "in_app_notification_id")
