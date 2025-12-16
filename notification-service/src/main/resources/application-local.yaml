@@ -76,6 +76,15 @@ spring:
     placeholder-replacement: false
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
+
+
+# FCM 설정
+firebase:
+  # 서비스 계정 키 파일 경로
+  service-account-key-path: ${FIREBASE_SERVICE_ACCOUNT_KEY_PATH:classpath:firebase/firebase-service-account.json}
+
+  # FCM 메시지 옵션
+
 # 로깅 설정
 logging:
   level:
@@ -84,9 +93,6 @@ logging:
 
     # P6Spy SQL 로그 레벨
     p6spy: INFO
-
-    # Hibernate 파라미터 바인딩 로그 레벨 (trace: 모든 파라미터 값 출력)
-    org.hibernate.type: trace
 
     com.lgcns.bebee.notification: ${LOGGING_LEVEL_SERVICE:info}
 
