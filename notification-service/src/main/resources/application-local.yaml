@@ -77,6 +77,19 @@ spring:
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
 
+# Spring Doc 설정
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
 
 # FCM 설정
 firebase:
