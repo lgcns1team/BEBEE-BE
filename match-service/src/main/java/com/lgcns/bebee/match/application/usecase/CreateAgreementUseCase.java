@@ -49,7 +49,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
                 param.getType(),
                 param.getIsVolunteer(),
                 param.getUnitHoney(),
-                param.getTotalHoney(),
                 param.getRegion(),
                 param.getHelpCategoryIds()
         );
@@ -68,7 +67,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         private final EngagementType type;
         private final Boolean isVolunteer;
         private final Integer unitHoney;
-        private final Integer totalHoney;
         private final String region;
         private final List<Long> helpCategoryIds;
 
@@ -79,9 +77,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
             }
             if (!ParamValidator.isNonNegativeInteger(unitHoney)) {
                 throw new InvalidParamException(MatchInvalidParamErrors.OUT_OF_RANGE, "unitHoney");
-            }
-            if (!ParamValidator.isNonNegativeInteger(totalHoney)) {
-                throw new InvalidParamException(MatchInvalidParamErrors.OUT_OF_RANGE, "totalHoney");
             }
             if (!ParamValidator.isValidString(region)) {
                 throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "region");
