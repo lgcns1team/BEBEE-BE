@@ -144,9 +144,10 @@ CREATE TABLE `engagement_time_day`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- 8. EngagementTime_Term 테이블
-CREATE TABLE `engagement_time_term`
+CREATE TABLE `agreement_engagement_time_term`
 (
-    `agreement_id`    BIGINT   NOT NULL PRIMARY KEY,
+    `agreement_engagement_time_term_id` BIGINT NOT NULL PRIMARY KEY,
+    `agreement_id` BIGINT NOT NULL,
     `start_date`      DATE     NOT NULL,
     `end_date`        DATE     NOT NULL,
     `engagement_time` JSON     NOT NULL,
