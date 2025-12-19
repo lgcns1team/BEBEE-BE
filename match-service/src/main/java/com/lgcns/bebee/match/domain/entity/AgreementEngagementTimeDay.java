@@ -3,11 +3,14 @@ package com.lgcns.bebee.match.domain.entity;
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AgreementEngagementTimeDay extends BaseTimeEntity {
     @Id
@@ -19,6 +22,9 @@ public class AgreementEngagementTimeDay extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate engagementDate;
 
-    @Column(nullable = false, columnDefinition = "json")
-    private String engagementTime;
+    @Column(nullable = false)
+    private LocalTime startTime;
+
+    @Column(nullable = false)
+    private LocalTime endTime;
 }
