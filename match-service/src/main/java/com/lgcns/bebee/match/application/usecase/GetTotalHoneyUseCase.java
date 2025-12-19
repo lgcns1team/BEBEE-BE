@@ -3,6 +3,7 @@ package com.lgcns.bebee.match.application.usecase;
 import com.lgcns.bebee.common.application.Params;
 import com.lgcns.bebee.common.application.UseCase;
 import com.lgcns.bebee.common.exception.InvalidParamException;
+import com.lgcns.bebee.match.application.service.AgreementReader;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class GetTotalHoneyUseCase implements UseCase<GetTotalHoneyUseCase.Param, GetTotalHoneyUseCase.Result> {
-    private final AgreementRepository agreementRepository;
+    private final AgreementReader agreementReader;
 
     @Transactional
     @Override
@@ -27,8 +28,7 @@ public class GetTotalHoneyUseCase implements UseCase<GetTotalHoneyUseCase.Param,
         param.validate();
 
         // 2. Agreement 조회
-        Agreement agreement = agreementRepository.findById(param.getAgreementId())
-                .orElseThrow(() -> MatchErrors.AGREEMENT_NOT_FOUND.toException());
+        Agreement agreement = agreementReader.getById(param.getAgreementId());
 
         // 3. totalHoney 계산
         Integer calculatedTotalHoney = agreement.calculateTotalHoney();

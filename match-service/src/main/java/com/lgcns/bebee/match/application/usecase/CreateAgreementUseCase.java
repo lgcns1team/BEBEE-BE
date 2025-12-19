@@ -3,12 +3,12 @@ package com.lgcns.bebee.match.application.usecase;
 import com.lgcns.bebee.common.application.Params;
 import com.lgcns.bebee.common.application.UseCase;
 import com.lgcns.bebee.common.exception.InvalidParamException;
+import com.lgcns.bebee.match.application.service.MatchReader;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
 import com.lgcns.bebee.match.domain.entity.AgreementHelpCategory;
 import com.lgcns.bebee.match.domain.entity.Match;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
-import com.lgcns.bebee.match.domain.repository.MatchRepository;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.exception.MatchErrors;
@@ -27,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Param, CreateAgreementUseCase.Result> {
     private final AgreementRepository agreementRepository;
-    private final MatchRepository matchRepository;
+    private final MatchReader matchReader;
 
     @Transactional
     @Override
@@ -35,9 +35,9 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         // 1. 파라미터 검증
         param.validate();
 
-        // 2-1. 작성자 확인
-        Match match = matchRepository.findById(param.getMatchId())
-                                    .orElseThrow(() -> MatchErrors.MATCH_NOT_FOUND.toException());
+        // 2-1. Match 조회
+        Match match = matchReader.getById(param.getMatchId());
+
         // 2-2. 작성자가 해당 매칭의 참여자인지 확인
         if (!match.isParticipant(param.getMemberId())) {
             throw MatchErrors.FORBIDDEN.toException();
