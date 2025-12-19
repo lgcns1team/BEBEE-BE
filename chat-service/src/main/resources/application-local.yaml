@@ -15,8 +15,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${CHAT_DB_NAME:bebee_chat}?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:1234}
+    username: ${DB_USERNAME:bebee}
+    password: ${DB_PASSWORD:bebee1234}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-test-query: SELECT 1
