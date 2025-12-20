@@ -20,7 +20,6 @@ public class RefreshTokenBlacklistService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final JwtTokenProvider jwtTokenProvider;
-    private final JwtProperties jwtProperties;
 
     /**
      * 리프레시 토큰을 블랙리스트에 추가합니다.

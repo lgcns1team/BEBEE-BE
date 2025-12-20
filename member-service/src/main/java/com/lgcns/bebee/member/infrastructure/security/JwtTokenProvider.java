@@ -1,5 +1,6 @@
 package com.lgcns.bebee.member.infrastructure.security;
 
+import com.lgcns.bebee.common.config.JwtProperties;
 import com.lgcns.bebee.member.domain.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
