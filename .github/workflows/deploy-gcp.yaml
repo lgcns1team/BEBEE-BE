@@ -100,7 +100,7 @@ jobs:
           image: ${{ env.IMAGE_TAG }}
 
           env_vars: |
-            SPRING_PROFILES_ACTIVE=test
+            SPRING_PROFILES_ACTIVE=dev
             DB_HOST=${{ secrets.DB_HOST }}
             DB_PORT=3306
             DB_USERNAME=${{ secrets.DB_USERNAME }}
