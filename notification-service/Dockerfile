@@ -11,7 +11,7 @@ COPY gradle ./gradle
 COPY build.gradle settings.gradle ./
 
 # [중요] 의존성(라이브러리) 캐싱을 위해 필요한 모듈을 먼저 복사합니다.
-# 1. 공통 모듈 (chat-service가 의존하는 경우 필수)
+# 1. 공통 모듈 (notification-service가 의존하는 경우 필수)
 COPY common ./common
 
 # 2. 빌드할 타겟 서비스 모듈 (현재 서비스)
@@ -20,7 +20,7 @@ COPY notification-service ./notification-service
 # 실행 권한 부여
 RUN chmod +x ./gradlew
 
-# [중요] 루트에서 래퍼를 실행하되, 특정 모듈(:chat-service)만 bootJar로 빌드합니다.
+# [중요] 루트에서 래퍼를 실행하되, 특정 모듈(:notification-service)만 bootJar로 빌드합니다.
 # -x test: 테스트 제외
 RUN ./gradlew :notification-service:bootJar -x test --no-daemon
 
