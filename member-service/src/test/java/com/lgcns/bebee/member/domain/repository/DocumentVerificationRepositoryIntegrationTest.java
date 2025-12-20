@@ -7,20 +7,19 @@ import com.lgcns.bebee.member.domain.entity.vo.DocumentStatus;
 import com.lgcns.bebee.member.domain.entity.vo.Gender;
 import com.lgcns.bebee.member.domain.entity.vo.MemberStatus;
 import com.lgcns.bebee.member.domain.entity.vo.Role;
+import com.lgcns.bebee.member.infrastructure.security.RefreshTokenBlacklistService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,28 +30,13 @@ import static org.assertj.core.api.Assertions.*;
  * DocumentVerificationRepository Integration Test
  * 
  * 테스트 범위: DB 연동 테스트 (Repository 계층)
- * 테스트 DB: TestContainers MySQL
+ * 테스트 DB: 실제 MySQL 테스트 프로필
  */
-@DataJpaTest
-@Testcontainers
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
+@ActiveProfiles("test")
+@Transactional
 @DisplayName("DocumentVerificationRepository 통합 테스트")
 class DocumentVerificationRepositoryIntegrationTest {
-
-    @Container
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mysql::getJdbcUrl);
-        registry.add("spring.datasource.username", mysql::getUsername);
-        registry.add("spring.datasource.password", mysql::getPassword);
-        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
-        registry.add("spring.flyway.enabled", () -> "false");
-    }
 
     @Autowired
     private DocumentVerificationRepository documentVerificationRepository;
@@ -62,6 +46,12 @@ class DocumentVerificationRepositoryIntegrationTest {
 
     @Autowired
     private EntityManager entityManager;
+
+    @MockBean
+    private RefreshTokenBlacklistService refreshTokenBlacklistService;
+
+    @MockBean
+    private AuditorAware<?> auditorAware;
 
     private Member testMember;
     private Document testDocument;

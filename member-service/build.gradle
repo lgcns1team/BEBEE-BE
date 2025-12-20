@@ -14,6 +14,15 @@ plugins {
 dependencies {
     implementation project(":common")
 
+    // Spring Security & JWT
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // Bean Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     // MySQL Connector - MySQL 데이터베이스 연결
     runtimeOnly 'com.mysql:mysql-connector-j:9.5.0'
 
@@ -28,6 +37,15 @@ dependencies {
 
     // EXIF 메타데이터 추출
     implementation 'com.drewnoakes:metadata-extractor:2.19.0'
+
+    // WebClient (비동기 HTTP 클라이언트) - OCR 서비스 통신용
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Redis - 리프레시 토큰 블랙리스트 관리용
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // Spring Boot Test - 테스트용 종속성
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // TestContainers - Integration Test용 컨테이너
     testImplementation 'org.testcontainers:testcontainers:1.19.3'
