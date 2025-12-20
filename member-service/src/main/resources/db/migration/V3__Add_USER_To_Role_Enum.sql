@@ -1,0 +1,2 @@
+-- Add USER to role enum
+ALTER TABLE member MODIFY COLUMN role ENUM('ADMIN','USER','DISABLED','HELPER') NOT NULL;
