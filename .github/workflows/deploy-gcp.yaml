@@ -8,7 +8,7 @@ on:
       - 'chat-service/**'
 #      - 'match-service/**'
 #      - 'member-service/**'
-#      - 'notification-service/**'
+      - 'notification-service/**'
 #      - 'payment-service/**'
       - 'build.gradle'
 
@@ -28,7 +28,7 @@ jobs:
           - chat
 #          - match
 #          - member
-#          - notification
+          - notification
 #          - payment
 
     permissions:
