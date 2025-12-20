@@ -8,21 +8,22 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type")
-public class InAppNotification extends BaseTimeEntity {
+public abstract class AppNotification extends BaseTimeEntity {
     @Id
     @Tsid
     private Long inAppNotificationId;
 
     @Column(nullable = false)
-    private Long receiverId;
+    protected Long receiverId;
 
     @Column(nullable = false)
-    private Long senderId;
+    protected Long senderId;
 
     @Column(nullable = false)
     private Boolean isRead;
@@ -33,8 +34,11 @@ public class InAppNotification extends BaseTimeEntity {
     // 해당 필드를 삽입, 수정이 불가능하게 해야 한다.
     @Column(name = "type", insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
-    private NotificationType type;
+    protected NotificationType type;
 
-    @Column(nullable = false, length = 255)
-    private String redirectionUrl;
+    public abstract String getTitle();
+
+    public abstract String getBody();
+
+    public abstract Map<String, String> getData();
 }
