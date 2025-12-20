@@ -33,6 +33,7 @@ public class AgreementCreateReqDTO {
                 type,
                 isVolunteer,
                 unitHoney,
+                totalHoney,
                 region,
                 helpCategoryIds
         );

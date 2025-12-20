@@ -28,7 +28,7 @@ public class Agreement extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer unitHoney;
 
-    @Column
+    @Column(nullable = false)
     private Integer totalHoney;
 
     @Column(nullable = false, length = 50)
@@ -66,6 +66,7 @@ public class Agreement extends BaseTimeEntity {
             EngagementType type,
             Boolean isVolunteer,
             Integer unitHoney,
+            Integer totalHoney,
             String region,
             List<Long> helpCategoryIds
     ) {
@@ -74,6 +75,7 @@ public class Agreement extends BaseTimeEntity {
         agreement.type = type;
         agreement.isVolunteer = isVolunteer;
         agreement.unitHoney = unitHoney;
+        agreement.totalHoney = totalHoney;
         agreement.region = region;
         agreement.confirmationDate = LocalDate.now();
         agreement.status = AgreementStatus.BEFORE;
@@ -87,63 +89,5 @@ public class Agreement extends BaseTimeEntity {
         });
 
         return agreement;
-    }
-
-    public void updateTotalHoney(Integer totalHoney) {
-        this.totalHoney = totalHoney;
-    }
-
-    /**
-     * Agreement의 type에 따라 totalHoney를 계산합니다.
-     * - DAY: unitHoney를 그대로 반환
-     * - TERM: 시작일부터 종료일까지 해당 요일의 발생 횟수 × unitHoney
-     */
-    public Integer calculateTotalHoney() {
-        if (type == EngagementType.DAY) {
-            return unitHoney;
-        }
-        
-        if (type == EngagementType.TERM) {
-            if (term == null || term.getSchedules().isEmpty()) {
-                throw new IllegalStateException("TERM 타입의 Agreement는 반드시 term과 schedules가 필요합니다.");
-            }
-
-            // schedules에서 설정된 요일들을 Set으로 추출
-            java.util.Set<java.time.DayOfWeek> targetDaysOfWeek = term.getSchedules().stream()
-                    .map(schedule -> schedule.getId().getDayOfWeek())
-                    .collect(java.util.stream.Collectors.toSet());
-
-            // 시작일부터 종료일까지 해당 요일이 몇 번 발생하는지 계산
-            int occurrenceCount = calculateDayOccurrences(
-                    term.getStartDate(),
-                    term.getEndDate(),
-                    targetDaysOfWeek
-            );
-
-            return unitHoney * occurrenceCount;
-        }
-
-        throw new IllegalStateException("알 수 없는 EngagementType: " + type);
-    }
-
-    /**
-     * 시작일부터 종료일까지 특정 요일들이 몇 번 발생하는지 계산합니다.
-     */
-    private int calculateDayOccurrences(
-            LocalDate startDate,
-            LocalDate endDate,
-            java.util.Set<java.time.DayOfWeek> targetDaysOfWeek
-    ) {
-        int count = 0;
-        LocalDate current = startDate;
-
-        while (!current.isAfter(endDate)) {
-            if (targetDaysOfWeek.contains(current.getDayOfWeek())) {
-                count++;
-            }
-            current = current.plusDays(1);
-        }
-
-        return count;
     }
 }
