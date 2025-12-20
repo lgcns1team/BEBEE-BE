@@ -17,7 +17,8 @@ import java.util.Map;
 public abstract class AppNotification extends BaseTimeEntity {
     @Id
     @Tsid
-    private Long inAppNotificationId;
+    @Column(name = "app_notification_id")
+    private Long id;
 
     @Column(nullable = false)
     protected Long receiverId;

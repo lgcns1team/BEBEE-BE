@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@PrimaryKeyJoinColumn(name = "in_app_notification_id")
+@PrimaryKeyJoinColumn(name = "app_notification_id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("MATCH")
 public class MatchAppNotification extends AppNotification {
@@ -20,13 +20,13 @@ public class MatchAppNotification extends AppNotification {
     private Long matchId;
 
     public static MatchAppNotification create(Long senderId, Long receiverId, Long matchId){
-        MatchAppNotification notification = new MatchAppNotification();
-        notification.senderId = senderId;
-        notification.receiverId = receiverId;
-        notification.type = NotificationType.MATCH;
-        notification.matchId = matchId;
+        MatchAppNotification appNotification = new MatchAppNotification();
+        appNotification.senderId = senderId;
+        appNotification.receiverId = receiverId;
+        appNotification.type = NotificationType.MATCH;
+        appNotification.matchId = matchId;
 
-        return notification;
+        return appNotification;
     }
 
     @Override

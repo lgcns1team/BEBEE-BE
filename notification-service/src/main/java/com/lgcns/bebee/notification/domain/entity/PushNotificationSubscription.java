@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PushNotificationSubscription extends BaseTimeEntity {
     @Id
-    @Tsid
+    @Tsid @Column(name = "push_notification_subscription_id")
     private Long id;
 
     @Column(nullable = false)
