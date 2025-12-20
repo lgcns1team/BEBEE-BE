@@ -4,6 +4,7 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.lgcns.bebee.member.application.client.OcrClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,12 @@ import java.util.Date;
  */
 @Service
 public class DocumentVerificationService {
+
+    private final OcrClient ocrClient;
+
+    public DocumentVerificationService(OcrClient ocrClient) {
+        this.ocrClient = ocrClient;
+    }
 
     /**
      * 업로드된 파일을 분석하고, 위변조 관련 점수와 플래그를 계산
@@ -132,14 +139,25 @@ public class DocumentVerificationService {
 
     /**
      * OCR 텍스트 인식 기반 점수 계산
-     * TODO: OCR 엔진(Tesseract, 외부 API 등) 연동
-     * - "활동지원사", "자격증", 발급기관명 등 키워드 포함 여부
-     * - 인식된 텍스트 비율 등
+     * - 외부 OCR 클라이언트의 신뢰도(confidence)를 0~100 점수로 변환
+     * - 키워드가 존재하지 않으면 소폭 감점
      */
     private int calcOcrScore(MultipartFile file) {
-        // TODO: 실제 OCR 분석 구현
-        // 현재는 기본값 반환
-        return 75;
+        if (ocrClient == null) {
+            return 75;
+        }
+
+        OcrClient.OcrResult result = ocrClient.analyze(file);
+        if (result == null || result.confidence() == null) {
+            return 50;
+        }
+
+        int score = (int) Math.round(result.confidence() * 100);
+        if (result.keywords() == null || result.keywords().isEmpty()) {
+            score -= 10;
+        }
+
+        return clamp(score);
     }
 
     /**

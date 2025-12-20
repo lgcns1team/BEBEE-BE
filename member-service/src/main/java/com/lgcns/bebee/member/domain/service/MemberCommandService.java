@@ -35,7 +35,7 @@ public class MemberCommandService {
 
         validateDuplicate(email, nickname);
 
-        Member member = Member.of(
+        Member member = Member.createNewMember(
                 email,
                 encodedPassword,
                 name,

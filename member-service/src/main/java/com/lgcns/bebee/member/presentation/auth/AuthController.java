@@ -2,10 +2,10 @@ package com.lgcns.bebee.member.presentation.auth;
 
 import com.lgcns.bebee.member.common.exception.AuthErrors;
 import com.lgcns.bebee.member.domain.service.AuthService;
-import com.lgcns.bebee.member.infrastructure.security.JwtProperties;
+import com.lgcns.bebee.common.config.JwtProperties;
 import com.lgcns.bebee.member.infrastructure.security.JwtTokenProvider.TokenPair;
-import com.lgcns.bebee.member.presentation.auth.dto.LoginRequest;
-import com.lgcns.bebee.member.presentation.auth.dto.SignupRequest;
+import com.lgcns.bebee.member.presentation.dto.MemberLoginReqDTO;
+import com.lgcns.bebee.member.presentation.dto.MemberSignUpReqDTO;
 import com.lgcns.bebee.member.presentation.auth.dto.TokenResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<TokenResponse> signup(@Valid @RequestBody SignupRequest request) {
+    public ResponseEntity<TokenResponse> signup(@Valid @RequestBody MemberSignUpReqDTO request) {
         TokenPair tokens = authService.signup(mapSignupCommand(request));
         ResponseCookie refreshCookie = buildRefreshCookie(tokens.refreshToken());
         return ResponseEntity.ok()
@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody MemberLoginReqDTO request) {
         TokenPair tokens = authService.login(new AuthService.LoginCommand(request.getEmail(), request.getPassword()));
         ResponseCookie refreshCookie = buildRefreshCookie(tokens.refreshToken());
         return ResponseEntity.ok()
@@ -84,7 +84,7 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    private AuthService.SignupCommand mapSignupCommand(SignupRequest request) {
+    private AuthService.SignupCommand mapSignupCommand(MemberSignUpReqDTO request) {
         return new AuthService.SignupCommand(
                 request.getEmail(),
                 request.getPassword(),
