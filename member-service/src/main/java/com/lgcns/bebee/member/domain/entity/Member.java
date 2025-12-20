@@ -73,5 +73,40 @@ public class Member extends BaseTimeEntity {
 
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal sweetness = BigDecimal.valueOf(40.00);
+
+    /**
+     * 회원 생성 팩토리 메서드
+     * 도메인 서비스 및 테스트 코드에서 일관된 방식으로 Member 인스턴스를 생성하기 위해 사용합니다.
+     */
+    public static Member createNewMember(String email,
+                                         String encodedPassword,
+                                         String name,
+                                         String nickname,
+                                         LocalDate birthDate,
+                                         Gender gender,
+                                         String phoneNumber,
+                                         Role role,
+                                         MemberStatus status,
+                                         String addressRoad,
+                                         BigDecimal latitude,
+                                         BigDecimal longitude,
+                                         String districtCode) {
+        Member member = new Member();
+        member.email = email;
+        member.password = encodedPassword;
+        member.name = name;
+        member.nickname = nickname;
+        member.birthDate = birthDate;
+        member.gender = gender;
+        member.phoneNumber = phoneNumber;
+        member.role = role;
+        member.status = status;
+        member.addressRoad = addressRoad;
+        member.latitude = latitude;
+        member.longitude = longitude;
+        member.districtCode = districtCode;
+        // profileImageUrl, introduction, sweetness 는 기본값 사용
+        return member;
+    }
 }
 
