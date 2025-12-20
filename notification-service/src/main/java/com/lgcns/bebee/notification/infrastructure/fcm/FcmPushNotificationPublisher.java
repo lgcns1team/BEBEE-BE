@@ -38,7 +38,6 @@ public class FcmPushNotificationPublisher implements PushNotificationClient {
 
         } catch (FirebaseMessagingException e) {
             log.error("Failed to send FCM message with data: token={}, error={}", token, e.getMessage(), e);
-            throw new RuntimeException("FCM 메시지 전송 실패", e);
         }
     }
 }
