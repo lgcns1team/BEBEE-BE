@@ -66,7 +66,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        testMember = Member.of(
+        testMember = Member.createNewMember(
                 "test@example.com",
                 "encodedPassword",
                 "홍길동",
@@ -273,7 +273,7 @@ class AuthServiceTest {
         @DisplayName("REJECTED 상태 회원 로그인 시 예외를 발생시킨다")
         void login_rejectedMember() {
             // given
-            Member rejectedMember = Member.of(
+            Member rejectedMember = Member.createNewMember(
                     "test@example.com",
                     "encodedPassword",
                     "홍길동",
