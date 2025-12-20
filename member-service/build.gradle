@@ -44,6 +44,9 @@ dependencies {
     // Redis - 리프레시 토큰 블랙리스트 관리용
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // Spring Boot Test - 테스트용 종속성
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
     // TestContainers - Integration Test용 컨테이너
     testImplementation 'org.testcontainers:testcontainers:1.19.3'
     testImplementation 'org.testcontainers:junit-jupiter:1.19.3'

@@ -17,8 +17,8 @@
 # Docker Compose 버전
 version: '3.8'
 
-# 프로젝트 이름 지정
-name: bebee
+# 프로젝트 이름 지정 (Docker Compose 버전 호환성으로 인해 주석 처리)
+# name: bebee
 
 # 서비스 정의
 services:
