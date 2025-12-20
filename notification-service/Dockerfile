@@ -32,7 +32,7 @@ WORKDIR /app
 
 # 빌드된 Jar 파일 복사
 # 경로는 /app/{모듈명}/build/libs/ 입니다.
-COPY --from=builder /app/chat-service/build/libs/*.jar app.jar
+COPY --from=builder /app/notification-service/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
