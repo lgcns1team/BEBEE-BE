@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@PrimaryKeyJoinColumn(name = "in_app_notification_id")
+@PrimaryKeyJoinColumn(name = "app_notification_id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("CHAT")
 public class ChatAppNotification extends AppNotification {
@@ -26,13 +26,13 @@ public class ChatAppNotification extends AppNotification {
     private Integer messageCount = 1;
 
     public static ChatAppNotification create(Long senderId, Long receiverId, Long chatroomId, String messagePreview) {
-        ChatAppNotification inAppNotification = new ChatAppNotification();
-        inAppNotification.senderId = senderId;
-        inAppNotification.receiverId = receiverId;
-        inAppNotification.type = NotificationType.CHAT;
-        inAppNotification.chatroomId = chatroomId;
-        inAppNotification.messagePreview = messagePreview;
-        return inAppNotification;
+        ChatAppNotification appNotification = new ChatAppNotification();
+        appNotification.senderId = senderId;
+        appNotification.receiverId = receiverId;
+        appNotification.type = NotificationType.CHAT;
+        appNotification.chatroomId = chatroomId;
+        appNotification.messagePreview = messagePreview;
+        return appNotification;
     }
 
     @Override

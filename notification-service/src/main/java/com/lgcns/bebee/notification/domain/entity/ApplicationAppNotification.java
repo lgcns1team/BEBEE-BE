@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@PrimaryKeyJoinColumn(name = "in_app_notification_id")
+@PrimaryKeyJoinColumn(name = "app_notification_id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("APPLICATION")
 public class ApplicationAppNotification extends AppNotification {
@@ -24,12 +24,12 @@ public class ApplicationAppNotification extends AppNotification {
             Long receiverId,
             Long applicationId
     ){
-        ApplicationAppNotification inAppNotification = new ApplicationAppNotification();
-        inAppNotification.senderId = senderId;
-        inAppNotification.receiverId = receiverId;
-        inAppNotification.type = NotificationType.APPLICATION;
-        inAppNotification.applicationId = applicationId;
-        return inAppNotification;
+        ApplicationAppNotification appNotification = new ApplicationAppNotification();
+        appNotification.senderId = senderId;
+        appNotification.receiverId = receiverId;
+        appNotification.type = NotificationType.APPLICATION;
+        appNotification.applicationId = applicationId;
+        return appNotification;
     }
 
     @Override
