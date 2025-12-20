@@ -1,6 +1,7 @@
 package com.lgcns.bebee.notification.domain.service;
 
 import com.lgcns.bebee.notification.core.exception.NotificationErrors;
+import com.lgcns.bebee.notification.domain.entity.PushNotificationSubscription;
 import com.lgcns.bebee.notification.domain.repository.PushNotificationSubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,18 @@ public class PushNotificationSubscriptionManagement {
             // 해당 토큰을 다른 사람의 소유라면 해당 토큰을 무효화한다.
             subscriptionRepository.delete(subscription);
         });
+    }
+
+
+    /**
+     * 회원의 푸시 알림 구독 정보를 조회합니다.
+     *
+     * @param currentMemberId 조회할 회원 ID
+     * @return 푸시 알림 구독 정보 (FCM 토큰 포함)
+     * @throws com.lgcns.bebee.notification.core.exception.NotificationException 회원의 구독 정보가 존재하지 않는 경우
+     */
+    @Transactional(readOnly = true)
+    public PushNotificationSubscription getExistingPushNotificationSubscription(Long currentMemberId) {
+        return subscriptionRepository.findBySubscriberId(currentMemberId).orElseThrow(NotificationErrors.SUBSCRIPTION_NOT_FOUND::toException);
     }
 }
