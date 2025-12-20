@@ -1,5 +1,5 @@
 # ========================================
-# Chat Service 개발 환경 설정 파일
+# Chat Service 로컬 개발 환경 설정 파일
 # ========================================
 #
 # 로컬 개발 환경에서 사용되는 설정입니다.
@@ -35,17 +35,16 @@ spring:
       # create: 애플리케이션 시작 시 테이블을 새로 생성 (기존 데이터 삭제)
       # validate: 엔티티와 데이터베이스 스키마 일치 여부만 검증
       # none: 자동 스키마 생성 비활성화
-      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+      ddl-auto: ${HIBERNATE_DDL_AUTO:none}
 
-      # SQL 쿼리 로그 출력 설정 (환경 변수에서 가져오거나 기본값 true 사용)
-      show-sql: ${SHOW_SQL:true}
+      # SQL 쿼리 로그 출력 설정 (p6spy 사용으로 비활성화)
+      show-sql: ${SHOW_SQL:false}
 
       # Hibernate 추가 속성 설정
       properties:
         hibernate:
-          # SQL 쿼리 포맷팅 설정 (환경 변수에서 가져오거나 기본값 true 사용)
-          # 가독성을 위해 들여쓰기 적용
-          format_sql: ${FORMAT_SQL:true}show
+          # SQL 쿼리 포맷팅 설정 (p6spy 사용으로 비활성화)
+          format_sql: ${FORMAT_SQL:false}
 
   data:
     # Redis 설정
@@ -54,10 +53,12 @@ spring:
       host: ${REDIS_HOST:localhost}
       # Redis Port
       port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PASSWORD:}
 
     # Mongodb 설정
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/bebee}
+      uri: ${MONGODB_URI:mongodb://${MONGODB_USERNAME:bebee}:${MONGODB_PASSWORD:bebee1234}@${MONGODB_HOST:localhost}:27017/bebee?authSource=admin}
       auto-index-creation: ${AUTO_INDEX_CREATION:false}
 
   # Flyway 설정

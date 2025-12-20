@@ -6,9 +6,9 @@ on:
     paths:
       - 'common/**'
       - 'chat-service/**'
-      - 'match-service/**'
+#      - 'match-service/**'
 #      - 'member-service/**'
-#      - 'notification-service/**'
+      - 'notification-service/**'
 #      - 'payment-service/**'
       - 'build.gradle'
 
@@ -26,9 +26,9 @@ jobs:
       matrix:
         service:
           - chat
-          - match
+#          - match
 #          - member
-#          - notification
+          - notification
 #          - payment
 
     permissions:
