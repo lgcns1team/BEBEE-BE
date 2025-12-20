@@ -16,7 +16,6 @@ CREATE TABLE in_app_notification
     is_read                BOOLEAN      NOT NULL,
     read_at                TIMESTAMP,
     type                   ENUM ('CHAT', 'APPLICATION', 'MATCH'),
-    redirection_url        VARCHAR(255) NOT NULL,
     created_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

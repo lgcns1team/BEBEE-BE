@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCM Token Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4285f4;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #4285f4;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #357ae8;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #token-display {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+            min-height: 60px;
+        }
+        .copy-btn {
+            background-color: #34a853;
+        }
+        .copy-btn:hover {
+            background-color: #2d9248;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .hidden {
+            display: none;
+        }
+        .config-input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-top: 10px;
+        }
+        .test-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 FCM Token Generator</h1>
+
+        <!-- Firebase 설정 섹션 -->
+        <div class="section">
+            <h3>1. Firebase 프로젝트 설정</h3>
+            <p>Firebase Console에서 아래 정보를 복사해서 입력하세요:</p>
+
+            <label>API Key:</label>
+            <input type="text" id="apiKey" class="config-input" placeholder="AIzaSy...">
+
+            <label>Auth Domain:</label>
+            <input type="text" id="authDomain" class="config-input" placeholder="your-project.firebaseapp.com">
+
+            <label>Project ID:</label>
+            <input type="text" id="projectId" class="config-input" placeholder="your-project-id">
+
+            <label>Storage Bucket:</label>
+            <input type="text" id="storageBucket" class="config-input" placeholder="your-project.appspot.com">
+
+            <label>Messaging Sender ID:</label>
+            <input type="text" id="messagingSenderId" class="config-input" placeholder="1234567890">
+
+            <label>App ID:</label>
+            <input type="text" id="appId" class="config-input" placeholder="1:1234567890:web:abcdef">
+
+            <label>VAPID Key (Cloud Messaging > Web Configuration):</label>
+            <input type="text" id="vapidKey" class="config-input" placeholder="BN...">
+
+            <button id="init-firebase">Firebase 초기화</button>
+            <div id="init-status"></div>
+        </div>
+
+        <!-- 토큰 생성 섹션 -->
+        <div class="section">
+            <h3>2. FCM 토큰 생성</h3>
+            <button id="request-permission" disabled>알림 권한 요청 및 토큰 생성</button>
+            <div id="permission-status"></div>
+
+            <div id="token-section" class="hidden">
+                <h4>생성된 FCM 토큰:</h4>
+                <div id="token-display">토큰이 여기에 표시됩니다...</div>
+                <button id="copy-token" class="copy-btn">토큰 복사</button>
+            </div>
+        </div>
+
+        <!-- API 테스트 섹션 -->
+        <div class="section test-section">
+            <h3>3. 서버 API 테스트</h3>
+            <p>생성된 토큰을 서버에 등록해보세요:</p>
+
+            <label>서버 URL:</label>
+            <input type="text" id="server-url" class="config-input" value="http://localhost:8080" placeholder="http://localhost:8080">
+
+            <label>Member ID:</label>
+            <input type="number" id="member-id" class="config-input" value="1" placeholder="1">
+
+            <label>Device Type:</label>
+            <select id="device-type" class="config-input">
+                <option value="WEB_PC">WEB_PC</option>
+                <option value="WEB_ANDROID">WEB_ANDROID</option>
+                <option value="WEB_IOS">WEB_IOS</option>
+            </select>
+
+            <button id="register-token" disabled>서버에 토큰 등록</button>
+            <div id="register-status"></div>
+        </div>
+
+        <!-- 사용 가이드 -->
+        <div class="section" style="background-color: #fff3cd; border: 1px solid #ffc107;">
+            <h3>📋 사용 가이드</h3>
+            <ol>
+                <li>Firebase Console에서 프로젝트 설정 정보를 복사하여 입력</li>
+                <li>"Firebase 초기화" 버튼 클릭</li>
+                <li>"알림 권한 요청 및 토큰 생성" 버튼 클릭</li>
+                <li>브라우저 알림 권한 허용</li>
+                <li>생성된 토큰을 복사하거나 직접 서버에 등록</li>
+            </ol>
+            <p><strong>주의:</strong> 이 페이지는 로컬 서버(http-server, Live Server 등)를 통해 열어야 합니다. file:// 프로토콜에서는 작동하지 않습니다.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js';
+
+        let app = null;
+        let messaging = null;
+        let currentToken = null;
+
+        // Firebase 초기화
+        document.getElementById('init-firebase').addEventListener('click', () => {
+            const firebaseConfig = {
+                apiKey: document.getElementById('apiKey').value.trim(),
+                authDomain: document.getElementById('authDomain').value.trim(),
+                projectId: document.getElementById('projectId').value.trim(),
+                storageBucket: document.getElementById('storageBucket').value.trim(),
+                messagingSenderId: document.getElementById('messagingSenderId').value.trim(),
+                appId: document.getElementById('appId').value.trim()
+            };
+
+            const vapidKey = document.getElementById('vapidKey').value.trim();
+
+            // 유효성 검사
+            if (!firebaseConfig.apiKey || !firebaseConfig.projectId || !vapidKey) {
+                showStatus('init-status', 'error', '모든 필수 항목을 입력해주세요!');
+                return;
+            }
+
+            try {
+                app = initializeApp(firebaseConfig);
+                messaging = getMessaging(app);
+
+                // 저장
+                localStorage.setItem('vapidKey', vapidKey);
+                localStorage.setItem('firebaseConfig', JSON.stringify(firebaseConfig));
+
+                showStatus('init-status', 'success', '✅ Firebase 초기화 완료!');
+                document.getElementById('request-permission').disabled = false;
+
+                // 메시지 수신 리스너
+                onMessage(messaging, (payload) => {
+                    console.log('메시지 수신:', payload);
+                    alert(`푸시 알림 수신!\n제목: ${payload.notification?.title}\n내용: ${payload.notification?.body}`);
+                });
+            } catch (error) {
+                console.error('Firebase 초기화 실패:', error);
+                showStatus('init-status', 'error', `❌ 초기화 실패: ${error.message}`);
+            }
+        });
+
+        // 토큰 생성
+        document.getElementById('request-permission').addEventListener('click', async () => {
+            if (!messaging) {
+                showStatus('permission-status', 'error', 'Firebase를 먼저 초기화해주세요.');
+                return;
+            }
+
+            const vapidKey = localStorage.getItem('vapidKey');
+
+            try {
+                showStatus('permission-status', 'info', '⏳ 알림 권한 요청 중...');
+
+                const permission = await Notification.requestPermission();
+
+                if (permission === 'granted') {
+                    showStatus('permission-status', 'info', '⏳ 토큰 생성 중...');
+
+                    const token = await getToken(messaging, { vapidKey });
+
+                    if (token) {
+                        currentToken = token;
+                        document.getElementById('token-display').textContent = token;
+                        document.getElementById('token-section').classList.remove('hidden');
+                        document.getElementById('register-token').disabled = false;
+
+                        showStatus('permission-status', 'success', '✅ 토큰 생성 완료!');
+                        console.log('FCM Token:', token);
+                    } else {
+                        showStatus('permission-status', 'error', '토큰 생성 실패: 토큰을 받을 수 없습니다.');
+                    }
+                } else {
+                    showStatus('permission-status', 'error', '❌ 알림 권한이 거부되었습니다.');
+                }
+            } catch (error) {
+                console.error('토큰 생성 오류:', error);
+                showStatus('permission-status', 'error', `❌ 오류: ${error.message}`);
+            }
+        });
+
+        // 토큰 복사
+        document.getElementById('copy-token').addEventListener('click', () => {
+            const tokenText = document.getElementById('token-display').textContent;
+            navigator.clipboard.writeText(tokenText).then(() => {
+                alert('토큰이 클립보드에 복사되었습니다!');
+            });
+        });
+
+        // 서버에 토큰 등록
+        document.getElementById('register-token').addEventListener('click', async () => {
+            if (!currentToken) {
+                showStatus('register-status', 'error', '토큰을 먼저 생성해주세요.');
+                return;
+            }
+
+            const serverUrl = document.getElementById('server-url').value.trim();
+            const memberId = document.getElementById('member-id').value;
+            const deviceType = document.getElementById('device-type').value;
+
+            const url = `${serverUrl}/api/notifications/fcm/register?memberId=${memberId}`;
+            const body = {
+                token: currentToken,
+                deviceType: deviceType
+            };
+
+            try {
+                showStatus('register-status', 'info', '⏳ 서버에 등록 중...');
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (response.ok) {
+                    showStatus('register-status', 'success', '✅ 서버 등록 완료!');
+                } else {
+                    const errorText = await response.text();
+                    showStatus('register-status', 'error', `❌ 등록 실패 (${response.status}): ${errorText}`);
+                }
+            } catch (error) {
+                console.error('서버 등록 오류:', error);
+                showStatus('register-status', 'error', `❌ 네트워크 오류: ${error.message}`);
+            }
+        });
+
+        // 상태 메시지 표시 헬퍼
+        function showStatus(elementId, type, message) {
+            const element = document.getElementById(elementId);
+            element.className = `status ${type}`;
+            element.textContent = message;
+        }
+
+        // 페이지 로드 시 저장된 설정 불러오기
+        window.addEventListener('load', () => {
+            const savedConfig = localStorage.getItem('firebaseConfig');
+            const savedVapidKey = localStorage.getItem('vapidKey');
+
+            if (savedConfig) {
+                const config = JSON.parse(savedConfig);
+                document.getElementById('apiKey').value = config.apiKey || '';
+                document.getElementById('authDomain').value = config.authDomain || '';
+                document.getElementById('projectId').value = config.projectId || '';
+                document.getElementById('storageBucket').value = config.storageBucket || '';
+                document.getElementById('messagingSenderId').value = config.messagingSenderId || '';
+                document.getElementById('appId').value = config.appId || '';
+            }
+
+            if (savedVapidKey) {
+                document.getElementById('vapidKey').value = savedVapidKey;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -19,8 +19,8 @@ public class OpenApiConfig extends BaseOpenApiConfig {
     public OpenAPI openAPI(){
         return new OpenAPI()
                 .info(createApiInfo(
-                        "Bebee Chat Service API",
-                        "채팅 서비스 REST API 문서",
+                        "Bebee Alarm Service API",
+                        "알림 서비스 REST API 문서",
                         "v1.0.0"
                 ))
                 .components(openApiComponents())
