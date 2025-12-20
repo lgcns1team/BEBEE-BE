@@ -6,7 +6,7 @@ on:
     paths:
       - 'common/**'
       - 'chat-service/**'
-#      - 'match-service/**'
+      - 'match-service/**'
 #      - 'member-service/**'
 #      - 'notification-service/**'
 #      - 'payment-service/**'
@@ -26,7 +26,7 @@ jobs:
       matrix:
         service:
           - chat
-#          - match
+          - match
 #          - member
 #          - notification
 #          - payment
