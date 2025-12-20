@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * 문서 검증 API Swagger 인터페이스
  * Controller가 이 인터페이스를 구현하여 API 문서화
- * TODO: Swagger 의존성 추가 후 @Tag, @Operation 어노테이션 적용
  */
 public interface DocumentSwagger {
 
