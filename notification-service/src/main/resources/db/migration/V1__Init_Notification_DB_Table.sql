@@ -68,7 +68,7 @@ CREATE TABLE match_in_app_notification
 # 5. PushNotificationSubscription 테이블
 CREATE TABLE push_notification_subscription
 (
-  web_push_notification_id BIGINT NOT NULL PRIMARY KEY,
+  push_notification_subscription_id BIGINT NOT NULL PRIMARY KEY,
   subscriber_id BIGINT NOT NULL,
   token BIGINT NOT NULL UNIQUE,
   device_type ENUM('WEB_PC', 'WEB_IOS', 'WEB_ANDROID') NOT NULL,
