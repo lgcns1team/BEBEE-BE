@@ -164,11 +164,11 @@ CREATE TABLE `agreement_engagement_time_term`
 CREATE TABLE `post_help_category`
 (
     `post_id`    BIGINT   NOT NULL,
-    `help_id`    BIGINT   NOT NULL,
+    `help_category_id`    BIGINT   NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY (`post_id`, `help_id`),
+    PRIMARY KEY (`post_id`, `help_category_id`),
     CONSTRAINT `FK_post_help_category_TO_help_request_post`
         FOREIGN KEY (`post_id`)
             REFERENCES `help_request_post` (`post_id`)
@@ -178,11 +178,11 @@ CREATE TABLE `post_help_category`
 CREATE TABLE `agreement_help_category`
 (
     `agreement_id` BIGINT   NOT NULL,
-    `help_id`      BIGINT   NOT NULL,
+    `help_category_id`      BIGINT   NOT NULL,
     `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    PRIMARY KEY (`agreement_id`, `help_id`),
+    PRIMARY KEY (`agreement_id`, `help_category_id`),
     CONSTRAINT `FK_agreement_help_category_TO_agreement`
         FOREIGN KEY (`agreement_id`)
             REFERENCES `agreement` (`agreement_id`)
