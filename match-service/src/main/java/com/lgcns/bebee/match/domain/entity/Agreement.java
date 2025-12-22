@@ -83,7 +83,8 @@ public class Agreement extends BaseTimeEntity {
         agreement.isTermComplete = Boolean.FALSE;
 
         helpCategoryIds.forEach(helpCategoryId -> {
-            AgreementHelpCategory agreementHelpCategory = AgreementHelpCategory.create(agreement, helpCategoryId);
+            String categoryName = com.lgcns.bebee.match.domain.entity.vo.HelpCategoryType.getNameById(helpCategoryId);
+            AgreementHelpCategory agreementHelpCategory = AgreementHelpCategory.create(agreement, helpCategoryId, categoryName);
             agreement.helpCategories.add(agreementHelpCategory);
         });
 
