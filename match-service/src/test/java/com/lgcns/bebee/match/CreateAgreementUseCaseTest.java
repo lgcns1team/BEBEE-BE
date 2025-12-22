@@ -1,7 +1,7 @@
 package com.lgcns.bebee.match;
 
 import com.lgcns.bebee.common.exception.InvalidParamException;
-import com.lgcns.bebee.match.application.service.MatchReader;
+import com.lgcns.bebee.match.domain.service.MatchReader;
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.domain.entity.Agreement;
 import com.lgcns.bebee.match.domain.entity.Match;

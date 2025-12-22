@@ -1,4 +1,4 @@
-package com.lgcns.bebee.match.application.service;
+package com.lgcns.bebee.match.domain.service;
 
 import com.lgcns.bebee.match.domain.entity.Agreement;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
