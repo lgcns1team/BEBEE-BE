@@ -5,5 +5,5 @@ public enum MemberStatus {
     PENDING_APPROVAL,
     REJECTED,
     WITHDRAW_APPROVAL,
-    WITHDRAWN
+    WITHDRAWN;
 }

@@ -175,12 +175,12 @@ class UploadDocumentUseCaseTest {
             given(verificationService.analyze(any(MultipartFile.class)))
                     .willReturn(analysisResult);
             given(documentManagement.loadDocument(documentId))
-                    .willThrow(new com.lgcns.bebee.member.common.exception.DocumentException(
-                            com.lgcns.bebee.member.common.exception.DocumentErrors.DOCUMENT_NOT_FOUND));
+                    .willThrow(new com.lgcns.bebee.member.core.exception.DocumentException(
+                            com.lgcns.bebee.member.core.exception.DocumentErrors.DOCUMENT_NOT_FOUND));
 
             // when & then
             assertThatThrownBy(() -> uploadDocumentUseCase.execute(param))
-                    .isInstanceOf(com.lgcns.bebee.member.common.exception.DocumentException.class);
+                    .isInstanceOf(com.lgcns.bebee.member.core.exception.DocumentException.class);
         }
     }
 

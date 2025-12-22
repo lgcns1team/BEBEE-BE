@@ -1,7 +1,9 @@
 package com.lgcns.bebee.member.infrastructure.security;
 
-import com.lgcns.bebee.common.config.JwtProperties;
+import com.lgcns.bebee.common.properties.JwtProperties;
+import com.lgcns.bebee.member.application.client.TokenProvider;
 import com.lgcns.bebee.member.domain.entity.Member;
+import com.lgcns.bebee.member.domain.entity.vo.TokenInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,27 +12,28 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 import javax.crypto.SecretKey;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtTokenProvider {
-
+public class JwtTokenProvider implements TokenProvider {
     private final JwtProperties jwtProperties;
     private final SecretKey secretKey;
 
     public JwtTokenProvider(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
-        this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
+        this.secretKey = Keys.hmacShaKeyFor(jwtProperties.secret().getBytes(StandardCharsets.UTF_8));
     }
 
-    public TokenPair generateTokens(Member member) {
+    @Override
+    public TokenInfo generateTokens(Member member) {
         Instant now = Instant.now();
-        String accessToken = createToken(member, now, jwtProperties.getAccessTokenValiditySeconds());
-        String refreshToken = createRefreshToken(member, now, jwtProperties.getRefreshTokenValiditySeconds());
-        return new TokenPair(accessToken, refreshToken, now.plusSeconds(jwtProperties.getAccessTokenValiditySeconds()));
+        String accessToken = createToken(member, now, jwtProperties.accessTokenExpiresTimeIn());
+        String refreshToken = createToken(member, now, jwtProperties.refreshTokenExpiresTimeIn());
+        return new TokenInfo(accessToken, refreshToken, jwtProperties.refreshTokenExpiresTimeIn());
     }
 
-    public TokenPair reissueTokens(Member member, String refreshToken) {
+    public TokenInfo reissueTokens(Member member, String refreshToken) {
         Claims claims = parseClaims(refreshToken);
         if (!claims.getSubject().equals(member.getEmail())) {
             throw new IllegalArgumentException("Invalid refresh token owner");
@@ -46,29 +49,15 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    private String createToken(Member member, Instant issuedAt, long validitySeconds) {
-        Instant expiry = issuedAt.plusSeconds(validitySeconds);
+    private String createToken(Member member, Instant issuedAt, long expiresTime) {
+        Instant expiry = issuedAt.plusSeconds(expiresTime);
         return Jwts.builder()
-                .setSubject(member.getEmail())
-                .claim("memberId", member.getMemberId())
+                .setSubject(String.valueOf(member.getId()))
                 .claim("role", member.getRole().name())
                 .setIssuedAt(Date.from(issuedAt))
                 .setExpiration(Date.from(expiry))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
-
-    private String createRefreshToken(Member member, Instant issuedAt, long validitySeconds) {
-        Instant expiry = issuedAt.plusSeconds(validitySeconds);
-        return Jwts.builder()
-                .setSubject(member.getEmail())
-                .claim("role", member.getRole().name())
-                .setIssuedAt(Date.from(issuedAt))
-                .setExpiration(Date.from(expiry))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    public record TokenPair(String accessToken, String refreshToken, Instant accessTokenExpiry) { }
 }
 
