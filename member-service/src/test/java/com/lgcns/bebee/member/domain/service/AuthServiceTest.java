@@ -1,8 +1,8 @@
 package com.lgcns.bebee.member.domain.service;
 
 import com.lgcns.bebee.common.exception.InvalidParamException;
-import com.lgcns.bebee.member.common.exception.AuthErrors;
-import com.lgcns.bebee.member.common.exception.AuthException;
+import com.lgcns.bebee.member.core.exception.MemberErrors;
+import com.lgcns.bebee.member.core.exception.MemberException;
 import com.lgcns.bebee.member.domain.entity.Member;
 import com.lgcns.bebee.member.domain.entity.vo.Gender;
 import com.lgcns.bebee.member.domain.entity.vo.MemberStatus;
@@ -10,7 +10,7 @@ import com.lgcns.bebee.member.domain.entity.vo.Role;
 import com.lgcns.bebee.member.domain.repository.MemberRepository;
 import com.lgcns.bebee.member.infrastructure.security.JwtTokenProvider;
 import com.lgcns.bebee.member.infrastructure.security.JwtTokenProvider.TokenPair;
-import com.lgcns.bebee.member.infrastructure.security.RefreshTokenBlacklistService;
+import com.lgcns.bebee.member.infrastructure.redis.RedisTokenRepository;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +57,7 @@ class AuthServiceTest {
     private JwtTokenProvider jwtTokenProvider;
 
     @Mock
-    private RefreshTokenBlacklistService refreshTokenBlacklistService;
+    private RedisTokenRepository refreshTokenBlacklistService;
 
     @InjectMocks
     private AuthService authService;
@@ -66,7 +66,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        testMember = Member.createNewMember(
+        testMember = Member.create(
                 "test@example.com",
                 "encodedPassword",
                 "홍길동",
@@ -246,8 +246,8 @@ class AuthServiceTest {
 
             // when & then
             assertThatThrownBy(() -> authService.login(command))
-                    .isInstanceOf(AuthException.class)
-                    .hasMessageContaining(AuthErrors.INVALID_CREDENTIALS.getMessage());
+                    .isInstanceOf(MemberException.class)
+                    .hasMessageContaining(MemberErrors.INVALID_CREDENTIALS.getMessage());
             verify(passwordEncoder, never()).matches(anyString(), anyString());
         }
 
@@ -265,15 +265,15 @@ class AuthServiceTest {
 
             // when & then
             assertThatThrownBy(() -> authService.login(command))
-                    .isInstanceOf(AuthException.class)
-                    .hasMessageContaining(AuthErrors.INVALID_CREDENTIALS.getMessage());
+                    .isInstanceOf(MemberException.class)
+                    .hasMessageContaining(MemberErrors.INVALID_CREDENTIALS.getMessage());
         }
 
         @Test
         @DisplayName("REJECTED 상태 회원 로그인 시 예외를 발생시킨다")
         void login_rejectedMember() {
             // given
-            Member rejectedMember = Member.createNewMember(
+            Member rejectedMember = Member.create(
                     "test@example.com",
                     "encodedPassword",
                     "홍길동",
@@ -299,8 +299,8 @@ class AuthServiceTest {
 
             // when & then
             assertThatThrownBy(() -> authService.login(command))
-                    .isInstanceOf(AuthException.class)
-                    .hasMessageContaining(AuthErrors.MEMBER_STATUS_REJECTED.getMessage());
+                    .isInstanceOf(MemberException.class)
+                    .hasMessageContaining(MemberErrors.MEMBER_STATUS_REJECTED.getMessage());
         }
     }
 
@@ -347,8 +347,8 @@ class AuthServiceTest {
 
             // when & then
             assertThatThrownBy(() -> authService.reissue(refreshToken))
-                    .isInstanceOf(AuthException.class)
-                    .hasMessageContaining(AuthErrors.INVALID_CREDENTIALS.getMessage());
+                    .isInstanceOf(MemberException.class)
+                    .hasMessageContaining(MemberErrors.INVALID_CREDENTIALS.getMessage());
             verify(jwtTokenProvider, never()).parseClaims(anyString());
         }
     }

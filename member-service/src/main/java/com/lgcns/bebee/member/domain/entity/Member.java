@@ -1,6 +1,7 @@
 package com.lgcns.bebee.member.domain.entity;
 
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import com.lgcns.bebee.member.core.exception.MemberErrors;
 import com.lgcns.bebee.member.domain.entity.vo.Gender;
 import com.lgcns.bebee.member.domain.entity.vo.MemberStatus;
 import com.lgcns.bebee.member.domain.entity.vo.Role;
@@ -20,8 +21,8 @@ import java.time.LocalDate;
 public class Member extends BaseTimeEntity {
 
     @Id
-    @Tsid
-    private Long memberId;
+    @Tsid @Column(name = "member_id")
+    private Long id;
 
     @Column(nullable = false, length = 30, unique = true)
     private String email;
@@ -74,39 +75,60 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal sweetness = BigDecimal.valueOf(40.00);
 
-    /**
-     * 회원 생성 팩토리 메서드
-     * 도메인 서비스 및 테스트 코드에서 일관된 방식으로 Member 인스턴스를 생성하기 위해 사용합니다.
-     */
-    public static Member createNewMember(String email,
-                                         String encodedPassword,
-                                         String name,
-                                         String nickname,
-                                         LocalDate birthDate,
-                                         Gender gender,
-                                         String phoneNumber,
-                                         Role role,
-                                         MemberStatus status,
-                                         String addressRoad,
-                                         BigDecimal latitude,
-                                         BigDecimal longitude,
-                                         String districtCode) {
+    public static Member create(String email,
+                                String encodedPassword,
+                                String name,
+                                String nickname,
+                                LocalDate birthDate,
+                                String gender,
+                                String phoneNumber,
+                                String role,
+                                String addressRoad,
+                                BigDecimal latitude,
+                                BigDecimal longitude,
+                                String districtCode) {
         Member member = new Member();
         member.email = email;
         member.password = encodedPassword;
         member.name = name;
         member.nickname = nickname;
         member.birthDate = birthDate;
-        member.gender = gender;
+        member.gender = Gender.valueOf(gender);
         member.phoneNumber = phoneNumber;
-        member.role = role;
-        member.status = status;
+        member.role = Role.from(role);
+        member.status = MemberStatus.PENDING_APPROVAL;
         member.addressRoad = addressRoad;
         member.latitude = latitude;
         member.longitude = longitude;
         member.districtCode = districtCode;
         // profileImageUrl, introduction, sweetness 는 기본값 사용
         return member;
+    }
+
+    /**
+     * 입력된 비밀번호가 회원의 비밀번호와 일치하는지 검증합니다.
+     *
+     * @param encodedPassword 암호화된 입력 비밀번호
+     * @throws com.lgcns.bebee.member.core.exception.MemberException 비밀번호가 일치하지 않는 경우
+     */
+    public void validatePassword(String encodedPassword) {
+        if (!encodedPassword.equals(this.password)) {
+            throw MemberErrors.INVALID_PASSWORD.toException();
+        }
+    }
+
+    /**
+     * 회원이 로그인 가능한 상태인지 검증합니다.
+     * ACTIVE 상태만 로그인이 가능합니다.
+     *
+     * @throws com.lgcns.bebee.member.core.exception.MemberException 로그인 불가능한 상태인 경우
+     */
+    public void validateLoginAvailable() {
+        switch (this.status) {
+            case REJECTED -> throw MemberErrors.MEMBER_STATUS_REJECTED.toException();
+            case WITHDRAWN, WITHDRAW_APPROVAL -> throw MemberErrors.MEMBER_STATUS_WITHDRAWN.toException();
+            case ACTIVE, PENDING_APPROVAL -> { /* 정상 */ }
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 package com.lgcns.bebee.member.domain.service;
 
 import com.lgcns.bebee.common.exception.InvalidParamException;
-import com.lgcns.bebee.member.common.exception.AuthInvalidParamErrors;
+import com.lgcns.bebee.member.core.exception.MemberInvalidParamErrors;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ public class PasswordPolicyValidator {
 
     public void validate(String rawPassword) {
         if (rawPassword == null || !PASSWORD_PATTERN.matcher(rawPassword).matches()) {
-            throw new InvalidParamException(AuthInvalidParamErrors.INVALID_PASSWORD_FORMAT);
+            throw new InvalidParamException(MemberInvalidParamErrors.PASSWORD_NOT_NULL);
         }
     }
 }

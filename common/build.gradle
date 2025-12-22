@@ -23,7 +23,7 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Spring Security - 공통 인증/인가 컴포넌트(Jwt 필터 등)를 위해 필요
-    api 'org.springframework.boot:spring-boot-starter-security'
+//    api 'org.springframework.boot:spring-boot-starter-security'
 
     // JWT 라이브러리 - 토큰 파싱/검증
     api 'io.jsonwebtoken:jjwt-api:0.11.5'

@@ -7,7 +7,7 @@ import com.lgcns.bebee.member.domain.entity.vo.DocumentStatus;
 import com.lgcns.bebee.member.domain.entity.vo.Gender;
 import com.lgcns.bebee.member.domain.entity.vo.MemberStatus;
 import com.lgcns.bebee.member.domain.entity.vo.Role;
-import com.lgcns.bebee.member.infrastructure.security.RefreshTokenBlacklistService;
+import com.lgcns.bebee.member.infrastructure.redis.RedisTokenRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +48,7 @@ class DocumentVerificationRepositoryIntegrationTest {
     private EntityManager entityManager;
 
     @MockBean
-    private RefreshTokenBlacklistService refreshTokenBlacklistService;
+    private RedisTokenRepository refreshTokenBlacklistService;
 
     @MockBean
     private AuditorAware<?> auditorAware;

@@ -77,6 +77,12 @@ spring:
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
 
+jwt:
+  secret: ${JWT_SECRET}
+  issuer: ${JWT_ISSUER:bebee}
+  access-token-expires-time-in: ${JWT_ACCESS_TOKEN_EXPIRES_IN}
+  refresh-token-expires-time-in: ${JWT_REFRESH_TOKEN_EXPIRES_IN}
+
 # 로깅 설정
 logging:
   level:

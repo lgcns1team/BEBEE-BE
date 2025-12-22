@@ -1,8 +1,8 @@
 package com.lgcns.bebee.member.presentation.swagger;
 
-import com.lgcns.bebee.member.presentation.dto.DocumentRejectReqDTO;
-import com.lgcns.bebee.member.presentation.dto.DocumentUploadResDTO;
-import com.lgcns.bebee.member.presentation.dto.DocumentVerificationResDTO;
+import com.lgcns.bebee.member.presentation.dto.req.DocumentRejectReqDTO;
+import com.lgcns.bebee.member.presentation.dto.res.DocumentUploadResDTO;
+import com.lgcns.bebee.member.presentation.dto.res.DocumentVerificationResDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 

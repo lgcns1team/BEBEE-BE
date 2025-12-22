@@ -1,9 +1,9 @@
 package com.lgcns.bebee.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lgcns.bebee.common.config.JwtProperties;
-import com.lgcns.bebee.member.presentation.dto.MemberLoginReqDTO;
-import com.lgcns.bebee.member.presentation.dto.MemberSignUpReqDTO;
+import com.lgcns.bebee.common.properties.JwtProperties;
+import com.lgcns.bebee.member.presentation.dto.req.MemberLoginReqDTO;
+import com.lgcns.bebee.member.presentation.dto.req.MemberSignUpReqDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
