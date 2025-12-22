@@ -5,9 +5,9 @@ import com.lgcns.bebee.member.application.usecase.RejectDocumentUseCase;
 import com.lgcns.bebee.member.application.usecase.UploadDocumentUseCase;
 import com.lgcns.bebee.member.domain.entity.DocumentVerification;
 import com.lgcns.bebee.member.domain.service.DocumentManagement;
-import com.lgcns.bebee.member.presentation.dto.DocumentRejectReqDTO;
-import com.lgcns.bebee.member.presentation.dto.DocumentUploadResDTO;
-import com.lgcns.bebee.member.presentation.dto.DocumentVerificationResDTO;
+import com.lgcns.bebee.member.presentation.dto.req.DocumentRejectReqDTO;
+import com.lgcns.bebee.member.presentation.dto.res.DocumentUploadResDTO;
+import com.lgcns.bebee.member.presentation.dto.res.DocumentVerificationResDTO;
 import com.lgcns.bebee.member.presentation.swagger.DocumentSwagger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +49,7 @@ public class DocumentController implements DocumentSwagger {
         DocumentVerification verification = documentManagement.load(verificationId);
 
         DocumentUploadResDTO response = DocumentUploadResDTO.of(
-                verification.getDocumentVerificationId(),
+                verification.getId(),
                 verification.getFileUrl(),
                 verification.getForgeryScore(),
                 verification.getSystemFlag(),

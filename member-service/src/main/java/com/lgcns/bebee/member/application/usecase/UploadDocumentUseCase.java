@@ -59,7 +59,7 @@ public class UploadDocumentUseCase implements UseCase<UploadDocumentUseCase.Para
         // 5. 저장
         verificationRepository.save(verification);
 
-        return verification.getDocumentVerificationId();
+        return verification.getId();
     }
 
     /**

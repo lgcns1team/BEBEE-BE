@@ -1,5 +1,5 @@
 # ========================================
-# Chat Service 개발 환경 설정 파일
+# Chat Service 로컬 개발 환경 설정 파일
 # ========================================
 #
 # 로컬 개발 환경에서 사용되는 설정입니다.
@@ -35,17 +35,16 @@ spring:
       # create: 애플리케이션 시작 시 테이블을 새로 생성 (기존 데이터 삭제)
       # validate: 엔티티와 데이터베이스 스키마 일치 여부만 검증
       # none: 자동 스키마 생성 비활성화
-      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+      ddl-auto: ${HIBERNATE_DDL_AUTO:none}
 
-      # SQL 쿼리 로그 출력 설정 (환경 변수에서 가져오거나 기본값 true 사용)
-      show-sql: ${SHOW_SQL:true}
+      # SQL 쿼리 로그 출력 설정 (p6spy 사용으로 비활성화)
+      show-sql: ${SHOW_SQL:false}
 
       # Hibernate 추가 속성 설정
       properties:
         hibernate:
-          # SQL 쿼리 포맷팅 설정 (환경 변수에서 가져오거나 기본값 true 사용)
-          # 가독성을 위해 들여쓰기 적용
-          format_sql: ${FORMAT_SQL:true}show
+          # SQL 쿼리 포맷팅 설정 (p6spy 사용으로 비활성화)
+          format_sql: ${FORMAT_SQL:false}
 
   data:
     # Redis 설정
@@ -54,10 +53,12 @@ spring:
       host: ${REDIS_HOST:localhost}
       # Redis Port
       port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PASSWORD:}
 
     # Mongodb 설정
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/bebee}
+      uri: ${MONGODB_URI:mongodb://${MONGODB_USERNAME:bebee}:${MONGODB_PASSWORD:bebee1234}@${MONGODB_HOST:localhost}:27017/bebee?authSource=admin}
       auto-index-creation: ${AUTO_INDEX_CREATION:false}
 
   # Flyway 설정
@@ -83,6 +84,32 @@ spring:
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
 
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+  api:
+    host: "${SPRINGDOC_API_HOST:http://localhost:8081}"
+    desc: "${SPRINGDOC_API_DESC:로컬 서버}"
+
+
+# TSID Node 아이디
+tsid:
+  node:
+    id: ${NODE_ID:0}
+
+# WebSocket Handshake를 허용할 클라이언트 출처 패턴 목록
+websocket:
+  stomp:
+    allowed-origin-patterns: "${WEBSOCKET_ALLOWED_ORIGINS:http://localhost:[*],https://localhost:[*]}"
 
 # 로깅 설정
 logging:
@@ -90,11 +117,8 @@ logging:
     # 루트 로그 레벨 설정 (환경 변수에서 가져오거나 기본값 info 사용)
     root: ${LOGGING_LEVEL_ROOT:INFO}
 
-    # Hibernate SQL 쿼리 로그 레벨 (debug: 상세한 쿼리 정보 출력)
-    org.hibernate.SQL: DEBUG
-
-    # Hibernate 파라미터 바인딩 로그 레벨 (trace: 모든 파라미터 값 출력)
-    org.hibernate.type: TRACE
+    # P6Spy SQL 로그 레벨
+    p6spy: INFO
 
     # Spring Data MongoDB Template 로그 레벨 (DEBUG: MongoDB 쿼리 정보 출력)
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG

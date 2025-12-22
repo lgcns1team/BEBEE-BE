@@ -16,7 +16,6 @@ CREATE TABLE in_app_notification
     is_read                BOOLEAN      NOT NULL,
     read_at                TIMESTAMP,
     type                   ENUM ('CHAT', 'APPLICATION', 'MATCH'),
-    redirection_url        VARCHAR(255) NOT NULL,
     created_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -69,10 +68,10 @@ CREATE TABLE match_in_app_notification
 # 5. PushNotificationSubscription 테이블
 CREATE TABLE push_notification_subscription
 (
-  web_push_notification_id BIGINT NOT NULL PRIMARY KEY,
+  push_notification_subscription_id BIGINT NOT NULL PRIMARY KEY,
   subscriber_id BIGINT NOT NULL,
-  fcm_token_id BIGINT NOT NULL,
-  device_type ENUM('WEB', 'IOS', 'ANDROID') NOT NULL,
+  token BIGINT NOT NULL UNIQUE,
+  device_type ENUM('WEB_PC', 'WEB_IOS', 'WEB_ANDROID') NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 

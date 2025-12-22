@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class DocumentVerification extends BaseTimeEntity {
 
     @Id
-    @Tsid
-    private Long documentVerificationId;
+    @Tsid @Column(name = "document_verification_id")
+    private Long id;
 
     @Column(nullable = false, length = 255)
     private String fileUrl;

@@ -26,7 +26,6 @@ CREATE TABLE `member` (
     `status`           VARCHAR(20)  NOT NULL,
     `profile_image_url` VARCHAR(255) NULL,
     `address_road`     VARCHAR(255) NULL,
-    `address_number`   VARCHAR(10)  NOT NULL,
     `introduction`     VARCHAR(255) NULL,
     `latitude`         DECIMAL(10,7) NOT NULL,
     `longitude`        DECIMAL(10,7) NOT NULL,

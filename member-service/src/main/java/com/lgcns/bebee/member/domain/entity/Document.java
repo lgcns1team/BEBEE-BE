@@ -29,8 +29,6 @@ public class Document extends BaseTimeEntity {
     @Column(nullable = false, length = 255)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Long memberId;
 }
 

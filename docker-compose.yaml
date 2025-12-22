@@ -17,8 +17,8 @@
 # Docker Compose 버전
 version: '3.8'
 
-# 프로젝트 이름 지정
-name: bebee
+# 프로젝트 이름 지정 (Docker Compose 버전 호환성으로 인해 주석 처리)
+# name: bebee
 
 # 서비스 정의
 services:
@@ -65,11 +65,12 @@ services:
     image: mongo:8.0
     container_name: mongo-db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: bebee
-      MONGO_INITDB_ROOT_PASSWORD: bebee1234
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root1234
     ports:
       - "27017:27017"
     volumes:
+      - ./docker/mongodb/init:/docker-entrypoint-initdb.d:ro
       - mongo_data:/data/db
     networks:
       - bebee-network

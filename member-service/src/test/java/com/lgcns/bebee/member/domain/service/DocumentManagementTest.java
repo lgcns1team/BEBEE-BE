@@ -1,6 +1,6 @@
 package com.lgcns.bebee.member.domain.service;
 
-import com.lgcns.bebee.member.common.exception.DocumentException;
+import com.lgcns.bebee.member.core.exception.DocumentException;
 import com.lgcns.bebee.member.domain.entity.Document;
 import com.lgcns.bebee.member.domain.entity.DocumentVerification;
 import com.lgcns.bebee.member.domain.entity.vo.DocumentStatus;

@@ -1,6 +1,6 @@
 package com.lgcns.bebee.member.application.usecase;
 
-import com.lgcns.bebee.member.common.exception.DocumentException;
+import com.lgcns.bebee.member.core.exception.DocumentException;
 import com.lgcns.bebee.member.domain.entity.Document;
 import com.lgcns.bebee.member.domain.entity.DocumentVerification;
 import com.lgcns.bebee.member.domain.service.DocumentManagement;
@@ -82,7 +82,7 @@ class RejectDocumentUseCaseTest {
 
             given(documentManagement.load(verificationId))
                     .willThrow(new DocumentException(
-                            com.lgcns.bebee.member.common.exception.DocumentErrors.NOT_FOUND));
+                            com.lgcns.bebee.member.core.exception.DocumentErrors.NOT_FOUND));
 
             // when & then
             assertThatThrownBy(() -> rejectDocumentUseCase.execute(param))
@@ -99,7 +99,7 @@ class RejectDocumentUseCaseTest {
 
             given(documentManagement.load(verificationId)).willReturn(testVerification);
             willThrow(new DocumentException(
-                    com.lgcns.bebee.member.common.exception.DocumentErrors.ALREADY_PROCESSED))
+                    com.lgcns.bebee.member.core.exception.DocumentErrors.ALREADY_PROCESSED))
                     .given(documentManagement).reject(testVerification, reason);
 
             // when & then

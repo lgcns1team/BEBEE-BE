@@ -2,6 +2,7 @@ package com.lgcns.bebee.chat.infrastructure.redis;
 
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,17 +12,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Redis 채널 구독 테스트")
 public class RedisChannelSubscriberTest {
     @Mock
     private RedisPubSubAsyncCommands<String, String> asyncCommands;
 
     @InjectMocks
-    private RedisChannelSubscriber redisSubscriptionManager;
+    private RedisChannelSubscriber redisChannelSubscriber;
 
     @Test
-    void subscribeToChatroom_성공(){
+    void subscribeToMember_성공(){
         // given
-        Long chatroomId = 123L;
+        Long memberId = 123L;
 
         RedisFuture<Void> future = mock(RedisFuture.class);
         when(asyncCommands.subscribe(anyString())).thenReturn(future);
@@ -29,7 +31,7 @@ public class RedisChannelSubscriberTest {
         when(future.exceptionally(any())).thenReturn(future);
 
         // when
-        redisSubscriptionManager.subscribeToChatroom(chatroomId);
+        redisChannelSubscriber.subscribeToMember(memberId);
 
         // then
         verify(asyncCommands).subscribe(any());

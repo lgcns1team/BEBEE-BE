@@ -37,3 +37,23 @@ out/
 .vscode/
 
 .env
+/notification-service/src/main/resources/firebase/*
+
+### Sensitive Files ###
+cookies*
+*.token
+auth.*
+*.key
+*.pem
+*.p12
+*.jks
+
+### Logs ###
+logs/
+*.log
+log/
+
+### Temporary Files ###
+tmp/
+temp/
+*.tmp
