@@ -33,21 +33,20 @@ public class AgreementCreateResDTO {
      * UseCase Result -> Response
      */
     public static AgreementCreateResDTO from(CreateAgreementUseCase.Result result) {
-        CreateAgreementUseCase.Result.AgreementInfo info = result.getAgreementInfo();
 
         return new AgreementCreateResDTO(
-                info.getAgreementId(),
-                info.getMatchId(),
-                info.getStatus(),
-                info.getConfirmationDate(),
-                info.getType(),
-                info.getIsVolunteer(),
-                info.getHelpCategories(),
-                info.getUnitHoney(),
-                info.getTotalHoney(),
-                info.getRegion(),
-                info.getIsDayComplete(),
-                info.getIsTermComplete()
+                result.getAgreementId(),
+                result.getMatchId(),
+                result.getStatus(),
+                result.getConfirmationDate(),
+                result.getType(),
+                result.getIsVolunteer(),
+                result.getHelpCategories(),
+                result.getUnitHoney(),
+                result.getTotalHoney(),
+                result.getRegion(),
+                result.getIsDayComplete(),
+                result.getIsTermComplete()
         );
     }
 }

@@ -103,45 +103,34 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Result {
-        private AgreementInfo agreementInfo;
+        private Long agreementId;
+        private Long matchId;
+        private AgreementStatus status;
+        private LocalDate confirmationDate;
+        private EngagementType type;
+        private Boolean isVolunteer;
+        private List<AgreementHelpCategory> helpCategories;
+        private Integer unitHoney;
+        private Integer totalHoney;
+        private String region;
+        private Boolean isDayComplete;
+        private Boolean isTermComplete;
 
         public static Result from(Agreement agreement) {
-            AgreementInfo info = AgreementInfo.from(agreement);
-            return new Result(info);
-        }
-
-        @Getter
-        @AllArgsConstructor(access = AccessLevel.PRIVATE)
-        public static class AgreementInfo {
-            private Long agreementId;
-            private Long matchId;
-            private AgreementStatus status;
-            private LocalDate confirmationDate;
-            private EngagementType type;
-            private Boolean isVolunteer;
-            private List<AgreementHelpCategory> helpCategories;
-            private Integer unitHoney;
-            private Integer totalHoney;
-            private String region;
-            private Boolean isDayComplete;
-            private Boolean isTermComplete;
-
-            public static AgreementInfo from(Agreement agreement) {
-                return new AgreementInfo(
-                        agreement.getId(),
-                        agreement.getMatchId(),
-                        agreement.getStatus(),
-                        agreement.getConfirmationDate(),
-                        agreement.getType(),
-                        agreement.getIsVolunteer(),
-                        agreement.getHelpCategories(),
-                        agreement.getUnitHoney(),
-                        agreement.getTotalHoney(),
-                        agreement.getRegion(),
-                        agreement.getIsDayComplete(),
-                        agreement.getIsTermComplete()
-                );
-            }
+            return new Result(
+                    agreement.getId(),
+                    agreement.getMatchId(),
+                    agreement.getStatus(),
+                    agreement.getConfirmationDate(),
+                    agreement.getType(),
+                    agreement.getIsVolunteer(),
+                    agreement.getHelpCategories(),
+                    agreement.getUnitHoney(),
+                    agreement.getTotalHoney(),
+                    agreement.getRegion(),
+                    agreement.getIsDayComplete(),
+                    agreement.getIsTermComplete()
+            );
         }
     }
 }
