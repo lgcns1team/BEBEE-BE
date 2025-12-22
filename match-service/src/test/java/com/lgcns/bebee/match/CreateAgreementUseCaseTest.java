@@ -82,11 +82,10 @@ class CreateAgreementUseCaseTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.getAgreementInfo()).isNotNull();
-            assertThat(result.getAgreementInfo().getMatchId()).isEqualTo(matchId);
-            assertThat(result.getAgreementInfo().getUnitHoney()).isEqualTo(5000);
-            assertThat(result.getAgreementInfo().getTotalHoney()).isEqualTo(5000);
-            assertThat(result.getAgreementInfo().getStatus()).isEqualTo(AgreementStatus.BEFORE);
+            assertThat(result.getMatchId()).isEqualTo(matchId);
+            assertThat(result.getUnitHoney()).isEqualTo(5000);
+            assertThat(result.getTotalHoney()).isEqualTo(5000);
+            assertThat(result.getStatus()).isEqualTo(AgreementStatus.BEFORE);
 
             // Mock 호출 검증
             verify(matchReader, times(1)).getById(matchId);
@@ -119,8 +118,8 @@ class CreateAgreementUseCaseTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.getAgreementInfo().getType()).isEqualTo(EngagementType.TERM);
-            assertThat(result.getAgreementInfo().getIsVolunteer()).isTrue();
+            assertThat(result.getType()).isEqualTo(EngagementType.TERM);
+            assertThat(result.getIsVolunteer()).isTrue();
 
             verify(matchReader, times(1)).getById(matchId);
             verify(agreementRepository, times(1)).save(any(Agreement.class));
@@ -445,7 +444,7 @@ class CreateAgreementUseCaseTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.getAgreementInfo().getUnitHoney()).isEqualTo(0);
+            assertThat(result.getUnitHoney()).isEqualTo(0);
         }
     }
 
