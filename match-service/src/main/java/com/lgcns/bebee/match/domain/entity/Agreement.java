@@ -83,9 +83,8 @@ public class Agreement extends BaseTimeEntity {
         agreement.isTermComplete = Boolean.FALSE;
 
         helpCategoryIds.forEach(helpCategoryId -> {
-            AgreementHelpCategory agreementHelpCategory = AgreementHelpCategory.create(helpCategoryId);
+            AgreementHelpCategory agreementHelpCategory = AgreementHelpCategory.create(agreement, helpCategoryId);
             agreement.helpCategories.add(agreementHelpCategory);
-            agreementHelpCategory.setAgreement(agreement);
         });
 
         return agreement;

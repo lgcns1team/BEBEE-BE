@@ -20,20 +20,10 @@ public class AgreementHelpCategory {
     @JoinColumn(name = "agreement_id")
     private Agreement agreement;
 
-//    @Column(name = "help_category_id", insertable = false, updatable = false)
-//    private Long helpCategoryId;
-
-    public static AgreementHelpCategory create(Long helpCategoryId) {
+    public static AgreementHelpCategory create(Agreement agreement, Long helpCategoryId) {
         AgreementHelpCategory category = new AgreementHelpCategory();
+        category.agreement = agreement;
         category.id = new AgreementHelpCategoryId(null, helpCategoryId);
-//        category.helpCategoryId = helpCategoryId;
         return category;
-    }
-
-    public void setAgreement(Agreement agreement) {
-        this.agreement = agreement;
-        if (this.id != null && agreement != null) {
-            this.id.setAgreementId(agreement.getId());
-        }
     }
 }
