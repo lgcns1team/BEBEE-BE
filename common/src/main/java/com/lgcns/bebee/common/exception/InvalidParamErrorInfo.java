@@ -11,5 +11,7 @@ public interface InvalidParamErrorInfo {
         return "[" + getCode() + "] " + getDesc() + " (" + getField() + ")";
     }
 
-    default InvalidParamException toException(){return new InvalidParamException(this);}
+    default InvalidParamException toException() {
+        return new InvalidParamException(this);
+    }
 }

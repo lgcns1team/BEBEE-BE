@@ -6,6 +6,7 @@ import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Agreement extends BaseTimeEntity {
     @Id
@@ -47,6 +49,45 @@ public class Agreement extends BaseTimeEntity {
     @Column(nullable = false)
     private AgreementStatus status = AgreementStatus.BEFORE;
 
-    @OneToMany(mappedBy = "agreement")
-    private List<AgreementHelpCategory> helpCategories = new ArrayList<>();
+    @OneToMany(mappedBy = "agreement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AgreementHelpCategory> helpCategories= new ArrayList<>();
+
+    @OneToOne(mappedBy = "agreement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AgreementEngagementTimeDay day;
+
+    @OneToOne(mappedBy = "agreement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AgreementEngagementTimeTerm term;
+
+    @Column
+    private Boolean isVolunteer;
+
+    public static Agreement create(
+            Long matchId,
+            EngagementType type,
+            Boolean isVolunteer,
+            Integer unitHoney,
+            Integer totalHoney,
+            String region,
+            List<Long> helpCategoryIds
+    ) {
+        Agreement agreement = new Agreement();
+        agreement.matchId = matchId;
+        agreement.type = type;
+        agreement.isVolunteer = isVolunteer;
+        agreement.unitHoney = unitHoney;
+        agreement.totalHoney = totalHoney;
+        agreement.region = region;
+        agreement.confirmationDate = LocalDate.now();
+        agreement.status = AgreementStatus.BEFORE;
+        agreement.isDayComplete = Boolean.FALSE;
+        agreement.isTermComplete = Boolean.FALSE;
+
+        helpCategoryIds.forEach(helpCategoryId -> {
+            String categoryName = com.lgcns.bebee.match.domain.entity.vo.HelpCategoryType.getNameById(helpCategoryId);
+            AgreementHelpCategory agreementHelpCategory = AgreementHelpCategory.create(agreement, helpCategoryId, categoryName);
+            agreement.helpCategories.add(agreementHelpCategory);
+        });
+
+        return agreement;
+    }
 }
