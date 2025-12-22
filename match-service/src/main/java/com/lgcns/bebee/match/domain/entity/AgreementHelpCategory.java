@@ -14,6 +14,7 @@ public class AgreementHelpCategory {
     @EmbeddedId
     private AgreementHelpCategoryId id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("agreementId")
     @JoinColumn(name = "agreement_id")
