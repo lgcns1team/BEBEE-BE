@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "`match`")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Match extends BaseTimeEntity {
     @Id
