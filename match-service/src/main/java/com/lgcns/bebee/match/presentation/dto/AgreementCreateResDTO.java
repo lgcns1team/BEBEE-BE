@@ -1,8 +1,6 @@
 package com.lgcns.bebee.match.presentation.dto;
 
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
-import com.lgcns.bebee.match.domain.entity.Agreement;
-import com.lgcns.bebee.match.domain.entity.AgreementHelpCategory;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import lombok.AccessLevel;
@@ -22,7 +20,7 @@ public class AgreementCreateResDTO {
     private LocalDate confirmationDate;
     private EngagementType type;
     private Boolean isVolunteer;
-    private List<AgreementHelpCategory> helpCategories;
+    private List<AgreementHelpCategoryDTO> helpCategories;
     private Integer unitHoney;
     private Integer totalHoney;
     private String region;

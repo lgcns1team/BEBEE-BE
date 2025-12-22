@@ -6,13 +6,13 @@ import com.lgcns.bebee.common.exception.InvalidParamException;
 import com.lgcns.bebee.match.domain.service.MatchReader;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
-import com.lgcns.bebee.match.domain.entity.AgreementHelpCategory;
 import com.lgcns.bebee.match.domain.entity.Match;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.exception.MatchErrors;
 import com.lgcns.bebee.match.exception.MatchInvalidParamErrors;
+import com.lgcns.bebee.match.presentation.dto.AgreementHelpCategoryDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -109,7 +109,7 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         private LocalDate confirmationDate;
         private EngagementType type;
         private Boolean isVolunteer;
-        private List<AgreementHelpCategory> helpCategories;
+        private List<AgreementHelpCategoryDTO> helpCategories;
         private Integer unitHoney;
         private Integer totalHoney;
         private String region;
@@ -117,6 +117,10 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         private Boolean isTermComplete;
 
         public static Result from(Agreement agreement) {
+            List<AgreementHelpCategoryDTO> categoryDTOs = agreement.getHelpCategories().stream()
+                    .map(AgreementHelpCategoryDTO::from)
+                    .toList();
+
             return new Result(
                     agreement.getId(),
                     agreement.getMatchId(),
@@ -124,7 +128,7 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
                     agreement.getConfirmationDate(),
                     agreement.getType(),
                     agreement.getIsVolunteer(),
-                    agreement.getHelpCategories(),
+                    categoryDTOs,
                     agreement.getUnitHoney(),
                     agreement.getTotalHoney(),
                     agreement.getRegion(),
