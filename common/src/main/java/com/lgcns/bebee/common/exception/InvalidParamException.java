@@ -18,4 +18,9 @@ public class InvalidParamException extends RuntimeException {
         return field;
     }
 
+    @Override
+    public String getMessage() {
+        return String.format("%s: %s", field, error.getDesc());
+    }
+
 }
