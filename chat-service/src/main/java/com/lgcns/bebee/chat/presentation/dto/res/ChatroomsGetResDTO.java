@@ -43,6 +43,9 @@ public record ChatroomsGetResDTO(
             @Schema(description = "채팅방 ID", example = "1234567890")
             Long chatroomId,
 
+            @Schema(description = "채팅방 제목", example = "이동 도우미 구해요!!", nullable = true)
+            String title,
+
             @Schema(description = "상대방 ID", example = "200")
             Long otherId,
 
@@ -70,6 +73,7 @@ public record ChatroomsGetResDTO(
 
             return ChatroomDTO.builder()
                     .chatroomId(chatroom.getId())
+                    .title(chatroom.getTitle())
                     .otherId(otherMember.getId())
                     .otherNickname(otherMember.getNickname())
                     .otherProfileImageUrl(otherMember.getProfileImageUrl())
