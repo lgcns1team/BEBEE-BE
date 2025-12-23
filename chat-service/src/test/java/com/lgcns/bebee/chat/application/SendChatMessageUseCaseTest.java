@@ -63,7 +63,7 @@ class SendChatMessageUseCaseTest {
     @Test
     void success_SendMessageAndUpdateLastMessage() {
         // Given
-        Long chatroomId = null;
+        Long chatroomId = 100L;
         Long senderId = 1L;
         Long receiverId = 2L;
         String textContent = "Hello, world!";
@@ -83,9 +83,7 @@ class SendChatMessageUseCaseTest {
 
         when(memberManagement.getExistingMember(senderId)).thenReturn(mockSender);
         when(memberManagement.getExistingMember(receiverId)).thenReturn(mockReceiver);
-        when(chatroomManagement.openChatroom(eq(chatroomId), eq(mockSender), eq(mockReceiver)))
-                .thenReturn(mockChatroom);
-
+        when(chatroomManagement.getExistingChatroom(chatroomId)).thenReturn(mockChatroom);
 
         ArgumentCaptor<Chat> chatCaptor = ArgumentCaptor.forClass(Chat.class);
         when(chatRepository.save(chatCaptor.capture())).thenReturn(mockChat);
@@ -97,7 +95,7 @@ class SendChatMessageUseCaseTest {
         verify(memberManagement).getExistingMember(senderId);
         verify(memberManagement).getExistingMember(receiverId);
 
-        verify(chatroomManagement).openChatroom(eq(chatroomId), eq(mockSender), eq(mockReceiver));
+        verify(chatroomManagement).getExistingChatroom(chatroomId);
         verify(chatRepository).save(any(Chat.class));
 
         Chat savedChat = chatCaptor.getValue();
