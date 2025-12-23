@@ -3,6 +3,7 @@
 -- ========================================
 -- 개발 및 테스트 환경에서 사용할 도움 카테고리 동기화 데이터
 
+
 -- 카테고리 1: 외출동행
 INSERT INTO help_category_sync (help_category_id, name, created_at, updated_at)
 VALUES (

@@ -3,7 +3,7 @@
 -- ========================================
 -- 개발 및 테스트 환경에서 사용할 회원 동기화 데이터
 
--- 회원 111
+-- 회원 1
 INSERT INTO member_sync (member_id, nickname, profile_image_url, sweetness, created_at, updated_at)
 VALUES (
     100,
@@ -18,7 +18,7 @@ VALUES (
     sweetness = VALUES(sweetness),
     updated_at = NOW();
 
--- 회원 222
+-- 회원 2
 INSERT INTO member_sync (member_id, nickname, profile_image_url, sweetness, created_at, updated_at)
 VALUES (
     200,
