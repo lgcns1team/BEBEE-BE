@@ -20,9 +20,6 @@ dependencies {
 	// Spring Data MongoDB - Spring Data 환경과 통합된 MongoDB 클라이언트
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-	// Spring Data Mongodb - Mongodb Client
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
 	// Lettuce Redis Client - Netty 기반 고성 Non-blocking Redis 클라이언트
 	implementation "io.lettuce:lettuce-core:7.1.0.RELEASE"
 
