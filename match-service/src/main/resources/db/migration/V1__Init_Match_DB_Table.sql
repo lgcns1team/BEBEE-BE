@@ -46,12 +46,17 @@ CREATE TABLE `match`
     `post_id`      BIGINT       NOT NULL,
     `title`        VARCHAR(100) NOT NULL,
     `chat_room_id` BIGINT       NOT NULL,
+    `agreement_id` BIGINT       NOT NULL,
     `created_at`   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT `FK_match_TO_post`
         FOREIGN KEY(`post_id`)
             REFERENCES `help_request_post`(`post_id`)
+            ON DELETE RESTRICT,
+    CONSTRAINT `FK_match_TO_agreement`
+        FOREIGN KEY(`agreement_id`)
+            REFERENCES `agreement`(`agreement_id`)
             ON DELETE RESTRICT,
     CONSTRAINT `UQ_post_id` UNIQUE (`post_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -60,23 +65,17 @@ CREATE TABLE `match`
 CREATE TABLE `agreement`
 (
     `agreement_id`      BIGINT      NOT NULL PRIMARY KEY,
-    `match_id`          BIGINT      NOT NULL,
     `unit_honey`        INT         NOT NULL,
     `total_honey`       INT         NOT NULL,
     `region`            VARCHAR(50) NOT NULL,
     `type`              ENUM('DAY','TERM') NOT NULL,
-    `confirmation_date` DATETIME    NOT NULL,
+    `confirmation_date` DATE        NOT NULL,
     `is_day_complete`   BOOLEAN     NULL DEFAULT FALSE,
     `is_term_complete`  BOOLEAN     NULL DEFAULT FALSE,
     `status`            ENUM('BEFORE', 'REFUSED', 'CONFIRMED') NOT NULL DEFAULT 'BEFORE',
+    `is_volunteer`      BOOLEAN     NOT NULL,
     `created_at`        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `UQ_match_id` UNIQUE (`match_id`),
-    CONSTRAINT `FK_agreement_TO_match`
-        FOREIGN KEY(`match_id`)
-            REFERENCES `match` (`match_id`)
-            ON DELETE CASCADE
+    `updated_at`        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- 4. Engagement 테이블
@@ -179,6 +178,7 @@ CREATE TABLE `agreement_help_category`
 (
     `agreement_id` BIGINT   NOT NULL,
     `help_category_id`      BIGINT   NOT NULL,
+    `category_name`         VARCHAR(10) NOT NULL,
     `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
