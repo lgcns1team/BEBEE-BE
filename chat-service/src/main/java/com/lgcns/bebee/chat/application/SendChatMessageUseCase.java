@@ -31,7 +31,7 @@ public class SendChatMessageUseCase implements UseCase<SendChatMessageUseCase.Pa
         MemberSync sender = memberManagement.getExistingMember(param.senderId);
         MemberSync receiver = memberManagement.getExistingMember(param.receiverId);
 
-        Chatroom chatroom = chatroomManagement.openChatroom(param.chatroomId, sender, receiver);
+        Chatroom chatroom = chatroomManagement.getExistingChatroom(param.chatroomId);
 
         Chat chat = Chat.create(
                 chatroom.getId(),

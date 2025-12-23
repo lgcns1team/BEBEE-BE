@@ -9,6 +9,7 @@ import com.lgcns.bebee.common.application.UseCase;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class GetChatroomsUseCase implements UseCase<GetChatroomsUseCase.Param, G
     private final ChatroomRepository chatroomRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Result execute(Param param) {
         MemberSync currentMember = memberManagement.getExistingMember(param.currentMemberId);
 

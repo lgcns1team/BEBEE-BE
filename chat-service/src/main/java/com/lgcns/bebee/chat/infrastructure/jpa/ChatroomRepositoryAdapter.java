@@ -41,22 +41,18 @@ public class ChatroomRepositoryAdapter implements ChatroomRepository {
     }
 
     @Override
-    public Optional<Chatroom> findChatroomWithMembers(Long chatroomId, Long member1Id, Long member2Id){
-        if(chatroomId != null){
-            ChatroomSearchCond cond = ChatroomSearchCond.of(chatroomId);
-            return queryDSLChatroomRepository.findChatroomWithMembers(cond);
-        }
+    public Optional<Chatroom> findChatroomWithMembers(Long chatroomId) {
+        ChatroomSearchCond cond = ChatroomSearchCond.of(chatroomId);
+        return queryDSLChatroomRepository.findChatroomWithMembers(cond);
+    }
 
-        // member1Id은 항상 작은 ID, member2Id는 큰 ID로 정렬하여 일관성 유지
-        if (member1Id != null && member2Id != null) {
-            Long normalizedMember1Id = Math.min(member1Id, member2Id);
-            Long normalizedMember2Id = Math.max(member1Id, member2Id);
+    @Override
+    public Optional<Chatroom> findChatroomWithMembers(MemberSync member1, MemberSync member2) {
+        MemberSync normalizedMember1 = member1.getId() < member2.getId() ? member1 : member2;
+        MemberSync normalizedMember2 = member1.getId() < member2.getId() ? member2 : member1;
 
-            ChatroomSearchCond cond = ChatroomSearchCond.of(normalizedMember1Id, normalizedMember2Id);
-            return queryDSLChatroomRepository.findChatroomWithMembers(cond);
-        }
-
-        return Optional.empty();
+        ChatroomSearchCond cond = ChatroomSearchCond.of(normalizedMember1, normalizedMember2);
+        return queryDSLChatroomRepository.findChatroomWithMembers(cond);
     }
 
     @Override

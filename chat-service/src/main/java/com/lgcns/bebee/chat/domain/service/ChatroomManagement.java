@@ -3,16 +3,21 @@ package com.lgcns.bebee.chat.domain.service;
 import com.lgcns.bebee.chat.core.exception.ChatErrors;
 import com.lgcns.bebee.chat.domain.entity.Chat;
 import com.lgcns.bebee.chat.domain.entity.Chatroom;
+import com.lgcns.bebee.chat.domain.entity.HelpCategorySync;
 import com.lgcns.bebee.chat.domain.entity.MemberSync;
 import com.lgcns.bebee.chat.domain.repository.ChatroomRepository;
+import com.lgcns.bebee.chat.domain.repository.HelpCategorySyncRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ChatroomManagement {
     private final ChatroomRepository chatroomRepository;
+    private final HelpCategorySyncRepository helpCategorySyncRepository;
 
     /**
      * ID로 채팅방을 조회합니다.
@@ -27,44 +32,50 @@ public class ChatroomManagement {
     }
 
     /**
-     * 채팅방을 조회합니다.
-     * - chatroomId로 조회하거나
-     * - member1Id, member2Id로 조회
+     * ID로 채팅방과 멤버 정보를 함께 조회합니다.
      *
-     * @param chatroomId 채팅방 ID (nullable)
-     * @param currentMemberId 현재 회원 ID (nullable)
-     * @param otherMemberId 상대 회원 ID (nullable)
-     * @return 조회된 채팅방 엔티티
+     * @param chatroomId 조회할 채팅방 ID
+     * @return 멤버 정보가 포함된 채팅방 엔티티
      * @throws com.lgcns.bebee.chat.core.exception.ChatException 채팅방이 존재하지 않을 경우
      */
     @Transactional(readOnly = true)
-    public Chatroom findChatroom(Long chatroomId, Long currentMemberId, Long otherMemberId) {
-        return chatroomRepository.findChatroomWithMembers(chatroomId, currentMemberId, otherMemberId)
+    public Chatroom findChatroomWithMembers(Long chatroomId){
+        return chatroomRepository.findChatroomWithMembers(chatroomId)
                 .orElseThrow(ChatErrors.CHATROOM_NOT_FOUND::toException);
     }
 
     /**
-     * 채팅방을 열거나 생성합니다.
-     * - chatroomId가 있으면 해당 채팅방을 조회합니다.
-     * - chatroomId가 없으면 sender와 receiver로 채팅방을 찾거나 새로 생성합니다.
+     * 두 멤버 간의 채팅방을 조회하거나 없으면 새로 생성합니다.
+     * 기존 채팅방이 존재하면 해당 채팅방을 반환하고,
+     * 없으면 새로운 채팅방을 생성하여 반환합니다.
      *
-     * @param chatroomId 기존 채팅방 ID (nullable)
-     * @param sender 발신자
-     * @param receiver 수신자
-     * @return 조회되거나 생성된 채팅방
+     * @param currentMember 현재 사용자
+     * @param otherMember 상대방 사용자
+     * @return 기존 또는 새로 생성된 채팅방 엔티티
      */
     @Transactional
-    public Chatroom openChatroom(Long chatroomId, MemberSync sender, MemberSync receiver) {
-        // chatroomId가 있으면 기존 채팅방 조회
-        if (chatroomId != null) {
-            return getExistingChatroom(chatroomId);
-        }
-
-        // sender와 receiver로 채팅방을 찾거나 생성
-        return chatroomRepository.findChatroom(sender, receiver)
+    public Chatroom findChatroomWithMembers(MemberSync currentMember, MemberSync otherMember) {
+        return chatroomRepository.findChatroomWithMembers(currentMember, otherMember)
                 .orElseGet(() ->
-                    chatroomRepository.save(sender, receiver));
+                        chatroomRepository.save(currentMember, otherMember));
     }
+
+    /**
+     * 채팅방에 게시글을 연결하고 도움 카테고리를 설정합니다.
+     *
+     * @param chatroom 채팅방
+     * @param postId 게시글 ID
+     * @param postTitle 게시글 제목
+     * @param helpCategoryIds 도움 카테고리 ID 목록
+     */
+    @Transactional
+    public void linkPost(Chatroom chatroom, Long postId, String postTitle, List<Long> helpCategoryIds){
+        List<HelpCategorySync> helpCategories = null;
+        if(helpCategoryIds != null && !helpCategoryIds.isEmpty()) helpCategories = helpCategorySyncRepository.findByIds(helpCategoryIds);
+
+        chatroom.linkPost(postId, postTitle, helpCategories);
+    }
+
 
     /**
      * 채팅방의 마지막 메시지를 업데이트합니다.
