@@ -71,6 +71,11 @@ public class Agreement extends BaseTimeEntity {
             String region,
             List<Long> helpCategoryIds
     ) {
+        if (isVolunteer) {
+            unitHoney = 0;
+            totalHoney = 0;
+        }
+
         Agreement agreement = new Agreement();
         agreement.type = type;
         agreement.isVolunteer = isVolunteer;
