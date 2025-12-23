@@ -119,7 +119,9 @@ jobs:
           service: bebee-${{ matrix.service }}
           region: ${{ env.REGION }}
           image: ${{ env.IMAGE_TAG }}
-          flags: '--timeout=300s --update-secrets=/secrets/firebase-key.json=FCM_KEY:latest'
+          flags: '--timeout=300s'
+          secrets: |
+            /secrets/firebase-key.json=FCM_KEY:latest
           env_vars: |
             SPRING_PROFILES_ACTIVE=dev
             DB_HOST=${{ secrets.DB_HOST }}
@@ -132,4 +134,4 @@ jobs:
             REDIS_PORT=6379
             SPRINGDOC_API_HOST=${{ secrets.SERVER_HOST}}
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
-            FIREBASE_SERVICE_ACCOUNT_KEY_PATH=/secrets/firebase-key.json
+            FIREBASE_SERVICE_ACCOUNT_KEY_PATH=file:/secrets/firebase-key.json
