@@ -5,9 +5,7 @@ import com.lgcns.bebee.common.application.UseCase;
 import com.lgcns.bebee.common.exception.InvalidParamException;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
-import com.lgcns.bebee.match.domain.entity.Match;
 import com.lgcns.bebee.match.domain.service.AgreementReader;
-import com.lgcns.bebee.match.domain.service.MatchReader;
 import com.lgcns.bebee.match.exception.MatchInvalidParamErrors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RefuseAgreementUseCase implements UseCase<RefuseAgreementUseCase.Param, Void> {
 
     private final AgreementReader agreementReader;
-    private final MatchReader matchReader;
 
     @Transactional
     @Override
