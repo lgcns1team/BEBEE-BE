@@ -6,10 +6,10 @@ on:
     paths:
       - 'common/**'
       - 'chat-service/**'
-#      - 'match-service/**'
-#      - 'member-service/**'
+      #      - 'match-service/**'
+      #      - 'member-service/**'
       - 'notification-service/**'
-#      - 'payment-service/**'
+      #      - 'payment-service/**'
       - 'build.gradle'
 
 env:
@@ -26,10 +26,10 @@ jobs:
       matrix:
         service:
           - chat
-#          - match
-#          - member
+          #          - match
+          #          - member
           - notification
-#          - payment
+    #          - payment
 
     permissions:
       contents: 'read'
@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-          
+
       # 변경 감지
       - name: Check for changes
         uses: dorny/paths-filter@v3
@@ -82,7 +82,7 @@ jobs:
           docker push $IMAGE_TAG
           
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-      
+
       - name: Google Auth
         if: steps.changes.outputs.src == 'true'
         id: auth
@@ -91,8 +91,8 @@ jobs:
           workload_identity_provider: '${{ secrets.GCP_WIF_PROVIDER }}'
           service_account: '${{ secrets.GCP_SA_EMAIL }}'
 
-      - name: Deploy to Cloud Run
-        if: steps.changes.outputs.src == 'true'
+      - name: Deploy to Cloud Run (General Services)
+        if: steps.changes.outputs.src == 'true' && matrix.service != 'notification'
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: bebee-${{ matrix.service }}
@@ -111,4 +111,25 @@ jobs:
             REDIS_PORT=6379
             SPRINGDOC_API_HOST=${{ secrets.SERVER_HOST}}
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
-            
+
+      - name: Deploy to Cloud Run (Notification Service)
+        if: steps.changes.outputs.src == 'true' && matrix.service == 'notification'
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: bebee-${{ matrix.service }}
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE_TAG }}
+          flags: '--timeout=300s --update-secrets=/secrets/firebase-key.json=FCM_KEY:latest'
+          env_vars: |
+            SPRING_PROFILES_ACTIVE=dev
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=3306
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            MONGODB_HOST=${{ secrets.MONGODB_HOST }}
+            MONGODB_PORT=27017
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=6379
+            SPRINGDOC_API_HOST=${{ secrets.SERVER_HOST}}
+            SPRINGDOC_API_DESC="임시 GCP 개발 서버"
+            FIREBASE_SERVICE_ACCOUNT_KEY_PATH=/secrets/firebase-key.json
