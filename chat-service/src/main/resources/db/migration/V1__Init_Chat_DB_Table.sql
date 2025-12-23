@@ -11,7 +11,8 @@ CREATE TABLE chatroom(
     chatroom_id BIGINT NOT NULL PRIMARY KEY,
     member1_id BIGINT NOT NULL,
     member2_id BIGINT NOT NULL,
-    title VARCHAR(50) NULL, # 원래 NULL 아님, 임시로 NULL로 선언
+    title VARCHAR(50) NULL,
+    post_id BIGINT NULL,
     last_message VARCHAR(31) NULL,
 
     created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -22,15 +23,14 @@ CREATE TABLE chatroom(
 
 -- 2. Chatroom Help Category 테이블
 CREATE TABLE chatroom_help_category(
-    chat_room_id BIGINT NOT NULL,
+    chatroom_id BIGINT NOT NULL,
     help_category_id BIGINT NOT NULL,
 
     created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT `PK_CHATROOM_HELP_CATEGORY` PRIMARY KEY (`chat_room_id`, `help_category_id`),
-    CONSTRAINT `FK_chatroom_help_category_TO_chatroom` FOREIGN KEY (`help_category_id`) REFERENCES `chatroom` (`chatroom_id`) #,
-    # CONSTRAINT `FK_chatroom_help_category_TO_chat_help_category_sync` FOREIGN KEY (`help_category_id`) REFERENCES `chat_help_category_sync` (`help_category_id`)
+    CONSTRAINT `PK_CHATROOM_HELP_CATEGORY` PRIMARY KEY (`chatroom_id`, `help_category_id`),
+    CONSTRAINT `FK_chatroom_help_category_TO_chatroom` FOREIGN KEY (`chatroom_id`) REFERENCES `chatroom` (`chatroom_id`) #,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
