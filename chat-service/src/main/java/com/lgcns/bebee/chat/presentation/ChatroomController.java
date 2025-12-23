@@ -1,26 +1,24 @@
 package com.lgcns.bebee.chat.presentation;
 
 import com.lgcns.bebee.chat.application.GetChatMessagesUseCase;
-import com.lgcns.bebee.chat.application.GetChatroomUseCase;
 import com.lgcns.bebee.chat.application.GetChatroomsUseCase;
+import com.lgcns.bebee.chat.application.OpenChatroomUseCase;
+import com.lgcns.bebee.chat.presentation.dto.req.ChatroomOpenReqDTO;
 import com.lgcns.bebee.chat.presentation.dto.res.ChatMessagesGetResDTO;
-import com.lgcns.bebee.chat.presentation.dto.res.ChatroomGetResDTO;
+import com.lgcns.bebee.chat.presentation.dto.res.ChatroomOpenResDTO;
 import com.lgcns.bebee.chat.presentation.dto.res.ChatroomsGetResDTO;
 import com.lgcns.bebee.chat.presentation.swagger.ChatroomSwagger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chatrooms")
 @RequiredArgsConstructor
 public class ChatroomController implements ChatroomSwagger {
     private final GetChatMessagesUseCase getChatMessagesUseCase;
-    private final GetChatroomUseCase getChatroomUseCase;
     private final GetChatroomsUseCase getChatroomsUseCase;
+    private final OpenChatroomUseCase openChatroomUseCase;
 
     @GetMapping("/chats")
     public ResponseEntity<ChatMessagesGetResDTO> getChatMessages(
@@ -54,18 +52,24 @@ public class ChatroomController implements ChatroomSwagger {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<ChatroomGetResDTO> getChatroom(
+    @PostMapping
+    public ResponseEntity<ChatroomOpenResDTO> openChatroom(
             @RequestParam(required = false) Long chatroomId,
             @RequestParam Long currentMemberId,
-            @RequestParam(required = false) Long otherMemberId
+            @RequestParam(required = false) Long otherMemberId,
+            @RequestBody ChatroomOpenReqDTO reqDTO
     ){
-        GetChatroomUseCase.Param param = new GetChatroomUseCase.Param(chatroomId, currentMemberId, otherMemberId);
-        GetChatroomUseCase.Result result = getChatroomUseCase.execute(param);
+        OpenChatroomUseCase.Param param = new OpenChatroomUseCase.Param(
+                chatroomId,
+                currentMemberId, otherMemberId,
+                reqDTO.postId(), reqDTO.postTitle(), reqDTO.helpCategoryIds()
+        );
 
-        ChatroomGetResDTO response = ChatroomGetResDTO.from(result);
+        OpenChatroomUseCase.Result result = openChatroomUseCase.execute(param);
 
-        return ResponseEntity.ok(response);
+        ChatroomOpenResDTO resDTO = ChatroomOpenResDTO.from(result);
+
+        return ResponseEntity.ok(resDTO);
     }
 }
 

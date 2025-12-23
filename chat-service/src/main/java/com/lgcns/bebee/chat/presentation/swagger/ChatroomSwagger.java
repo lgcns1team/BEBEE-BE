@@ -1,7 +1,8 @@
 package com.lgcns.bebee.chat.presentation.swagger;
 
+import com.lgcns.bebee.chat.presentation.dto.req.ChatroomOpenReqDTO;
 import com.lgcns.bebee.chat.presentation.dto.res.ChatMessagesGetResDTO;
-import com.lgcns.bebee.chat.presentation.dto.res.ChatroomGetResDTO;
+import com.lgcns.bebee.chat.presentation.dto.res.ChatroomOpenResDTO;
 import com.lgcns.bebee.chat.presentation.dto.res.ChatroomsGetResDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "채팅방", description = "채팅방 관련 API")
@@ -118,49 +120,79 @@ public interface ChatroomSwagger {
     );
 
     @Operation(
-            summary = "채팅방 정보 조회",
+            summary = "채팅방 열기 (조회/생성)",
             description = """
-                    특정 채팅방의 정보를 조회합니다.
+                    기존 채팅방이 있으면 조회, 없으면 채팅방 생성
+                    
+                    지도 페이지에서 채팅방 버튼 클릭: chatroomId = null, 게시글 정보 X
+                    매칭 현황 페이지에서 채팅방 버튼 클릭: chatroomId 존재
+                    도우미 지원 현황 페이지에서 채팅방 버튼 클릭: chatroomId = null, 게시글 정보 O(** 중요 ** 이때, 게시글 정보를 줘야 합니다.)
+                    채팅방 리스트에서 채팅방 진입: chatroomId 존재
 
-                    - 본인과 상대방을 구분하여 채팅방 정보를 반환합니다.
-                    - 상대방의 닉네임, 프로필 이미지, 당도 정보를 포함합니다.
-                    - chatroomId 가 있는 경우 chatroomId 만 파라미터 값을 설정합니다.
-                    - chatroomId 가 없는 경우 otherMemberId 파라미터 값을 설정해야 합니다.
+                    **동작 방식:**
+                    1. chatroomId가 있는 경우: 기존 채팅방 조회
+                    2. chatroomId가 없는 경우: memberId 로 채팅방을 찾거나 새로 생성
+                    3. 게시글 정보(postId, postTitle)와 도움 카테고리를 채팅방에 연결
+
+                    **요청 파라미터:**
+                    - chatroomId: 기존 채팅방 ID (선택)
+                    - currentMemberId: 현재 사용자 ID (필수)
+                    - otherMemberId: 상대방 ID (chatroomId가 없을 때 필수)
+
+                    **요청 본문 (ChatroomOpenReqDTO):**
+                    - postId: 게시글 ID
+                    - postTitle: 게시글 제목
+                    - helpCategoryIds: 도움 카테고리 ID 목록
+
+                    **응답 정보:**
+                    - 채팅방 ID, 본인 ID, 상대방 정보 (ID, 닉네임, 프로필 이미지, 당도)
+                    - 연결된 도움 카테고리 목록
                     """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "채팅방 조회 성공",
+                    description = "채팅방 열기 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ChatroomGetResDTO.class)
+                            schema = @Schema(implementation = ChatroomOpenResDTO.class)
                     )
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "채팅방을 찾을 수 없음",
+                    description = "회원 또는 채팅방을 찾을 수 없음",
                     content = @Content(mediaType = "application/json")
             )
     })
-    ResponseEntity<ChatroomGetResDTO> getChatroom(
+    ResponseEntity<ChatroomOpenResDTO> openChatroom(
             @Parameter(
-                    description = "채팅방 ID",
+                    description = "기존 채팅방 ID (선택)",
                     example = "1"
             )
-            @RequestParam Long chatroomId,
+            @RequestParam(required = false) Long chatroomId,
 
             @Parameter(
-                    description = "현재 사용자(본인) ID(임시 용도, 나중에 토큰에서 처리)",
+                    description = "현재 사용자(본인) ID (필수, 임시 용도, 나중에 토큰에서 처리)",
                     required = true,
                     example = "100"
             )
             @RequestParam Long currentMemberId,
 
             @Parameter(
-                    description = "상대방 ID(채팅방 처음 생성되는 경우 필요)",
+                    description = "상대방 ID (chatroomId가 없을 때 필수)",
                     example = "200"
             )
-            @RequestParam Long otherMemberId
+            @RequestParam(required = false) Long otherMemberId,
+
+            @Parameter(
+                    description = """
+                            채팅방 열기 요청 정보
+                            - postId: 게시글 ID
+                            - postTitle: 게시글 제목
+                            - helpCategoryIds: 도움 카테고리 ID 목록
+                            """,
+                    required = true
+            )
+            @RequestBody ChatroomOpenReqDTO reqDTO
     );
 }
