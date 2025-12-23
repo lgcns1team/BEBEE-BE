@@ -3,6 +3,7 @@ package com.lgcns.bebee.match.domain.entity;
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
+import com.lgcns.bebee.match.exception.MatchException;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.lgcns.bebee.match.exception.MatchErrors.ALREADY_CONFIRMED_AGREEMENT;
+import static com.lgcns.bebee.match.exception.MatchErrors.CANNOT_REFUSE_CONFIRMED_AGREEMENT;
 
 @Entity
 @Getter
@@ -43,6 +47,7 @@ public class Agreement extends BaseTimeEntity {
     @Column
     private Boolean isTermComplete = Boolean.FALSE;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AgreementStatus status = AgreementStatus.BEFORE;
 
@@ -84,5 +89,19 @@ public class Agreement extends BaseTimeEntity {
         });
 
         return agreement;
+    }
+
+    public void refuse() {
+        if (this.status == AgreementStatus.CONFIRMED) {
+            throw new MatchException(ALREADY_CONFIRMED_AGREEMENT).getError().toException();
+        }
+        this.status = AgreementStatus.REFUSED;
+    }
+
+    public void confirm() {
+        if (this.status == AgreementStatus.CONFIRMED) {
+            throw new MatchException(CANNOT_REFUSE_CONFIRMED_AGREEMENT).getError().toException();
+        }
+        this.status = AgreementStatus.CONFIRMED;
     }
 }
