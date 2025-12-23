@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.lgcns.bebee")
-@ConfigurationPropertiesScan
+@ConfigurationPropertiesScan(basePackages = "com.lgcns.bebee")
 public class ChatServiceApplication {
 
 	public static void main(String[] args) {

@@ -83,6 +83,15 @@ jwt:
   access-token-expires-time-in: ${JWT_ACCESS_TOKEN_EXPIRES_IN}
   refresh-token-expires-time-in: ${JWT_REFRESH_TOKEN_EXPIRES_IN}
 
+# CORS (Cross-Origin Resource Sharing) 설정
+cors:
+  allowed-origin-patterns: "${CORS_ALLOWED_ORIGINS:http://localhost:[*],https://localhost:[*]}"
+  allowed-methods: "${CORS_ALLOWED_METHODS:GET,POST,PUT,PATCH,DELETE,OPTIONS}"
+  allowed-headers: "${CORS_ALLOWED_HEADERS:*}"
+  exposed-headers: "${CORS_EXPOSED_HEADERS:}"
+  allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+  max-age: ${CORS_MAX_AGE:3600}
+
 # 로깅 설정
 logging:
   level:
