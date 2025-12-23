@@ -14,7 +14,9 @@ public interface ChatroomRepository {
 
     Optional<Chatroom> findChatroom(MemberSync member1, MemberSync member2);
 
-    Optional<Chatroom> findChatroomWithMembers(Long chatroomId, Long member1Id, Long member2Id);
+    Optional<Chatroom> findChatroomWithMembers(Long chatroomId);
+
+    Optional<Chatroom> findChatroomWithMembers(MemberSync member1, MemberSync member2);
 
     List<Chatroom> findChatroomsWithCursor(MemberSync member, Long lastChatroomId, int limit);
 }
