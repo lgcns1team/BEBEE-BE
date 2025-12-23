@@ -106,6 +106,35 @@ class CreateAgreementUseCaseTest {
 
             verify(agreementRepository, times(1)).save(any(Agreement.class));
         }
+
+        @Test
+        @DisplayName("isVolunteer가 true면 unitHoney, totalHoney가 무조건 0으로 생성된다")
+        void shouldHoneyFree_whenIsVolunteerIsTrue() throws Exception {
+            // Given
+            CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
+                    memberId,
+                    EngagementType.DAY,
+                    true,
+                    500,
+                    500,
+                    "서울특별시 중구",
+                    List.of(3L)
+            );
+
+            when(agreementRepository.save(any(Agreement.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            // When
+            CreateAgreementUseCase.Result result = useCase.execute(param);
+
+            // Then
+            assertThat(result).isNotNull();
+            assertThat(result.getUnitHoney()).isEqualTo(0);
+            assertThat(result.getTotalHoney()).isEqualTo(0);
+            assertThat(result.getStatus()).isEqualTo(AgreementStatus.BEFORE);
+
+            // Mock 호출 검증
+            verify(agreementRepository, times(1)).save(any(Agreement.class));
+        }
     }
 
     @Nested
