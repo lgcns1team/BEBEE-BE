@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class GetChatMessagesUseCase implements UseCase<GetChatMessagesUseCase.Pa
     private final ChatRepository chatRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Result execute(Param param) {
         Chatroom chatroom = chatroomManagement.getExistingChatroom(param.chatroomId);
 
