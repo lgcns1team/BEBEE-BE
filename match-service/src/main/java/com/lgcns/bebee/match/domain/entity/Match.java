@@ -29,6 +29,9 @@ public class Match extends BaseTimeEntity {
     @Column(nullable = false)
     private Long chatRoomId;
 
+    @Column(nullable = false, unique = true)
+    private Long agreementId;
+
     public boolean isParticipant(Long memberId) {
         return this.helperId.equals(memberId) || this.disabledId.equals(memberId);
     }

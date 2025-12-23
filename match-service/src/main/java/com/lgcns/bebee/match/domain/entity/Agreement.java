@@ -22,9 +22,6 @@ public class Agreement extends BaseTimeEntity {
     @Column(name = "agreement_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private Long matchId;
-
     @Column(nullable = false)
     private Integer unitHoney;
 
@@ -62,7 +59,6 @@ public class Agreement extends BaseTimeEntity {
     private Boolean isVolunteer;
 
     public static Agreement create(
-            Long matchId,
             EngagementType type,
             Boolean isVolunteer,
             Integer unitHoney,
@@ -71,7 +67,6 @@ public class Agreement extends BaseTimeEntity {
             List<Long> helpCategoryIds
     ) {
         Agreement agreement = new Agreement();
-        agreement.matchId = matchId;
         agreement.type = type;
         agreement.isVolunteer = isVolunteer;
         agreement.unitHoney = unitHoney;

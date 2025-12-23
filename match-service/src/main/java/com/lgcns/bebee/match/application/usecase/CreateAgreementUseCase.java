@@ -32,20 +32,11 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
     @Transactional
     @Override
     public Result execute(Param param) {
-        // 1. 파라미터 검증
+        // 파라미터 검증
         param.validate();
 
-        // 2-1. Match 조회
-        Match match = matchReader.getById(param.getMatchId());
-
-        // 2-2. 작성자가 해당 매칭의 참여자인지 확인
-        if (!match.isParticipant(param.getMemberId())) {
-            throw MatchErrors.FORBIDDEN.toException();
-        }
-
-        // 3. 매칭 확인서 생성
+        // 매칭 확인서 생성
         Agreement agreement = Agreement.create(
-                param.getMatchId(),
                 param.getType(),
                 param.getIsVolunteer(),
                 param.getUnitHoney(),
@@ -54,7 +45,7 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
                 param.getHelpCategoryIds()
         );
 
-        // 4. 매칭 확인서 저장
+        // 매칭 확인서 저장
         Agreement savedAgreement = agreementRepository.save(agreement);
 
         return Result.from(savedAgreement);
@@ -64,7 +55,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
     @RequiredArgsConstructor
     public static class Param implements Params {
         private final Long memberId;
-        private final Long matchId;
         private final EngagementType type;
         private final Boolean isVolunteer;
         private final Integer unitHoney;
@@ -74,9 +64,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
 
         @Override
         public boolean validate() {
-            if (!ParamValidator.isValidId(matchId)) {
-                throw new InvalidParamException(MatchInvalidParamErrors.INVALID_FORMAT, "matchId");
-            }
             if (!ParamValidator.isNonNegativeInteger(unitHoney)) {
                 throw new InvalidParamException(MatchInvalidParamErrors.OUT_OF_RANGE, "unitHoney");
             }
@@ -104,7 +91,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Result {
         private Long agreementId;
-        private Long matchId;
         private AgreementStatus status;
         private LocalDate confirmationDate;
         private EngagementType type;
@@ -123,7 +109,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
 
             return new Result(
                     agreement.getId(),
-                    agreement.getMatchId(),
                     agreement.getStatus(),
                     agreement.getConfirmationDate(),
                     agreement.getType(),
