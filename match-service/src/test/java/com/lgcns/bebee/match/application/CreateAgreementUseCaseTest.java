@@ -1,15 +1,11 @@
-package com.lgcns.bebee.match;
+package com.lgcns.bebee.match.application;
 
 import com.lgcns.bebee.common.exception.InvalidParamException;
-import com.lgcns.bebee.match.domain.service.MatchReader;
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.domain.entity.Agreement;
-import com.lgcns.bebee.match.domain.entity.Match;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
-import com.lgcns.bebee.match.exception.MatchErrors;
-import com.lgcns.bebee.match.exception.MatchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
