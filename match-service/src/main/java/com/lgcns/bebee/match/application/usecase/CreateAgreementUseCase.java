@@ -64,6 +64,15 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
 
         @Override
         public boolean validate() {
+            if (!ParamValidator.isValidId(memberId)) {
+                throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "memberId");
+            }
+            if (!ParamValidator.isNotNull(type)) {
+                throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "type");
+            }
+            if (!ParamValidator.isNotNull(isVolunteer)) {
+                throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "isVolunteer");
+            }
             if (!ParamValidator.isNonNegativeInteger(unitHoney)) {
                 throw new InvalidParamException(MatchInvalidParamErrors.OUT_OF_RANGE, "unitHoney");
             }
@@ -75,9 +84,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
             }
             if (!ParamValidator.isValidStringLength(region, 1, 50)) {
                 throw new InvalidParamException(MatchInvalidParamErrors.OUT_OF_RANGE, "region");
-            }
-            if (!ParamValidator.isNotNull(type)) {
-                throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "type");
             }
             if (!ParamValidator.isValidList(helpCategoryIds)) {
                 throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "helpCategoryIds");
