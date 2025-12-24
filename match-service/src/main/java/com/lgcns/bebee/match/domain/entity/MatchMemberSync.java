@@ -1,5 +1,6 @@
 package com.lgcns.bebee.match.domain.entity;
 
+import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.AccountStatus;
 import com.lgcns.bebee.match.domain.entity.vo.Gender;
 import com.lgcns.bebee.match.domain.entity.vo.MemberRole;
@@ -11,7 +12,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * 회원 Sync 테이블
@@ -19,7 +19,7 @@ import java.util.Date;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MatchMemberSync {
+public class MatchMemberSync extends BaseTimeEntity {
     @Id
     @Tsid
     @Column(name = "member_id")
