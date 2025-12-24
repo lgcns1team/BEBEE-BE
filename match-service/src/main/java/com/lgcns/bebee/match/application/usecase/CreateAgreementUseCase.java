@@ -3,6 +3,10 @@ package com.lgcns.bebee.match.application.usecase;
 import com.lgcns.bebee.common.application.Params;
 import com.lgcns.bebee.common.application.UseCase;
 import com.lgcns.bebee.common.exception.InvalidParamException;
+import com.lgcns.bebee.match.domain.entity.MatchMemberSync;
+import com.lgcns.bebee.match.domain.entity.vo.MemberRole;
+import com.lgcns.bebee.match.domain.repository.MatchMemberSyncRepository;
+import com.lgcns.bebee.match.domain.repository.MatchRepository;
 import com.lgcns.bebee.match.domain.service.MatchReader;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
@@ -26,14 +30,23 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Param, CreateAgreementUseCase.Result> {
+
     private final AgreementRepository agreementRepository;
-    private final MatchReader matchReader;
+    private final MatchMemberSyncRepository matchMemberSyncRepository;
 
     @Transactional
     @Override
     public Result execute(Param param) {
         // 파라미터 검증
         param.validate();
+
+        // 생성하려는 사용자 검증, 장애인 유저인지 확인
+        MatchMemberSync member = matchMemberSyncRepository.findById(param.getMemberId())
+                .orElseThrow(() -> MatchErrors.MEMBER_NOT_FOUND.toException());
+
+        if (member.getRole() != MemberRole.DISABLED) {
+            throw MatchErrors.ONLY_DISABLED_MEMBERS_ALLOWED.toException();
+        }
 
         // 매칭 확인서 생성
         Agreement agreement = Agreement.create(
