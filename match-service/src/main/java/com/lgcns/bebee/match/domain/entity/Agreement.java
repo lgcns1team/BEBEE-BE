@@ -3,6 +3,7 @@ package com.lgcns.bebee.match.domain.entity;
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
+import com.lgcns.bebee.match.exception.MatchErrors;
 import com.lgcns.bebee.match.exception.MatchException;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
@@ -98,14 +99,14 @@ public class Agreement extends BaseTimeEntity {
 
     public void refuse() {
         if (this.status == AgreementStatus.CONFIRMED) {
-            throw new MatchException(ALREADY_CONFIRMED_AGREEMENT).getError().toException();
+            throw ALREADY_CONFIRMED_AGREEMENT.toException();
         }
         this.status = AgreementStatus.REFUSED;
     }
 
     public void confirm() {
         if (this.status == AgreementStatus.CONFIRMED) {
-            throw new MatchException(CANNOT_REFUSE_CONFIRMED_AGREEMENT).getError().toException();
+            throw ALREADY_CONFIRMED_AGREEMENT.toException();
         }
         this.status = AgreementStatus.CONFIRMED;
     }
