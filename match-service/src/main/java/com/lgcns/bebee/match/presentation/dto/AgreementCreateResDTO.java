@@ -15,7 +15,6 @@ import java.util.List;
 public class AgreementCreateResDTO {
 
     private Long agreementId;
-    private Long matchId;
     private AgreementStatus status;
     private LocalDate confirmationDate;
     private EngagementType type;
@@ -34,7 +33,6 @@ public class AgreementCreateResDTO {
 
         return new AgreementCreateResDTO(
                 result.getAgreementId(),
-                result.getMatchId(),
                 result.getStatus(),
                 result.getConfirmationDate(),
                 result.getType(),

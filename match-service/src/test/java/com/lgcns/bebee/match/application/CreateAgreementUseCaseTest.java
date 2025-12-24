@@ -1,15 +1,11 @@
-package com.lgcns.bebee.match;
+package com.lgcns.bebee.match.application;
 
 import com.lgcns.bebee.common.exception.InvalidParamException;
-import com.lgcns.bebee.match.domain.service.MatchReader;
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.domain.entity.Agreement;
-import com.lgcns.bebee.match.domain.entity.Match;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
-import com.lgcns.bebee.match.exception.MatchErrors;
-import com.lgcns.bebee.match.exception.MatchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -35,21 +31,16 @@ import org.mockito.quality.Strictness;
 class CreateAgreementUseCaseTest {
 
     @Mock
-    private MatchReader matchReader;
-
-    @Mock
     private AgreementRepository agreementRepository;
 
     @InjectMocks
     private CreateAgreementUseCase useCase;
 
     private Long memberId;
-    private Long matchId;
 
     @BeforeEach
     void setUp() {
         memberId = 1L;
-        matchId = 100L;
     }
 
     @Nested
@@ -62,7 +53,6 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -71,10 +61,8 @@ class CreateAgreementUseCaseTest {
                     List.of(1L, 2L)
             );
 
-            Match mockMatch = createMockMatch(memberId, 999L);
-            Agreement savedAgreement = createMockAgreement(1L, matchId, 5000, 5000);
+            Agreement savedAgreement = createMockAgreement(1L, 5000, 5000);
 
-            when(matchReader.getById(matchId)).thenReturn(mockMatch);
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
 
             // When
@@ -82,13 +70,11 @@ class CreateAgreementUseCaseTest {
 
             // Then
             assertThat(result).isNotNull();
-            assertThat(result.getMatchId()).isEqualTo(matchId);
             assertThat(result.getUnitHoney()).isEqualTo(5000);
             assertThat(result.getTotalHoney()).isEqualTo(5000);
             assertThat(result.getStatus()).isEqualTo(AgreementStatus.BEFORE);
 
             // Mock 호출 검증
-            verify(matchReader, times(1)).getById(matchId);
             verify(agreementRepository, times(1)).save(any(Agreement.class));
         }
 
@@ -98,7 +84,6 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.TERM,
                     true,
                     10000,
@@ -107,10 +92,8 @@ class CreateAgreementUseCaseTest {
                     List.of(3L, 4L)
             );
 
-            Match mockMatch = createMockMatch(memberId, 999L);
-            Agreement savedAgreement = createMockAgreementWithType(2L, matchId, EngagementType.TERM, 10000, 150000, true);
+            Agreement savedAgreement = createMockAgreementWithType(2L, EngagementType.TERM, 10000, 150000, true);
 
-            when(matchReader.getById(matchId)).thenReturn(mockMatch);
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
 
             // When
@@ -121,7 +104,35 @@ class CreateAgreementUseCaseTest {
             assertThat(result.getType()).isEqualTo(EngagementType.TERM);
             assertThat(result.getIsVolunteer()).isTrue();
 
-            verify(matchReader, times(1)).getById(matchId);
+            verify(agreementRepository, times(1)).save(any(Agreement.class));
+        }
+
+        @Test
+        @DisplayName("isVolunteer가 true면 unitHoney, totalHoney가 무조건 0으로 생성된다")
+        void shouldHoneyFree_whenIsVolunteerIsTrue() throws Exception {
+            // Given
+            CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
+                    memberId,
+                    EngagementType.DAY,
+                    true,
+                    500,
+                    500,
+                    "서울특별시 중구",
+                    List.of(3L)
+            );
+
+            when(agreementRepository.save(any(Agreement.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+            // When
+            CreateAgreementUseCase.Result result = useCase.execute(param);
+
+            // Then
+            assertThat(result).isNotNull();
+            assertThat(result.getUnitHoney()).isEqualTo(0);
+            assertThat(result.getTotalHoney()).isEqualTo(0);
+            assertThat(result.getStatus()).isEqualTo(AgreementStatus.BEFORE);
+
+            // Mock 호출 검증
             verify(agreementRepository, times(1)).save(any(Agreement.class));
         }
     }
@@ -131,57 +142,11 @@ class CreateAgreementUseCaseTest {
     class ParameterValidationFailures {
 
         @Test
-        @DisplayName("matchId가 null이면 InvalidParamException 발생")
-        void shouldThrowException_whenMatchIdIsNull() {
-            // Given
-            CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
-                    null, // matchId null
-                    EngagementType.DAY,
-                    false,
-                    5000,
-                    5000,
-                    "서울특별시",
-                    List.of(1L, 2L)
-            );
-
-            // When & Then
-            assertThatThrownBy(() -> useCase.execute(param))
-                    .isInstanceOf(InvalidParamException.class)
-                    .hasMessageContaining("matchId");
-
-            verify(matchReader, never()).getById(any());
-            verify(agreementRepository, never()).save(any());
-        }
-
-        @Test
-        @DisplayName("matchId가 0 이하면 InvalidParamException 발생")
-        void shouldThrowException_whenMatchIdIsZeroOrNegative() {
-            // Given
-            CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
-                    0L, // 0
-                    EngagementType.DAY,
-                    false,
-                    5000,
-                    5000,
-                    "서울특별시",
-                    List.of(1L, 2L)
-            );
-
-            // When & Then
-            assertThatThrownBy(() -> useCase.execute(param))
-                    .isInstanceOf(InvalidParamException.class)
-                    .hasMessageContaining("matchId");
-        }
-
-        @Test
         @DisplayName("unitHoney가 음수면 InvalidParamException 발생")
         void shouldThrowException_whenUnitHoneyIsNegative() {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     -1000, // 음수
@@ -202,7 +167,6 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -223,7 +187,6 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -244,7 +207,6 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -266,7 +228,6 @@ class CreateAgreementUseCaseTest {
             String longRegion = "a".repeat(51); // 51자
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -287,7 +248,6 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     null, // type null
                     false,
                     5000,
@@ -308,7 +268,6 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -329,58 +288,18 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     5000,
                     5000,
                     "서울특별시",
-                    List.of() // 빈 리스트
+                    List.of()
             );
 
             // When & Then
             assertThatThrownBy(() -> useCase.execute(param))
                     .isInstanceOf(InvalidParamException.class)
                     .hasMessageContaining("helpCategoryIds");
-        }
-    }
-
-    @Nested
-    @DisplayName("비즈니스 로직 실패")
-    class BusinessLogicFailures {
-
-        @Test
-        @DisplayName("Match가 존재하지 않으면 MatchException 발생")
-        void shouldThrowException_whenMatchNotFound() {
-            // Given
-            CreateAgreementUseCase.Param param = createValidParam();
-
-            when(matchReader.getById(matchId))
-                    .thenThrow(MatchErrors.MATCH_NOT_FOUND.toException());
-
-            // When & Then
-            assertThatThrownBy(() -> useCase.execute(param))
-                    .isInstanceOf(MatchException.class);
-
-            verify(matchReader, times(1)).getById(matchId);
-            verify(agreementRepository, never()).save(any());
-        }
-
-        @Test
-        @DisplayName("참여자가 아니면 FORBIDDEN 예외 발생")
-        void shouldThrowException_whenNotParticipant() throws Exception {
-            // Given
-            CreateAgreementUseCase.Param param = createValidParam();
-            Match notParticipantMatch = createMockMatch(888L, 999L); // 다른 사용자들
-
-            when(matchReader.getById(matchId)).thenReturn(notParticipantMatch);
-
-            // When & Then
-            assertThatThrownBy(() -> useCase.execute(param))
-                    .isInstanceOf(MatchException.class);
-
-            verify(matchReader, times(1)).getById(matchId);
-            verify(agreementRepository, never()).save(any());
         }
     }
 
@@ -395,7 +314,6 @@ class CreateAgreementUseCaseTest {
             String regionWith50Chars = "a".repeat(50); // 정확히 50자
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -404,10 +322,8 @@ class CreateAgreementUseCaseTest {
                     List.of(1L, 2L)
             );
 
-            Match mockMatch = createMockMatch(memberId, 999L);
-            Agreement savedAgreement = createMockAgreement(1L, matchId, 5000, 5000);
+            Agreement savedAgreement = createMockAgreement(1L, 5000, 5000);
 
-            when(matchReader.getById(matchId)).thenReturn(mockMatch);
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
 
             // When
@@ -424,7 +340,6 @@ class CreateAgreementUseCaseTest {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
                     memberId,
-                    matchId,
                     EngagementType.DAY,
                     false,
                     0, // 0
@@ -433,10 +348,8 @@ class CreateAgreementUseCaseTest {
                     List.of(1L, 2L)
             );
 
-            Agreement savedAgreement = createMockAgreement(1L, matchId, 0, 0);
-            Match mockMatch = createMockMatch(memberId, 999L);
+            Agreement savedAgreement = createMockAgreement(1L, 0, 0);
 
-            when(matchReader.getById(matchId)).thenReturn(mockMatch);
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
 
             // When
@@ -453,7 +366,6 @@ class CreateAgreementUseCaseTest {
     private CreateAgreementUseCase.Param createValidParam() {
         return new CreateAgreementUseCase.Param(
                 memberId,
-                matchId,
                 EngagementType.DAY,
                 false,
                 5000,
@@ -464,26 +376,10 @@ class CreateAgreementUseCaseTest {
     }
 
     /**
-     * Mock Match 생성
-     */
-    private Match createMockMatch(Long helperId, Long disabledId) {
-        Match match = mock(Match.class);
-
-        // isParticipant 메서드의 실제 동작을 구현
-        when(match.isParticipant(helperId)).thenReturn(true);
-        when(match.isParticipant(disabledId)).thenReturn(true);
-        when(match.isParticipant(argThat(id -> !id.equals(helperId) && !id.equals(disabledId))))
-                .thenReturn(false);
-
-        return match;
-    }
-
-    /**
      * Mock Agreement 생성 (DAY 타입)
      */
-    private Agreement createMockAgreement(Long agreementId, Long matchId, Integer unitHoney, Integer totalHoney) throws Exception {
+    private Agreement createMockAgreement(Long agreementId, Integer unitHoney, Integer totalHoney) throws Exception {
         Agreement agreement = Agreement.create(
-                matchId,
                 EngagementType.DAY,
                 false,
                 unitHoney,
@@ -505,14 +401,12 @@ class CreateAgreementUseCaseTest {
      */
     private Agreement createMockAgreementWithType(
             Long agreementId,
-            Long matchId,
             EngagementType type,
             Integer unitHoney,
             Integer totalHoney,
             Boolean isVolunteer
     ) throws Exception {
         Agreement agreement = Agreement.create(
-                matchId,
                 type,
                 isVolunteer,
                 unitHoney,

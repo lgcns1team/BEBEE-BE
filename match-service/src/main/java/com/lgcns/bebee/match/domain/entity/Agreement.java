@@ -3,6 +3,8 @@ package com.lgcns.bebee.match.domain.entity;
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
+import com.lgcns.bebee.match.exception.MatchErrors;
+import com.lgcns.bebee.match.exception.MatchException;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,6 +15,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.lgcns.bebee.match.exception.MatchErrors.ALREADY_CONFIRMED_AGREEMENT;
+import static com.lgcns.bebee.match.exception.MatchErrors.CANNOT_REFUSE_CONFIRMED_AGREEMENT;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,9 +26,6 @@ public class Agreement extends BaseTimeEntity {
     @Tsid
     @Column(name = "agreement_id")
     private Long id;
-
-    @Column(nullable = false, unique = true)
-    private Long matchId;
 
     @Column(nullable = false)
     private Integer unitHoney;
@@ -46,6 +48,7 @@ public class Agreement extends BaseTimeEntity {
     @Column
     private Boolean isTermComplete = Boolean.FALSE;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AgreementStatus status = AgreementStatus.BEFORE;
 
@@ -62,7 +65,6 @@ public class Agreement extends BaseTimeEntity {
     private Boolean isVolunteer;
 
     public static Agreement create(
-            Long matchId,
             EngagementType type,
             Boolean isVolunteer,
             Integer unitHoney,
@@ -70,8 +72,12 @@ public class Agreement extends BaseTimeEntity {
             String region,
             List<Long> helpCategoryIds
     ) {
+        if (isVolunteer) {
+            unitHoney = 0;
+            totalHoney = 0;
+        }
+
         Agreement agreement = new Agreement();
-        agreement.matchId = matchId;
         agreement.type = type;
         agreement.isVolunteer = isVolunteer;
         agreement.unitHoney = unitHoney;
@@ -89,5 +95,19 @@ public class Agreement extends BaseTimeEntity {
         });
 
         return agreement;
+    }
+
+    public void refuse() {
+        if (this.status == AgreementStatus.CONFIRMED) {
+            throw ALREADY_CONFIRMED_AGREEMENT.toException();
+        }
+        this.status = AgreementStatus.REFUSED;
+    }
+
+    public void confirm() {
+        if (this.status == AgreementStatus.CONFIRMED) {
+            throw ALREADY_CONFIRMED_AGREEMENT.toException();
+        }
+        this.status = AgreementStatus.CONFIRMED;
     }
 }
