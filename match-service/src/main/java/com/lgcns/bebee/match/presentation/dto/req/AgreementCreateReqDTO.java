@@ -29,7 +29,6 @@ public class AgreementCreateReqDTO {
     public CreateAgreementUseCase.Param toParam() {
         return new CreateAgreementUseCase.Param(
                 memberId,
-                matchId,
                 type,
                 isVolunteer,
                 unitHoney,

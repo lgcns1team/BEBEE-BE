@@ -10,10 +10,12 @@ DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS `match`;
 DROP TABLE IF EXISTS `agreement`;
 DROP TABLE IF EXISTS `engagement`;
-DROP TABLE IF EXISTS `activetime_day`;
-DROP TABLE IF EXISTS `activetime_term`;
-DROP TABLE IF EXISTS `engagement_time_day`;
-DROP TABLE IF EXISTS `engagement_time_term`;
+DROP TABLE IF EXISTS `post_engagement_time_day`;
+DROP TABLE IF EXISTS `post_engagement_time_term`;
+DROP TABLE IF EXISTS `agreement_engagement_time_day`;
+DROP TABLE IF EXISTS `agreement_engagement_time_schedule`;
+DROP TABLE IF EXISTS `agreement_engagement_time_term`;
+DROP TABLE IF EXISTS `post_help_category`;
 DROP TABLE IF EXISTS `agreement_help_category`;
 DROP TABLE IF EXISTS `review`;
 DROP TABLE IF EXISTS `application`;
@@ -132,6 +134,7 @@ CREATE TABLE `match`
     `post_id`      BIGINT       NOT NULL,
     `title`        VARCHAR(100) NOT NULL,
     `chat_room_id` BIGINT       NOT NULL,
+    `agreement_id` BIGINT       NOT NULL UNIQUE,
     `created_at`   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -146,23 +149,17 @@ CREATE TABLE `match`
 CREATE TABLE `agreement`
 (
     `agreement_id`      BIGINT      NOT NULL PRIMARY KEY,
-    `match_id`          BIGINT      NOT NULL,
     `unit_honey`        INT         NOT NULL,
     `total_honey`       INT         NOT NULL,
     `region`            VARCHAR(50) NOT NULL,
     `type`              ENUM('DAY','TERM') NOT NULL,
-    `confirmation_date` DATETIME    NOT NULL,
+    `confirmation_date` DATE        NOT NULL,
     `is_day_complete`   BOOLEAN     NULL DEFAULT FALSE,
     `is_term_complete`  BOOLEAN     NULL DEFAULT FALSE,
     `status`            ENUM('BEFORE', 'REFUSED', 'CONFIRMED') NOT NULL DEFAULT 'BEFORE',
+    `is_volunteer`      BOOLEAN     NOT NULL,
     `created_at`        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `UQ_match_id` UNIQUE (`match_id`),
-    CONSTRAINT `FK_agreement_TO_match`
-        FOREIGN KEY(`match_id`)
-            REFERENCES `match` (`match_id`)
-            ON DELETE CASCADE
+    `updated_at`        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- 4. Engagement 테이블
@@ -184,7 +181,7 @@ CREATE TABLE `engagement`
 
 
 -- 5. ActiveTime_Day 테이블
-CREATE TABLE `activetime_day`
+CREATE TABLE `post_engagement_time_day`
 (
     `post_id`         BIGINT   NOT NULL PRIMARY KEY,
     `engagement_date` DATE     NOT NULL,
@@ -192,14 +189,14 @@ CREATE TABLE `activetime_day`
     `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT `FK_activetime_day_TO_help_request_post`
+    CONSTRAINT `FK_post_engagement_time_day_TO_help_request_post`
         FOREIGN KEY (`post_id`)
-            REFERENCES post (`post_id`)
+            REFERENCES `help_request_post` (`post_id`)
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- 6. ActiveTime_Term 테이블
-CREATE TABLE `activetime_term`
+CREATE TABLE `post_engagement_time_term`
 (
     `post_id`         BIGINT   NOT NULL PRIMARY KEY,
     `start_date`      DATE     NOT NULL,
@@ -208,22 +205,23 @@ CREATE TABLE `activetime_term`
     `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT `FK_activetime_term_TO_help_request_post`
+    CONSTRAINT `FK_post_engagement_time_term_TO_help_request_post`
         FOREIGN KEY (`post_id`)
-            REFERENCES post (`post_id`)
+            REFERENCES `help_request_post` (`post_id`)
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- 7. EngagementTime_Day 테이블
-CREATE TABLE `engagement_time_day`
+CREATE TABLE `agreement_engagement_time_day`
 (
     `agreement_id`    BIGINT   NOT NULL PRIMARY KEY,
     `engagement_date` DATE     NOT NULL,
-    `engagement_time` TIME     NOT NULL,
+    `start_time`      TIME     NOT NULL,
+    `end_time`        TIME     NOT NULL,
     `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT `FK_engagement_time_day_TO_agreement`
+    CONSTRAINT `FK_agreement_engagement_time_day_TO_agreement`
         FOREIGN KEY (`agreement_id`)
             REFERENCES `agreement` (`agreement_id`)
             ON DELETE CASCADE
@@ -233,35 +231,48 @@ CREATE TABLE `engagement_time_day`
 CREATE TABLE `agreement_engagement_time_term`
 (
     `agreement_engagement_time_term_id` BIGINT NOT NULL PRIMARY KEY,
-    `agreement_id` BIGINT NOT NULL,
+    `agreement_id` BIGINT NOT NULL UNIQUE,
     `start_date`      DATE     NOT NULL,
     `end_date`        DATE     NOT NULL,
-    `engagement_time` JSON     NOT NULL,
     `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT `FK_engagement_time_term_TO_agreement`
+    CONSTRAINT `FK_agreement_engagement_time_term_TO_agreement`
         FOREIGN KEY (`agreement_id`)
             REFERENCES `agreement` (`agreement_id`)
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 8. Agreement_HelpCategory 테이블
+-- 10. Agreement_HelpCategory 테이블
 CREATE TABLE `agreement_help_category`
 (
-    `agreement_id`     BIGINT   NOT NULL,
-    `help_category_id` BIGINT   NOT NULL,
-    `created_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `agreement_id` BIGINT   NOT NULL,
+    `help_category_id`      BIGINT   NOT NULL,
+    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY (`agreement_id`, `help_category_id`),
     CONSTRAINT `FK_agreement_help_category_TO_agreement`
         FOREIGN KEY (`agreement_id`)
             REFERENCES `agreement` (`agreement_id`)
-            ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 9. Application 테이블
+-- 12. Review 테이블
+CREATE TABLE `review`
+(
+    `review_id`     BIGINT   NOT NULL PRIMARY KEY,
+    `engagement_id` BIGINT   NOT NULL,
+    `rating`        INT      NOT NULL,
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `FK_review_TO_engagement`
+        FOREIGN KEY (`engagement_id`)
+            REFERENCES `engagement` (`engagement_id`),
+    CHECK (`rating` BETWEEN 1 AND 4)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 13. Application 테이블
 CREATE TABLE `application`
 (
     `application_id` BIGINT   NOT NULL PRIMARY KEY,
@@ -275,21 +286,6 @@ CREATE TABLE `application`
         FOREIGN KEY (`post_id`)
             REFERENCES post (`post_id`)
             ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 10. Review 테이블
-CREATE TABLE `review`
-(
-    `review_id`     BIGINT   NOT NULL PRIMARY KEY,
-    `engagement_id` BIGINT   NOT NULL,
-    `rating`        INT      NOT NULL,
-    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `FK_review_TO_engagement`
-        FOREIGN KEY (`engagement_id`)
-            REFERENCES `engagement` (`engagement_id`),
-    CHECK (`rating` BETWEEN 1 AND 4)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
