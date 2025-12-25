@@ -1,8 +1,8 @@
 package com.lgcns.bebee.match.presentation;
 
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
-import com.lgcns.bebee.match.presentation.dto.AgreementCreateReqDTO;
-import com.lgcns.bebee.match.presentation.dto.AgreementCreateResDTO;
+import com.lgcns.bebee.match.presentation.dto.req.AgreementCreateReqDTO;
+import com.lgcns.bebee.match.presentation.dto.res.AgreementCreateResDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
