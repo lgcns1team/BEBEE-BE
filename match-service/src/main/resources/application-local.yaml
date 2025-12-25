@@ -77,6 +77,23 @@ spring:
     # clean 명령 비활성화 (안전)
     # clean-disabled: true
 
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+  api:
+    host: "${SPRINGDOC_API_HOST:http://localhost:8082}"
+    desc: "${SPRINGDOC_API_DESC:로컬 서버}"
+
+
 # CORS (Cross-Origin Resource Sharing) 설정
 cors:
   allowed-origin-patterns: "${CORS_ALLOWED_ORIGINS:http://localhost:[*],https://localhost:[*]}"
@@ -96,7 +113,7 @@ logging:
     p6spy: INFO
 
     # Hibernate 파라미터 바인딩 로그 레벨 (trace: 모든 파라미터 값 출력)
-    org.hibernate.type: trace
+    org.hibernate.type: info
 
     com.lgcns.bebee.match: ${LOGGING_LEVEL_SERVICE:info}
 
