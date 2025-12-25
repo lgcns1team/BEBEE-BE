@@ -1,7 +1,7 @@
 package com.lgcns.bebee.chat.core.config;
 
-import com.lgcns.bebee.chat.core.properties.SpringdocApiProperties;
 import com.lgcns.bebee.common.config.BaseOpenApiConfig;
+import com.lgcns.bebee.common.properties.SpringdocApiProperties;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
