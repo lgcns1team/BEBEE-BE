@@ -1,24 +1,21 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- DROP TABLES (존재한다면 먼저 삭제)
-DROP TABLE IF EXISTS post_day;
-DROP TABLE IF EXISTS post_period;
-DROP TABLE IF EXISTS post_schedule;
-DROP TABLE IF EXISTS post_help_category;
-DROP TABLE IF EXISTS post_image;
-DROP TABLE IF EXISTS post;
-DROP TABLE IF EXISTS `match`;
-DROP TABLE IF EXISTS `agreement`;
-DROP TABLE IF EXISTS `engagement`;
-DROP TABLE IF EXISTS `post_engagement_time_day`;
-DROP TABLE IF EXISTS `post_engagement_time_term`;
-DROP TABLE IF EXISTS `agreement_engagement_time_day`;
-DROP TABLE IF EXISTS `agreement_engagement_time_schedule`;
-DROP TABLE IF EXISTS `agreement_engagement_time_term`;
-DROP TABLE IF EXISTS `post_help_category`;
-DROP TABLE IF EXISTS `agreement_help_category`;
 DROP TABLE IF EXISTS `review`;
 DROP TABLE IF EXISTS `application`;
+DROP TABLE IF EXISTS `agreement_help_category`;
+DROP TABLE IF EXISTS `agreement_engagement_time_schedule`;
+DROP TABLE IF EXISTS `agreement_engagement_time_term`;
+DROP TABLE IF EXISTS `agreement_engagement_time_day`;
+DROP TABLE IF EXISTS `engagement`;
+DROP TABLE IF EXISTS `match`;
+DROP TABLE IF EXISTS `post_help_category`;
+DROP TABLE IF EXISTS `post_image`;
+DROP TABLE IF EXISTS `post_schedule`;
+DROP TABLE IF EXISTS `post_period`;
+DROP TABLE IF EXISTS `post_day`;
+DROP TABLE IF EXISTS `post`;
+DROP TABLE IF EXISTS `agreement`;
 
 -- CREATE TABLES
 
@@ -125,7 +122,7 @@ CREATE TABLE post_image
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 7. Match 테이블
+-- 7. Match 테이블 (매칭 정보)
 CREATE TABLE `match`
 (
     `match_id`     BIGINT       NOT NULL PRIMARY KEY,
@@ -145,7 +142,7 @@ CREATE TABLE `match`
     CONSTRAINT `UQ_post_id` UNIQUE (`post_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 3. Agreement 테이블
+-- 8. Agreement 테이블 (활동 계약 정보)
 CREATE TABLE `agreement`
 (
     `agreement_id`      BIGINT      NOT NULL PRIMARY KEY,
@@ -177,38 +174,6 @@ CREATE TABLE `engagement`
     CONSTRAINT `FK_engagement_TO_agreement`
         FOREIGN KEY (`agreement_id`)
             REFERENCES `agreement` (`agreement_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- 5. ActiveTime_Day 테이블
-CREATE TABLE `post_engagement_time_day`
-(
-    `post_id`         BIGINT   NOT NULL PRIMARY KEY,
-    `engagement_date` DATE     NOT NULL,
-    `engagement_time` TIME     NOT NULL,
-    `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `FK_post_engagement_time_day_TO_help_request_post`
-        FOREIGN KEY (`post_id`)
-            REFERENCES `help_request_post` (`post_id`)
-            ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 6. ActiveTime_Term 테이블
-CREATE TABLE `post_engagement_time_term`
-(
-    `post_id`         BIGINT   NOT NULL PRIMARY KEY,
-    `start_date`      DATE     NOT NULL,
-    `end_date`        DATE     NOT NULL,
-    `engagement_time` JSON     NOT NULL,
-    `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `FK_post_engagement_time_term_TO_help_request_post`
-        FOREIGN KEY (`post_id`)
-            REFERENCES `help_request_post` (`post_id`)
-            ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- 7. EngagementTime_Day 테이블

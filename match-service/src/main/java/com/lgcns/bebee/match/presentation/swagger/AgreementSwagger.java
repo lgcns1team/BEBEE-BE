@@ -61,7 +61,7 @@ public interface AgreementSwagger {
                                                   "unitHoney": 100,
                                                   "totalHoney": 100,
                                                   "region": "서울특별시 강남구 논현동",
-                                                  "helpCategoryIds": [1, 2],
+                                                  "helpCategoryIds": [1, 2]
                                                 }
                                                 """
                                 )
@@ -100,7 +100,7 @@ public interface AgreementSwagger {
                                         name = "매칭 확인서 거절 요청 예시",
                                         value = """
                                                 {
-                                                  "helperId": 101,
+                                                  "helperId": 101
                                                 }
                                                 """
                                 )
