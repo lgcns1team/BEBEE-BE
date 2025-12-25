@@ -1,7 +1,12 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- DROP TABLES (존재한다면 먼저 삭제)
-DROP TABLE IF EXISTS `help_request_post`;
+DROP TABLE IF EXISTS post_day;
+DROP TABLE IF EXISTS post_period;
+DROP TABLE IF EXISTS post_schedule;
+DROP TABLE IF EXISTS post_help_category;
+DROP TABLE IF EXISTS post_image;
+DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS `match`;
 DROP TABLE IF EXISTS `agreement`;
 DROP TABLE IF EXISTS `engagement`;
@@ -9,35 +14,116 @@ DROP TABLE IF EXISTS `activetime_day`;
 DROP TABLE IF EXISTS `activetime_term`;
 DROP TABLE IF EXISTS `engagement_time_day`;
 DROP TABLE IF EXISTS `engagement_time_term`;
-DROP TABLE IF EXISTS `post_help_category`;
 DROP TABLE IF EXISTS `agreement_help_category`;
 DROP TABLE IF EXISTS `review`;
 DROP TABLE IF EXISTS `application`;
-DROP TABLE IF EXISTS `post_image`;
 
 -- CREATE TABLES
 
--- 1. HelpRequestPost 테이블
-CREATE TABLE `help_request_post`
+-- 1. Post 테이블
+CREATE TABLE post
 (
-    `post_id`         BIGINT        NOT NULL PRIMARY KEY,
-    `member_id`       BIGINT        NOT NULL,
-    `title`           VARCHAR(50)   NOT NULL,
-    `type`            ENUM('DAY','TERM') NOT NULL,
-    `unit_honey`      INT           NOT NULL,
-    `total_honey`     INT           NOT NULL,
-    `region`          VARCHAR(30)   NOT NULL,
-    `status`          ENUM('NON_MATCHED','PROCEEDING','MATCHED') NOT NULL DEFAULT 'NON_MATCHED',
-    `legaldong_code`  VARCHAR(10)   NOT NULL,
-    `latitude`        DECIMAL(10,7) NOT NULL,
-    `longitude`       DECIMAL(10,7) NOT NULL,
-    `applicant_count` INT           NULL DEFAULT 0,
-    `content`         VARCHAR(1000) NULL,
-    `created_at`      TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`      TIMESTAMP     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `post_id`          BIGINT        NOT NULL PRIMARY KEY,
+    `member_id`        BIGINT        NOT NULL,
+    `title`            VARCHAR(50)   NOT NULL,
+    `type`             ENUM('DAY','TERM') NOT NULL,
+    `unit_honey`       INT           NOT NULL,
+    `total_honey`      INT           NOT NULL,
+    `region`           VARCHAR(30)   NOT NULL,
+    `status`           ENUM('NON_MATCHED','PROCEEDING','MATCHED') NOT NULL DEFAULT 'NON_MATCHED',
+    `legal_dong_code`  VARCHAR(10)   NOT NULL,
+    `latitude`         DECIMAL(10,7) NOT NULL,
+    `longitude`        DECIMAL(10,7) NOT NULL,
+    `applicant_count`  INT           NULL DEFAULT 0,
+    `content`          VARCHAR(1000) NULL,
+    `created_at`       TIMESTAMP     NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`       TIMESTAMP     NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 2. Match 테이블
+-- 2. PostDay 테이블 (DAY 타입 게시글 상세 정보)
+CREATE TABLE post_day
+(
+    `post_day_id`  BIGINT   NOT NULL PRIMARY KEY,
+    `post_id`      BIGINT   NOT NULL,
+    `date`         DATE     NOT NULL,
+    `start_time`   TIME     NOT NULL,
+    `end_time`     TIME     NOT NULL,
+    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `FK_post_day_TO_post`
+        FOREIGN KEY (`post_id`)
+            REFERENCES post (`post_id`)
+            ON DELETE CASCADE,
+    CONSTRAINT `UQ_post_day_post_id` UNIQUE (`post_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 3. PostPeriod 테이블 (TERM 타입 게시글 기간 정보)
+CREATE TABLE post_period
+(
+    `post_period_id` BIGINT   NOT NULL PRIMARY KEY,
+    `post_id`        BIGINT   NOT NULL,
+    `start_date`     DATE     NOT NULL,
+    `end_date`       DATE     NOT NULL,
+    `created_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `FK_post_period_TO_post`
+        FOREIGN KEY (`post_id`)
+            REFERENCES post (`post_id`)
+            ON DELETE CASCADE,
+    CONSTRAINT `UQ_post_period_post_id` UNIQUE (`post_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 4. PostSchedule 테이블 (게시글 요일별 스케줄 정보)
+CREATE TABLE post_schedule
+(
+    `post_schedule_id` BIGINT   NOT NULL PRIMARY KEY,
+    `post_id`          BIGINT   NOT NULL,
+    `day`              ENUM('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY') NULL,
+    `start_time`       TIME     NULL,
+    `end_time`         TIME     NULL,
+    `created_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `FK_post_schedule_TO_post`
+        FOREIGN KEY (`post_id`)
+            REFERENCES post (`post_id`)
+            ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 5. PostHelpCategory 테이블 (게시글-도움카테고리 매핑)
+CREATE TABLE post_help_category
+(
+    `post_id`          BIGINT   NOT NULL,
+    `help_category_id` BIGINT   NOT NULL,
+    `created_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (`post_id`, `help_category_id`),
+    CONSTRAINT `FK_post_help_category_TO_post`
+        FOREIGN KEY (`post_id`)
+            REFERENCES post (`post_id`)
+            ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 6. PostImage 테이블 (게시글 이미지)
+CREATE TABLE post_image
+(
+    `image_id`   BIGINT       NOT NULL PRIMARY KEY,
+    `post_id`    BIGINT       NOT NULL,
+    `image_url`  VARCHAR(255) NOT NULL,
+    `sequence`   INT          NOT NULL,
+    `created_at` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `FK_post_image_TO_post`
+        FOREIGN KEY (`post_id`)
+            REFERENCES post (`post_id`)
+            ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 7. Match 테이블
 CREATE TABLE `match`
 (
     `match_id`     BIGINT       NOT NULL PRIMARY KEY,
@@ -51,7 +137,7 @@ CREATE TABLE `match`
 
     CONSTRAINT `FK_match_TO_post`
         FOREIGN KEY(`post_id`)
-            REFERENCES `help_request_post`(`post_id`)
+            REFERENCES post(`post_id`)
             ON DELETE RESTRICT,
     CONSTRAINT `UQ_post_id` UNIQUE (`post_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -108,7 +194,7 @@ CREATE TABLE `activetime_day`
 
     CONSTRAINT `FK_activetime_day_TO_help_request_post`
         FOREIGN KEY (`post_id`)
-            REFERENCES `help_request_post` (`post_id`)
+            REFERENCES post (`post_id`)
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -124,7 +210,7 @@ CREATE TABLE `activetime_term`
 
     CONSTRAINT `FK_activetime_term_TO_help_request_post`
         FOREIGN KEY (`post_id`)
-            REFERENCES `help_request_post` (`post_id`)
+            REFERENCES post (`post_id`)
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -160,35 +246,38 @@ CREATE TABLE `agreement_engagement_time_term`
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 9. Post_HelpCategory 테이블
-CREATE TABLE `post_help_category`
-(
-    `post_id`    BIGINT   NOT NULL,
-    `help_category_id`    BIGINT   NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    PRIMARY KEY (`post_id`, `help_category_id`),
-    CONSTRAINT `FK_post_help_category_TO_help_request_post`
-        FOREIGN KEY (`post_id`)
-            REFERENCES `help_request_post` (`post_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 10. Agreement_HelpCategory 테이블
+-- 8. Agreement_HelpCategory 테이블
 CREATE TABLE `agreement_help_category`
 (
-    `agreement_id` BIGINT   NOT NULL,
-    `help_category_id`      BIGINT   NOT NULL,
-    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `agreement_id`     BIGINT   NOT NULL,
+    `help_category_id` BIGINT   NOT NULL,
+    `created_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY (`agreement_id`, `help_category_id`),
     CONSTRAINT `FK_agreement_help_category_TO_agreement`
         FOREIGN KEY (`agreement_id`)
             REFERENCES `agreement` (`agreement_id`)
+            ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 11. Review 테이블
+-- 9. Application 테이블
+CREATE TABLE `application`
+(
+    `application_id` BIGINT   NOT NULL PRIMARY KEY,
+    `post_id`        BIGINT   NOT NULL,
+    `applicant_id`   BIGINT   NOT NULL,
+    `is_volunteer`   BOOLEAN  NOT NULL,
+    `created_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `FK_application_TO_post`
+        FOREIGN KEY (`post_id`)
+            REFERENCES post (`post_id`)
+            ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 10. Review 테이블
 CREATE TABLE `review`
 (
     `review_id`     BIGINT   NOT NULL PRIMARY KEY,
@@ -201,38 +290,6 @@ CREATE TABLE `review`
         FOREIGN KEY (`engagement_id`)
             REFERENCES `engagement` (`engagement_id`),
     CHECK (`rating` BETWEEN 1 AND 4)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 12. Application 테이블
-CREATE TABLE `application`
-(
-    `application_id` BIGINT   NOT NULL PRIMARY KEY,
-    `post_id`        BIGINT   NOT NULL,
-    `applicant_id`   BIGINT   NOT NULL,
-    `is_volunteer`   BOOLEAN  NOT NULL,
-    `created_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `FK_application_TO_help_request_post`
-        FOREIGN KEY (`post_id`)
-            REFERENCES `help_request_post` (`post_id`)
-            ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 13. PostImage 테이블
-CREATE TABLE `post_image`
-(
-    `image_id`   BIGINT       NOT NULL PRIMARY KEY,
-    `image_url`  VARCHAR(255) NOT NULL,
-    `post_id`    BIGINT       NOT NULL,
-    `sequence`   INT          NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `FK_post_image_TO_help_request_post`
-        FOREIGN KEY (`post_id`)
-            REFERENCES `help_request_post` (`post_id`)
-            ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
