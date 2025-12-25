@@ -1,4 +1,4 @@
-package com.lgcns.bebee.chat.core.properties;
+package com.lgcns.bebee.common.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

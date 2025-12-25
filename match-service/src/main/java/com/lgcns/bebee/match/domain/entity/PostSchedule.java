@@ -1,29 +1,34 @@
 package com.lgcns.bebee.match.domain.entity;
 
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HelpRequestPostEngagementTimeSchedule extends BaseTimeEntity {
+public class PostSchedule extends BaseTimeEntity {
     @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
+    @Tsid @Column(name = "post_schedule_id")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private HelpRequestPostEngagementTimeTerm post;
+    private Post post;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
-    private DayOfWeek day;
+    @Column(nullable = false)
+    private DayOfWeek dayOfWeek;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalTime startTime;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalTime endTime;
 }

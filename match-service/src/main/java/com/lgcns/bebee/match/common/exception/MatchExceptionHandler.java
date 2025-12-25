@@ -1,4 +1,4 @@
-package com.lgcns.bebee.match.exception;
+package com.lgcns.bebee.match.common.exception;
 
 import com.lgcns.bebee.common.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;

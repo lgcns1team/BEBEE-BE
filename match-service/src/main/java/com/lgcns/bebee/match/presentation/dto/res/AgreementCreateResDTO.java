@@ -1,4 +1,4 @@
-package com.lgcns.bebee.match.presentation.dto;
+package com.lgcns.bebee.match.presentation.dto.res;
 
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;

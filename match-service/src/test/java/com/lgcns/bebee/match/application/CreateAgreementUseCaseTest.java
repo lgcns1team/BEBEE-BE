@@ -6,6 +6,8 @@ import com.lgcns.bebee.match.domain.entity.Agreement;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
+import com.lgcns.bebee.match.common.exception.MatchErrors;
+import com.lgcns.bebee.match.common.exception.MatchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

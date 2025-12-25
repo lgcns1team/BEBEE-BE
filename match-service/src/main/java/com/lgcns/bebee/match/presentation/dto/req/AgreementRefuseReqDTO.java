@@ -1,4 +1,4 @@
-package com.lgcns.bebee.match.presentation.dto;
+package com.lgcns.bebee.match.presentation.dto.req;
 
 import com.lgcns.bebee.match.application.usecase.RefuseAgreementUseCase;
 import lombok.AccessLevel;

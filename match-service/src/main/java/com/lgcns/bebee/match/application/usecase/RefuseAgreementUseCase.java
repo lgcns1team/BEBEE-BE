@@ -6,7 +6,7 @@ import com.lgcns.bebee.common.exception.InvalidParamException;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
 import com.lgcns.bebee.match.domain.service.AgreementReader;
-import com.lgcns.bebee.match.exception.MatchInvalidParamErrors;
+import com.lgcns.bebee.match.common.exception.MatchInvalidParamErrors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

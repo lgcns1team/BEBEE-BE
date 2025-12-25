@@ -1,8 +1,9 @@
-package com.lgcns.bebee.chat.core.config;
+package com.lgcns.bebee.match.common.config;
 
 import com.lgcns.bebee.common.config.BaseOpenApiConfig;
 import com.lgcns.bebee.common.properties.SpringdocApiProperties;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +20,8 @@ public class OpenApiConfig extends BaseOpenApiConfig {
     public OpenAPI openAPI(){
         return new OpenAPI()
                 .info(createApiInfo(
-                        "Bebee Chat Service API",
-                        "채팅 서비스 REST API 문서",
+                        "Bebee Match Service API",
+                        "매칭 서비스 REST API 문서",
                         "v1.0.0"
                 ))
                 .components(openApiComponents())

@@ -3,8 +3,8 @@ package com.lgcns.bebee.match.domain.entity;
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
-import com.lgcns.bebee.match.exception.MatchErrors;
-import com.lgcns.bebee.match.exception.MatchException;
+import com.lgcns.bebee.match.common.exception.MatchErrors;
+import com.lgcns.bebee.match.common.exception.MatchException;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,8 +15,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lgcns.bebee.match.exception.MatchErrors.ALREADY_CONFIRMED_AGREEMENT;
-import static com.lgcns.bebee.match.exception.MatchErrors.CANNOT_REFUSE_CONFIRMED_AGREEMENT;
+import static com.lgcns.bebee.match.common.exception.MatchErrors.ALREADY_CONFIRMED_AGREEMENT;
+import static com.lgcns.bebee.match.common.exception.MatchErrors.CANNOT_REFUSE_CONFIRMED_AGREEMENT;
 
 @Entity
 @Getter

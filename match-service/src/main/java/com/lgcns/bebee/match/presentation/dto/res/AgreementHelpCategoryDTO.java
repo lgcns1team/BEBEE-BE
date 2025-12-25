@@ -1,4 +1,4 @@
-package com.lgcns.bebee.match.presentation.dto;
+package com.lgcns.bebee.match.presentation.dto.res;
 
 import com.lgcns.bebee.match.domain.entity.AgreementHelpCategory;
 import lombok.AllArgsConstructor;

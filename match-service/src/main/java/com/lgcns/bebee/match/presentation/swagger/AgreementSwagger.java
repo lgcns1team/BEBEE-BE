@@ -1,6 +1,10 @@
 package com.lgcns.bebee.match.presentation.swagger;
 
-import com.lgcns.bebee.match.presentation.dto.*;
+import com.lgcns.bebee.match.presentation.dto.req.AgreementCreateReqDTO;
+import com.lgcns.bebee.match.presentation.dto.req.AgreementRefuseReqDTO;
+import com.lgcns.bebee.match.presentation.dto.res.AgreementConfirmReqDTO;
+import com.lgcns.bebee.match.presentation.dto.res.AgreementConfirmResDTO;
+import com.lgcns.bebee.match.presentation.dto.res.AgreementCreateResDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -57,7 +61,7 @@ public interface AgreementSwagger {
                                                   "unitHoney": 100,
                                                   "totalHoney": 100,
                                                   "region": "서울특별시 강남구 논현동",
-                                                  "helpCategoryIds": [1, 2],
+                                                  "helpCategoryIds": [1, 2]
                                                 }
                                                 """
                                 )
@@ -96,7 +100,7 @@ public interface AgreementSwagger {
                                         name = "매칭 확인서 거절 요청 예시",
                                         value = """
                                                 {
-                                                  "helperId": 101,
+                                                  "helperId": 101
                                                 }
                                                 """
                                 )
