@@ -29,14 +29,16 @@ public class AgreementPeriod extends BaseTimeEntity {
     private LocalDate endDate;
 
     public static AgreementPeriod create(
-            Agreement agreement,
             LocalDate startDate,
             LocalDate endDate
     ) {
         AgreementPeriod period = new AgreementPeriod();
-        period.agreement = agreement;
         period.startDate = startDate;
         period.endDate = endDate;
         return period;
+    }
+
+    protected void assignToAgreement(Agreement agreement) {
+        this.agreement = agreement;
     }
 }

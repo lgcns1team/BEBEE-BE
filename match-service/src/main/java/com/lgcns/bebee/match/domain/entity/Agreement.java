@@ -105,37 +105,39 @@ public class Agreement extends BaseTimeEntity {
         agreement.isTermComplete = Boolean.FALSE;
 
         if (type == EngagementType.DAY && dayTime != null) {
-            // DAY 타입: startDate == endDate, 1개의 스케줄
+            // DAY 타입: period 생성 및 주입
             AgreementPeriod period = AgreementPeriod.create(
-                    agreement,
                     dayTime.getEngagementDate(),
                     dayTime.getEngagementDate()
             );
+            period.assignToAgreement(agreement);
             agreement.period = period;
 
+            // DAY 타입: schedule 생성 및 주입
             AgreementSchedule schedule = AgreementSchedule.create(
-                    agreement,
                     dayTime.getEngagementDate().getDayOfWeek(),
                     dayTime.getStartTime(),
                     dayTime.getEndTime()
             );
+            schedule.assignToAgreement(agreement);
             agreement.schedules.add(schedule);
         } else if (type == EngagementType.TERM && termTime != null) {
-            // TERM 타입: startDate != endDate, 여러 개의 스케줄
+            // TERM 타입: period 생성 및 주입
             AgreementPeriod period = AgreementPeriod.create(
-                    agreement,
                     termTime.getStartDate(),
                     termTime.getEndDate()
             );
+            period.assignToAgreement(agreement);
             agreement.period = period;
 
+            // TERM 타입: schedules 생성 및 주입
             termTime.getSchedules().forEach(scheduleDTO -> {
                 AgreementSchedule schedule = AgreementSchedule.create(
-                        agreement,
                         scheduleDTO.getDayOfWeek(),
                         scheduleDTO.getStartTime(),
                         scheduleDTO.getEndTime()
                 );
+                schedule.assignToAgreement(agreement);
                 agreement.schedules.add(schedule);
             });
         }
