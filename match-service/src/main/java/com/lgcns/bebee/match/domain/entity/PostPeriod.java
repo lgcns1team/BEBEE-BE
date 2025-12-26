@@ -27,4 +27,15 @@ public class PostPeriod extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalDate endDate;
+
+    public static PostPeriod create(LocalDate startDate, LocalDate endDate) {
+        PostPeriod period = new PostPeriod();
+        period.startDate = startDate;
+        period.endDate = endDate;
+        return period;
+    }
+
+    protected void assignToPost(Post post) {
+        this.post = post;
+    }
 }

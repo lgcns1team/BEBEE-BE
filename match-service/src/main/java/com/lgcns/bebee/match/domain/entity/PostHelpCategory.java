@@ -18,4 +18,14 @@ public class PostHelpCategory extends BaseTimeEntity {
     @MapsId("postId")
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    public static PostHelpCategory create(Long helpCategoryId) {
+        PostHelpCategory category = new PostHelpCategory();
+        category.id = new PostHelpCategoryId(null, helpCategoryId);
+        return category;
+    }
+
+    protected void assignToPost(Post post) {
+        this.post = post;
+    }
 }
