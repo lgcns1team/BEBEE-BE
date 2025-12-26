@@ -8,15 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
 @Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AgreementEngagementTimeTerm extends BaseTimeEntity {
+public class AgreementPeriod extends BaseTimeEntity {
     @Id
-    @Tsid @Column(name = "agreement_engagement_time_term_id")
+    @Tsid
+    @Column(name = "agreement_period_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -29,6 +28,15 @@ public class AgreementEngagementTimeTerm extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "term", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AgreementEngagementTimeSchedule> schedules = new ArrayList<>();
+    public static AgreementPeriod create(
+            Agreement agreement,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        AgreementPeriod period = new AgreementPeriod();
+        period.agreement = agreement;
+        period.startDate = startDate;
+        period.endDate = endDate;
+        return period;
+    }
 }

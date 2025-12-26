@@ -127,52 +127,37 @@ CREATE TABLE `post_engagement_time_term`
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 7. EngagementTime_Day 테이블
-CREATE TABLE `agreement_engagement_time_day`
+-- 7. AgreementPeriod 테이블 (게시글 날짜/기간 정보)
+CREATE TABLE agreement_period
 (
-    `agreement_id`    BIGINT   NOT NULL PRIMARY KEY,
-    `engagement_date` DATE     NOT NULL,
-    `start_time`      TIME     NOT NULL,
-    `end_time`        TIME     NOT NULL,
-    `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `agreement_period_id` BIGINT   NOT NULL PRIMARY KEY,
+    `agreement_id`        BIGINT   NOT NULL,
+    `start_date`     DATE     NOT NULL,
+    `end_date`       DATE     NOT NULL,
+    `created_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT `FK_agreement_engagement_time_day_TO_agreement`
+    CONSTRAINT `FK_agreement_period_TO_agreement`
         FOREIGN KEY (`agreement_id`)
-            REFERENCES `agreement` (`agreement_id`)
-            ON DELETE CASCADE
+            REFERENCES agreement (`agreement_id`)
+            ON DELETE CASCADE,
+    CONSTRAINT `UQ_post_period_agreement_id` UNIQUE (`agreement_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 8. EngagementTime_Term 테이블
-CREATE TABLE `agreement_engagement_time_term`
+-- 8. AgreementSchedule 테이블 (게시글 요일별 스케줄 정보)
+CREATE TABLE agreement_schedule
 (
-    `agreement_engagement_time_term_id` BIGINT NOT NULL PRIMARY KEY,
-    `agreement_id` BIGINT NOT NULL UNIQUE,
-    `start_date`      DATE     NOT NULL,
-    `end_date`        DATE     NOT NULL,
-    `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `agreement_schedule_id` BIGINT   NOT NULL PRIMARY KEY,
+    `agreement_id`          BIGINT   NOT NULL,
+    `day_of_week`      ENUM('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY') NOT NULL,
+    `start_time`       TIME     NOT NULL,
+    `end_time`         TIME     NOT NULL,
+    `created_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT `FK_agreement_engagement_time_term_TO_agreement`
+    CONSTRAINT `FK_agreement_schedule_TO_agreement`
         FOREIGN KEY (`agreement_id`)
-            REFERENCES `agreement` (`agreement_id`)
-            ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 9. AgreementEngagementTimeSchedule 테이블 (Term의 요일별 시간)
-CREATE TABLE `agreement_engagement_time_schedule`
-(
-    `term_id`     BIGINT   NOT NULL,
-    `day_of_week` ENUM('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY') NOT NULL,
-    `start_time`  TIME     NULL,
-    `end_time`    TIME     NULL,
-    `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    PRIMARY KEY (`term_id`, `day_of_week`),
-    CONSTRAINT `FK_schedule_TO_term`
-        FOREIGN KEY (`term_id`)
-            REFERENCES `agreement_engagement_time_term` (`agreement_engagement_time_term_id`)
+            REFERENCES agreement (`agreement_id`)
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
