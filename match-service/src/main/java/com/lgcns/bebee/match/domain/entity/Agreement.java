@@ -25,6 +25,15 @@ public class Agreement extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    private Long postId;
+
+    @Column(nullable = false)
+    private Long disabledId;
+
+    @Column(nullable = false)
+    private Long helperId;
+
+    @Column(nullable = false)
     private Integer unitHoney;
 
     @Column(nullable = false)
@@ -62,6 +71,9 @@ public class Agreement extends BaseTimeEntity {
     private Boolean isVolunteer;
 
     public static Agreement create(
+            Long postId,
+            Long disabledId,
+            Long helperId,
             EngagementType type,
             Boolean isVolunteer,
             Integer unitHoney,
@@ -75,6 +87,9 @@ public class Agreement extends BaseTimeEntity {
         }
 
         Agreement agreement = new Agreement();
+        agreement.postId = postId;
+        agreement.disabledId = disabledId;
+        agreement.helperId = helperId;
         agreement.type = type;
         agreement.isVolunteer = isVolunteer;
         agreement.unitHoney = unitHoney;

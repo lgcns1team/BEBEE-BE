@@ -39,11 +39,17 @@ class RefuseAgreementUseCaseTest {
 
     private Long memberId;
     private Long agreementId;
+    private Long postId;
+    private Long helperId;
+    private Long disabledId;
 
     @BeforeEach
     void setUp() {
         memberId = 101L;  // 도우미
         agreementId = 999888777666L;
+        postId = 1L;
+        helperId = 101L;
+        disabledId = 202L;
     }
 
     @Nested
@@ -174,6 +180,9 @@ class RefuseAgreementUseCaseTest {
 
     private Agreement createMockAgreement(Long agreementId, AgreementStatus status) throws Exception {
         Agreement agreement = Agreement.create(
+                postId,
+                helperId,
+                disabledId,
                 EngagementType.DAY,
                 false,
                 200,
