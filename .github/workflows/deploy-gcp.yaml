@@ -79,7 +79,7 @@ jobs:
         run: |
           IMAGE_TAG="${{ env.DOCKER_USERNAME }}/bebee-${{ matrix.service }}:latest"
           
-          docker build --no-cahce -t $IMAGE_TAG -f ${{ matrix.service }}-service/Dockerfile .
+          docker build --no-cache -t $IMAGE_TAG -f ${{ matrix.service }}-service/Dockerfile .
           docker push $IMAGE_TAG
           
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
