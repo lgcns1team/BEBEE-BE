@@ -6,6 +6,9 @@ import com.lgcns.bebee.match.domain.entity.Agreement;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
+import com.lgcns.bebee.match.domain.entity.MatchMemberSync;
+import com.lgcns.bebee.match.domain.entity.vo.MemberRole;
+import com.lgcns.bebee.match.domain.service.MemberReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,14 +36,26 @@ class CreateAgreementUseCaseTest {
     @Mock
     private AgreementRepository agreementRepository;
 
+    @Mock
+    private MemberReader memberReader;
+
     @InjectMocks
     private CreateAgreementUseCase useCase;
 
-    private Long memberId;
+    private Long postId;
+    private Long helperId;
+    private Long disabledId;
+
 
     @BeforeEach
     void setUp() {
-        memberId = 1L;
+        postId = 1L;
+        helperId = 2L;
+        disabledId = 3L;
+
+        MatchMemberSync mockMember = mock(MatchMemberSync.class);
+        when(mockMember.getRole()).thenReturn(MemberRole.DISABLED);
+        when(memberReader.getById(disabledId)).thenReturn(mockMember);
     }
 
     @Nested
@@ -52,7 +67,9 @@ class CreateAgreementUseCaseTest {
         void shouldCreateAgreement_whenAllParametersAreValid() throws Exception {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -83,7 +100,9 @@ class CreateAgreementUseCaseTest {
         void shouldCreateAgreement_whenTypeIsTerm() throws Exception {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.TERM,
                     true,
                     10000,
@@ -112,7 +131,9 @@ class CreateAgreementUseCaseTest {
         void shouldHoneyFree_whenIsVolunteerIsTrue() throws Exception {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     true,
                     500,
@@ -146,7 +167,9 @@ class CreateAgreementUseCaseTest {
         void shouldThrowException_whenUnitHoneyIsNegative() {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     -1000, // 음수
@@ -166,7 +189,9 @@ class CreateAgreementUseCaseTest {
         void shouldThrowException_whenTotalHoneyIsNegative() {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -186,7 +211,9 @@ class CreateAgreementUseCaseTest {
         void shouldThrowException_whenRegionIsNull() {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -206,7 +233,9 @@ class CreateAgreementUseCaseTest {
         void shouldThrowException_whenRegionIsEmpty() {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -227,7 +256,9 @@ class CreateAgreementUseCaseTest {
             // Given
             String longRegion = "a".repeat(51); // 51자
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -247,7 +278,9 @@ class CreateAgreementUseCaseTest {
         void shouldThrowException_whenTypeIsNull() {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     null, // type null
                     false,
                     5000,
@@ -267,7 +300,9 @@ class CreateAgreementUseCaseTest {
         void shouldThrowException_whenHelpCategoryIdsIsNull() {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -287,7 +322,9 @@ class CreateAgreementUseCaseTest {
         void shouldThrowException_whenHelpCategoryIdsIsEmpty() {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -313,7 +350,9 @@ class CreateAgreementUseCaseTest {
             // Given
             String regionWith50Chars = "a".repeat(50); // 정확히 50자
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     5000,
@@ -339,7 +378,9 @@ class CreateAgreementUseCaseTest {
         void shouldCreateAgreement_whenUnitHoneyIsZero() throws Exception {
             // Given
             CreateAgreementUseCase.Param param = new CreateAgreementUseCase.Param(
-                    memberId,
+                    postId,
+                    helperId,
+                    disabledId,
                     EngagementType.DAY,
                     false,
                     0, // 0
@@ -365,7 +406,9 @@ class CreateAgreementUseCaseTest {
 
     private CreateAgreementUseCase.Param createValidParam() {
         return new CreateAgreementUseCase.Param(
-                memberId,
+                postId,
+                helperId,
+                disabledId,
                 EngagementType.DAY,
                 false,
                 5000,
@@ -380,6 +423,9 @@ class CreateAgreementUseCaseTest {
      */
     private Agreement createMockAgreement(Long agreementId, Integer unitHoney, Integer totalHoney) throws Exception {
         Agreement agreement = Agreement.create(
+                postId,
+                helperId,
+                disabledId,
                 EngagementType.DAY,
                 false,
                 unitHoney,
@@ -407,6 +453,9 @@ class CreateAgreementUseCaseTest {
             Boolean isVolunteer
     ) throws Exception {
         Agreement agreement = Agreement.create(
+                postId,
+                helperId,
+                disabledId,
                 type,
                 isVolunteer,
                 unitHoney,

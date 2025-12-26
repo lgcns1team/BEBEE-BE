@@ -353,6 +353,9 @@ class ConfirmAgreementUseCaseTest {
 
     private Agreement createMockAgreement(Long agreementId, AgreementStatus status) throws Exception {
         Agreement agreement = Agreement.create(
+                postId,
+                helperId,
+                disabledId,
                 EngagementType.DAY,
                 false,
                 200,

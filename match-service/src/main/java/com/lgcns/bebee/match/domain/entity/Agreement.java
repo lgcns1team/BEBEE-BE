@@ -3,8 +3,6 @@ package com.lgcns.bebee.match.domain.entity;
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
-import com.lgcns.bebee.match.exception.MatchErrors;
-import com.lgcns.bebee.match.exception.MatchException;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.lgcns.bebee.match.exception.MatchErrors.ALREADY_CONFIRMED_AGREEMENT;
-import static com.lgcns.bebee.match.exception.MatchErrors.CANNOT_REFUSE_CONFIRMED_AGREEMENT;
 
 @Entity
 @Getter
@@ -26,6 +23,15 @@ public class Agreement extends BaseTimeEntity {
     @Tsid
     @Column(name = "agreement_id")
     private Long id;
+
+    @Column(nullable = false)
+    private Long postId;
+
+    @Column(nullable = false)
+    private Long disabledId;
+
+    @Column(nullable = false)
+    private Long helperId;
 
     @Column(nullable = false)
     private Integer unitHoney;
@@ -65,6 +71,9 @@ public class Agreement extends BaseTimeEntity {
     private Boolean isVolunteer;
 
     public static Agreement create(
+            Long postId,
+            Long disabledId,
+            Long helperId,
             EngagementType type,
             Boolean isVolunteer,
             Integer unitHoney,
@@ -78,6 +87,9 @@ public class Agreement extends BaseTimeEntity {
         }
 
         Agreement agreement = new Agreement();
+        agreement.postId = postId;
+        agreement.disabledId = disabledId;
+        agreement.helperId = helperId;
         agreement.type = type;
         agreement.isVolunteer = isVolunteer;
         agreement.unitHoney = unitHoney;
