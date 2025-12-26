@@ -4,18 +4,17 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `review`;
 DROP TABLE IF EXISTS `application`;
 DROP TABLE IF EXISTS `agreement_help_category`;
-DROP TABLE IF EXISTS `agreement_engagement_time_schedule`;
-DROP TABLE IF EXISTS `agreement_engagement_time_term`;
-DROP TABLE IF EXISTS `agreement_engagement_time_day`;
+DROP TABLE IF EXISTS `agreement_period`;
+DROP TABLE IF EXISTS `agreement_schedule`;
 DROP TABLE IF EXISTS `engagement`;
 DROP TABLE IF EXISTS `match`;
 DROP TABLE IF EXISTS `post_help_category`;
 DROP TABLE IF EXISTS `post_image`;
 DROP TABLE IF EXISTS `post_schedule`;
 DROP TABLE IF EXISTS `post_period`;
-DROP TABLE IF EXISTS `post_day`;
 DROP TABLE IF EXISTS `post`;
 DROP TABLE IF EXISTS `agreement`;
+DROP TABLE IF EXISTS `match_member_sync`;
 
 -- CREATE TABLES
 
@@ -39,25 +38,7 @@ CREATE TABLE post
     `updated_at`       TIMESTAMP     NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 2. PostDay 테이블 (DAY 타입 게시글 상세 정보)
-CREATE TABLE post_day
-(
-    `post_day_id`  BIGINT   NOT NULL PRIMARY KEY,
-    `post_id`      BIGINT   NOT NULL,
-    `date`         DATE     NOT NULL,
-    `start_time`   TIME     NOT NULL,
-    `end_time`     TIME     NOT NULL,
-    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `FK_post_day_TO_post`
-        FOREIGN KEY (`post_id`)
-            REFERENCES post (`post_id`)
-            ON DELETE CASCADE,
-    CONSTRAINT `UQ_post_day_post_id` UNIQUE (`post_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 3. PostPeriod 테이블 (TERM 타입 게시글 기간 정보)
+-- 2. PostPeriod 테이블 (게시글 날짜/기간 정보)
 CREATE TABLE post_period
 (
     `post_period_id` BIGINT   NOT NULL PRIMARY KEY,
@@ -74,7 +55,7 @@ CREATE TABLE post_period
     CONSTRAINT `UQ_post_period_post_id` UNIQUE (`post_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 4. PostSchedule 테이블 (게시글 요일별 스케줄 정보)
+-- 3. PostSchedule 테이블 (게시글 요일별 스케줄 정보)
 CREATE TABLE post_schedule
 (
     `post_schedule_id` BIGINT   NOT NULL PRIMARY KEY,
@@ -91,7 +72,7 @@ CREATE TABLE post_schedule
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 5. PostHelpCategory 테이블 (게시글-도움카테고리 매핑)
+-- 4. PostHelpCategory 테이블 (게시글-도움카테고리 매핑)
 CREATE TABLE post_help_category
 (
     `post_id`          BIGINT   NOT NULL,
@@ -106,7 +87,7 @@ CREATE TABLE post_help_category
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 6. PostImage 테이블 (게시글 이미지)
+-- 5. PostImage 테이블 (게시글 이미지)
 CREATE TABLE post_image
 (
     `image_id`   BIGINT       NOT NULL PRIMARY KEY,
@@ -122,7 +103,7 @@ CREATE TABLE post_image
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 7. Match 테이블 (매칭 정보)
+-- 6. Match 테이블 (매칭 정보)
 CREATE TABLE `match`
 (
     `match_id`     BIGINT       NOT NULL PRIMARY KEY,
@@ -142,7 +123,7 @@ CREATE TABLE `match`
     CONSTRAINT `UQ_post_id` UNIQUE (`post_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 8. Agreement 테이블 (활동 계약 정보)
+-- 7. Agreement 테이블 (활동 계약 정보)
 CREATE TABLE `agreement`
 (
     `agreement_id`      BIGINT      NOT NULL PRIMARY KEY,
@@ -162,7 +143,7 @@ CREATE TABLE `agreement`
     `updated_at`        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 4. Engagement 테이블
+-- 8. Engagement 테이블
 CREATE TABLE `engagement`
 (
     `engagement_id`     BIGINT   NOT NULL PRIMARY KEY,
@@ -179,43 +160,46 @@ CREATE TABLE `engagement`
             REFERENCES `agreement` (`agreement_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 7. EngagementTime_Day 테이블
-CREATE TABLE `agreement_engagement_time_day`
+-- 9. AgreementPeriod 테이블 (매칭 확인서 날짜/기간 정보)
+CREATE TABLE agreement_period
 (
-    `agreement_id`    BIGINT   NOT NULL PRIMARY KEY,
-    `engagement_date` DATE     NOT NULL,
-    `start_time`      TIME     NOT NULL,
-    `end_time`        TIME     NOT NULL,
-    `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `agreement_period_id` BIGINT   NOT NULL PRIMARY KEY,
+    `agreement_id`        BIGINT   NOT NULL,
+    `start_date`     DATE     NOT NULL,
+    `end_date`       DATE     NOT NULL,
+    `created_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT `FK_agreement_engagement_time_day_TO_agreement`
+    CONSTRAINT `FK_agreement_period_TO_agreement`
         FOREIGN KEY (`agreement_id`)
-            REFERENCES `agreement` (`agreement_id`)
+            REFERENCES agreement (`agreement_id`)
+            ON DELETE CASCADE,
+    CONSTRAINT `UQ_post_period_agreement_id` UNIQUE (`agreement_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 10. AgreementSchedule 테이블 (매칭 확인서 요일별 스케줄 정보)
+CREATE TABLE agreement_schedule
+(
+    `agreement_schedule_id` BIGINT   NOT NULL PRIMARY KEY,
+    `agreement_id`          BIGINT   NOT NULL,
+    `day_of_week`      ENUM('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY') NOT NULL,
+    `start_time`       TIME     NOT NULL,
+    `end_time`         TIME     NOT NULL,
+    `created_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `FK_agreement_schedule_TO_agreement`
+        FOREIGN KEY (`agreement_id`)
+            REFERENCES agreement (`agreement_id`)
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 8. EngagementTime_Term 테이블
-CREATE TABLE `agreement_engagement_time_term`
-(
-    `agreement_engagement_time_term_id` BIGINT NOT NULL PRIMARY KEY,
-    `agreement_id` BIGINT NOT NULL UNIQUE,
-    `start_date`      DATE     NOT NULL,
-    `end_date`        DATE     NOT NULL,
-    `created_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `FK_agreement_engagement_time_term_TO_agreement`
-        FOREIGN KEY (`agreement_id`)
-            REFERENCES `agreement` (`agreement_id`)
-            ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 10. Agreement_HelpCategory 테이블
+-- 11. Agreement_HelpCategory 테이블
 CREATE TABLE `agreement_help_category`
 (
     `agreement_id` BIGINT   NOT NULL,
     `help_category_id`      BIGINT   NOT NULL,
+    `category_name`         VARCHAR(10) NOT NULL,
     `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -254,26 +238,6 @@ CREATE TABLE `application`
         FOREIGN KEY (`post_id`)
             REFERENCES post (`post_id`)
             ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 15. Member Sync 테이블
-CREATE TABLE `match_member_sync`
-(
-    `member_id`         BIGINT          NOT NULL PRIMARY KEY,
-    `nickname`          VARCHAR(10)     NOT NULL,
-    `gender`            ENUM('MALE','FEMALE','NONE') NOT NULL DEFAULT 'NONE',
-    `birth_date`        DATE            NOT NULL,
-    `role`              ENUM('ADMIN','DISABLED','HELPER') NOT NULL,
-    `status`            VARCHAR(20)     NOT NULL,
-    `profile_image_url` VARCHAR(255)    NULL,
-    `address_road`      VARCHAR(255)    NULL,
-    `latitude`          DECIMAL(10,7)   NOT NULL,
-    `longitude`         DECIMAL(10,7)   NOT NULL,
-    `district_code`     CHAR(10)        NOT NULL,
-    `created_at`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `UQ_MEMBER_NICK`  UNIQUE (`nickname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
