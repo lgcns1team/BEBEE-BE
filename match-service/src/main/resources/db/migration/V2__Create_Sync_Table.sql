@@ -13,6 +13,7 @@ CREATE TABLE member_sync (
     `longitude` DECIMAL(10,7) NOT NULL,
     profile_image_url VARCHAR(512) NULL COMMENT '프로필 이미지 URL',
     sweetness DECIMAL(5,2) NOT NULL COMMENT '평점 (스위트니스)',
+    legal_dong_code VARCHAR(10) NOT NULL COMMENT '법정동 코드',
 
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL

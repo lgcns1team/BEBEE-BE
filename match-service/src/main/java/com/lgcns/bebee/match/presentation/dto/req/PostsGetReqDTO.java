@@ -1,7 +1,6 @@
 package com.lgcns.bebee.match.presentation.dto.req;
 
 import com.lgcns.bebee.match.application.usecase.GetPostsUseCase;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;

@@ -119,7 +119,7 @@ public class GetPostsUseCase implements UseCase<GetPostsUseCase.Param, GetPostsU
             private final String helpType;
             private final String imageUrl;
             private final LocalDate date;  // DAY 타입일 때만 값 있음
-            private final List<String> dayOfWeeks;  // TERM 타입일 때만 값 있음
+            private final List<String> dayOfWeeks;
 
             public static PostDTO from(Post post) {
                 List<String> helpCategoryNames = post.getHelpCategories().stream()

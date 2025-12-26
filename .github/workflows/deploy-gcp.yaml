@@ -6,7 +6,7 @@ on:
     paths:
       - 'common/**'
       - 'chat-service/**'
-      #      - 'match-service/**'
+      - 'match-service/**'
       #      - 'member-service/**'
       - 'notification-service/**'
       #      - 'payment-service/**'
@@ -26,7 +26,7 @@ jobs:
       matrix:
         service:
           - chat
-          #          - match
+          - match
           #          - member
           - notification
     #          - payment
@@ -109,7 +109,7 @@ jobs:
             MONGODB_PORT=27017
             REDIS_HOST=${{ secrets.REDIS_HOST }}
             REDIS_PORT=6379
-            SPRINGDOC_API_HOST=${{ secrets.SERVER_HOST}}
+            SPRINGDOC_API_HOST=https://bebee-${{ matrix.service }}-${{ secrets.GCP_PROJECT_NUMBER }}.${{ env.REGION }}.run.app
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
 
       - name: Deploy to Cloud Run (Notification Service)
@@ -132,6 +132,6 @@ jobs:
             MONGODB_PORT=27017
             REDIS_HOST=${{ secrets.REDIS_HOST }}
             REDIS_PORT=6379
-            SPRINGDOC_API_HOST=${{ secrets.SERVER_HOST}}
+            SPRINGDOC_API_HOST=https://bebee-${{ matrix.service }}-${{ secrets.GCP_PROJECT_NUMBER }}.${{ env.REGION }}.run.app
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
             FIREBASE_SERVICE_ACCOUNT_KEY_PATH=file:/secrets/firebase-key.json

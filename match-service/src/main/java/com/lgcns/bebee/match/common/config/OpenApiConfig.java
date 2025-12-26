@@ -3,7 +3,6 @@ package com.lgcns.bebee.match.common.config;
 import com.lgcns.bebee.common.config.BaseOpenApiConfig;
 import com.lgcns.bebee.common.properties.SpringdocApiProperties;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

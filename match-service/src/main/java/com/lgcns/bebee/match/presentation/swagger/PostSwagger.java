@@ -1,6 +1,7 @@
 package com.lgcns.bebee.match.presentation.swagger;
 
 import com.lgcns.bebee.match.presentation.dto.req.PostsGetReqDTO;
+import com.lgcns.bebee.match.presentation.dto.res.PostGetResDTO;
 import com.lgcns.bebee.match.presentation.dto.res.PostsGetResDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Post", description = "게시글 관련 API")
@@ -121,5 +123,58 @@ public interface PostSwagger {
                     required = false
             )
             @ModelAttribute PostsGetReqDTO reqDTO
+    );
+
+    @Operation(
+            summary = "게시글 상세 조회",
+            description = """
+                    특정 게시글의 상세 정보를 조회합니다.
+
+                    **응답 정보:**
+                    - 회원 정보: 닉네임, 지역 코드, 프로필 이미지
+                    - 게시글 기본 정보: 제목, 도움 타입, 단위 꿀, 총 꿀, 내용
+                    - 도움 카테고리 목록
+                    - 날짜/시간 정보:
+                      - DAY 타입: date 필드에 단일 날짜 포함
+                      - TERM 타입: startDate, endDate 필드에 기간 포함
+                    - 스케줄 정보: 요일별 시간 (TERM 타입의 경우)
+                    - 게시글 이미지 목록 (순서대로 정렬)
+                    - 신청자 수
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "게시글 상세 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostGetResDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "게시글을 찾을 수 없음",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    ResponseEntity<PostGetResDTO> getSinglePost(
+            @Parameter(
+                    description = "현재 로그인한 회원 ID (임시, 나중에 토큰으로 처리)",
+                    required = true,
+                    example = "100"
+            )
+            @RequestParam String currentMemberId,
+
+            @Parameter(
+                    description = "조회할 게시글 ID",
+                    required = true,
+                    example = "1234567890"
+            )
+            @PathVariable String postId
     );
 }
