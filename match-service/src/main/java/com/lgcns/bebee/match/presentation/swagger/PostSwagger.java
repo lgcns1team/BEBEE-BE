@@ -1,12 +1,15 @@
 package com.lgcns.bebee.match.presentation.swagger;
 
+import com.lgcns.bebee.match.presentation.dto.req.PostCreateReqDTO;
 import com.lgcns.bebee.match.presentation.dto.req.PostsGetReqDTO;
+import com.lgcns.bebee.match.presentation.dto.res.PostCreateResDTO;
 import com.lgcns.bebee.match.presentation.dto.res.PostGetResDTO;
 import com.lgcns.bebee.match.presentation.dto.res.PostsGetResDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -176,5 +179,75 @@ public interface PostSwagger {
                     example = "1234567890"
             )
             @PathVariable String postId
+    );
+
+    @Operation(
+            summary = "게시글 작성",
+            description = """
+                    새로운 도움 요청 게시글을 작성합니다.
+
+                    **게시글 타입:**
+                    - DAY: 일회성 도움 (단일 날짜, date 필드 사용)
+                    - TERM: 정기적 도움 (기간, startDate/endDate 필드 사용)
+
+                    **필수 정보:**
+                    - 게시글 기본 정보: 제목, 내용, 도움 타입
+                    - 보상 정보: 단위 꿀, 총 꿀
+                    - 위치 정보: 지역, 법정동 코드, 위도, 경도
+                    - 도움 카테고리: 1개 이상 선택 필요
+                    - 스케줄: 활동 가능한 요일/시간
+
+                    **선택 정보:**
+                    - 게시글 이미지 (최대 3개)
+                    - date: DAY 타입의 경우 활동 날짜
+                    - startDate: Term 타입의 경우 시작 날짜
+                    - endDate: Term 타입의 경우 종료 날짜
+
+                    **응답:**
+                    - 생성된 게시글 ID 반환
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "게시글 작성 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostCreateResDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청 (필수 필드 누락, 유효하지 않은 값 등)",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "회원을 찾을 수 없음",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    ResponseEntity<PostCreateResDTO> createPost(
+            @Parameter(
+                    description = "현재 로그인한 회원 ID (임시, 나중에 토큰으로 처리)",
+                    required = true,
+                    example = "100"
+            )
+            @RequestParam String currentMemberId,
+
+            @RequestBody(
+                    description = "게시글 작성 정보",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PostCreateReqDTO.class)
+                    )
+            )
+            @org.springframework.web.bind.annotation.RequestBody PostCreateReqDTO reqDTO
     );
 }
