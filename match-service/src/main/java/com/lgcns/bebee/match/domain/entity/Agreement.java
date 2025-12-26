@@ -3,6 +3,8 @@ package com.lgcns.bebee.match.domain.entity;
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
+import com.lgcns.bebee.match.presentation.dto.DayEngagementTimeDTO;
+import com.lgcns.bebee.match.presentation.dto.TermEngagementTimeDTO;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -62,10 +64,10 @@ public class Agreement extends BaseTimeEntity {
     private List<AgreementHelpCategory> helpCategories= new ArrayList<>();
 
     @OneToOne(mappedBy = "agreement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private AgreementEngagementTimeDay day;
+    private AgreementPeriod period;
 
-    @OneToOne(mappedBy = "agreement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private AgreementEngagementTimeTerm term;
+    @OneToMany(mappedBy = "agreement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AgreementSchedule> schedules = new ArrayList<>();
 
     @Column
     private Boolean isVolunteer;
@@ -79,6 +81,8 @@ public class Agreement extends BaseTimeEntity {
             Integer unitHoney,
             Integer totalHoney,
             String region,
+            DayEngagementTimeDTO dayTime,
+            TermEngagementTimeDTO termTime,
             List<Long> helpCategoryIds
     ) {
         if (isVolunteer) {
@@ -99,6 +103,42 @@ public class Agreement extends BaseTimeEntity {
         agreement.status = AgreementStatus.BEFORE;
         agreement.isDayComplete = Boolean.FALSE;
         agreement.isTermComplete = Boolean.FALSE;
+
+        if (type == EngagementType.DAY && dayTime != null) {
+            // DAY 타입: startDate == endDate, 1개의 스케줄
+            AgreementPeriod period = AgreementPeriod.create(
+                    agreement,
+                    dayTime.getEngagementDate(),
+                    dayTime.getEngagementDate()
+            );
+            agreement.period = period;
+
+            AgreementSchedule schedule = AgreementSchedule.create(
+                    agreement,
+                    dayTime.getEngagementDate().getDayOfWeek(),
+                    dayTime.getStartTime(),
+                    dayTime.getEndTime()
+            );
+            agreement.schedules.add(schedule);
+        } else if (type == EngagementType.TERM && termTime != null) {
+            // TERM 타입: startDate != endDate, 여러 개의 스케줄
+            AgreementPeriod period = AgreementPeriod.create(
+                    agreement,
+                    termTime.getStartDate(),
+                    termTime.getEndDate()
+            );
+            agreement.period = period;
+
+            termTime.getSchedules().forEach(scheduleDTO -> {
+                AgreementSchedule schedule = AgreementSchedule.create(
+                        agreement,
+                        scheduleDTO.getDayOfWeek(),
+                        scheduleDTO.getStartTime(),
+                        scheduleDTO.getEndTime()
+                );
+                agreement.schedules.add(schedule);
+            });
+        }
 
         helpCategoryIds.forEach(helpCategoryId -> {
             String categoryName = com.lgcns.bebee.match.domain.entity.vo.HelpCategoryType.getNameById(helpCategoryId);

@@ -1,5 +1,7 @@
 package com.lgcns.bebee.match.presentation.dto;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
@@ -23,6 +25,18 @@ public class AgreementCreateResDTO {
     private Integer unitHoney;
     private Integer totalHoney;
     private String region;
+
+    @JsonTypeInfo(
+            use = JsonTypeInfo.Id.NAME,
+            include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
+            property = "type"
+    )
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = DayEngagementTimeDTO.class, name = "DAY"),
+            @JsonSubTypes.Type(value = TermEngagementTimeDTO.class, name = "TERM")
+    })
+    private Object engagementTime;
+
     private Boolean isDayComplete;
     private Boolean isTermComplete;
 
@@ -41,6 +55,7 @@ public class AgreementCreateResDTO {
                 result.getUnitHoney(),
                 result.getTotalHoney(),
                 result.getRegion(),
+                result.getEngagementTime(),
                 result.getIsDayComplete(),
                 result.getIsTermComplete()
         );

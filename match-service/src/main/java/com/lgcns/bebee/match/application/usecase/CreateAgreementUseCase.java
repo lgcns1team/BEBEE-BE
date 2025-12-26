@@ -14,6 +14,8 @@ import com.lgcns.bebee.match.domain.service.MemberReader;
 import com.lgcns.bebee.match.exception.MatchErrors;
 import com.lgcns.bebee.match.exception.MatchInvalidParamErrors;
 import com.lgcns.bebee.match.presentation.dto.AgreementHelpCategoryDTO;
+import com.lgcns.bebee.match.presentation.dto.DayEngagementTimeDTO;
+import com.lgcns.bebee.match.presentation.dto.TermEngagementTimeDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,6 +63,8 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
                 param.getUnitHoney(),
                 param.getTotalHoney(),
                 param.getRegion(),
+                param.getDayEngagementTime(),
+                param.getTermEngagementTime(),
                 param.getHelpCategoryIds()
         );
 
@@ -81,6 +85,8 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         private final Integer unitHoney;
         private final Integer totalHoney;
         private final String region;
+        private final DayEngagementTimeDTO dayEngagementTime;
+        private final TermEngagementTimeDTO termEngagementTime;
         private final List<Long> helpCategoryIds;
 
         @Override
@@ -132,10 +138,19 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         private Integer unitHoney;
         private Integer totalHoney;
         private String region;
+        private Object engagementTime;
         private Boolean isDayComplete;
         private Boolean isTermComplete;
 
         public static Result from(Agreement agreement) {
+            Object engagementTime = null;
+
+            if (agreement.getType() == EngagementType.DAY && agreement.getPeriod() != null && !agreement.getSchedules().isEmpty()) {
+                engagementTime = DayEngagementTimeDTO.from(agreement.getPeriod(), agreement.getSchedules().get(0));
+            } else if (agreement.getType() == EngagementType.TERM && agreement.getPeriod() != null) {
+                engagementTime = TermEngagementTimeDTO.from(agreement.getPeriod(), agreement.getSchedules());
+            }
+
             List<AgreementHelpCategoryDTO> categoryDTOs = agreement.getHelpCategories().stream()
                     .map(AgreementHelpCategoryDTO::from)
                     .toList();
@@ -150,6 +165,7 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
                     agreement.getUnitHoney(),
                     agreement.getTotalHoney(),
                     agreement.getRegion(),
+                    engagementTime,
                     agreement.getIsDayComplete(),
                     agreement.getIsTermComplete()
             );
