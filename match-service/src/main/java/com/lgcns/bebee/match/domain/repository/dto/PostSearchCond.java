@@ -1,8 +1,8 @@
 package com.lgcns.bebee.match.domain.repository.dto;
 
+import com.lgcns.bebee.match.domain.entity.sync.Gender;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.entity.vo.PostStatus;
-import com.lgcns.bebee.match.domain.entity.sync.Gender;
 
 import java.time.DayOfWeek;
 import java.util.List;

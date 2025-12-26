@@ -1,10 +1,10 @@
 package com.lgcns.bebee.match.domain.repository;
 
 import com.lgcns.bebee.match.domain.entity.Post;
+import com.lgcns.bebee.match.domain.entity.sync.Gender;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.entity.vo.PostStatus;
 import com.lgcns.bebee.match.domain.repository.dto.PostSearchCond;
-import com.lgcns.bebee.match.domain.entity.sync.Gender;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
