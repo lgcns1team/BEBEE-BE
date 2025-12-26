@@ -14,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AgreementCreateReqDTO {
 
-    private Long memberId;
-    private Long matchId;
+    private String memberId;
+    private String matchId;
     private EngagementType type;
     private Boolean isVolunteer;
     private List<Long> helpCategoryIds;
@@ -28,7 +28,7 @@ public class AgreementCreateReqDTO {
      */
     public CreateAgreementUseCase.Param toParam() {
         return new CreateAgreementUseCase.Param(
-                memberId,
+                Long.parseLong(memberId),
                 type,
                 isVolunteer,
                 unitHoney,

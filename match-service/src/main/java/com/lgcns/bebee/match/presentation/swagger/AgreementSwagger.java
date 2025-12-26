@@ -88,7 +88,7 @@ public interface AgreementSwagger {
                     required = true,
                     example = "791168241386394999"
             )
-            Long agreementId,
+            String agreementId,
 
             @RequestBody(
                     required = true,
@@ -145,7 +145,7 @@ public interface AgreementSwagger {
                     required = true,
                     example = "791168241386394999"
             )
-            Long agreementId,
+            String agreementId,
 
             @RequestBody(
                     required = true,

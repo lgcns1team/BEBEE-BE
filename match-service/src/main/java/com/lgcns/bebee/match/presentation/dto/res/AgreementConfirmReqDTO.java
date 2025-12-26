@@ -11,21 +11,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AgreementConfirmReqDTO {
 
-    private Long helperId;
-    private Long disabledId;
-    private Long postId;
+    private String helperId;
+    private String disabledId;
+    private String postId;
     private String title;
-    private Long chatRoomId;
-    private Long agreementId;
+    private String chatRoomId;
+    private String agreementId;
 
-    public ConfirmAgreementUseCase.Param toParam(Long agreementId) {
+    public ConfirmAgreementUseCase.Param toParam(String agreementId) {
         return new ConfirmAgreementUseCase.Param(
-                helperId,
-                disabledId,
-                postId,
+                Long.parseLong(helperId),
+                Long.parseLong(disabledId),
+                Long.parseLong(postId),
                 title,
-                chatRoomId,
-                agreementId
+                Long.parseLong(chatRoomId),
+                Long.parseLong(agreementId)
         );
     }
 }

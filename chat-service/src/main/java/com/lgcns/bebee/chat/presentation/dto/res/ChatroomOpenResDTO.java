@@ -8,13 +8,13 @@ import java.util.List;
 
 public record ChatroomOpenResDTO(
         @Schema(description = "채팅방 ID", example = "1")
-        Long chatroomId,
+        String chatroomId,
 
         @Schema(description = "본인(현재 사용자) ID", example = "100")
-        Long myId,
+        String myId,
 
         @Schema(description = "상대방 ID", example = "200")
-        Long otherId,
+        String otherId,
 
         @Schema(description = "상대방 닉네임", example = "홍길동")
         String otherNickname,
@@ -39,9 +39,9 @@ public record ChatroomOpenResDTO(
         }
 
         return new ChatroomOpenResDTO(
-                result.getChatroomId(),
-                result.getMyId(),
-                result.getOtherId(),
+                String.valueOf(result.getChatroomId()),
+                String.valueOf(result.getMyId()),
+                String.valueOf(result.getOtherId()),
                 result.getOtherNickname(),
                 result.getOtherProfileImageUrl(),
                 result.getOtherSweetness(),

@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record ChatMessageSendReqDTO(
-    Long chatroomId,
-    Long receiverId,
+    String chatroomId,
+    String receiverId,
     String textContent,
     String chatType,
     List<String> attachments,
-    Long agreementId,
+    String agreementId,
     String matchType,
     String startDate,
     String endDate,
