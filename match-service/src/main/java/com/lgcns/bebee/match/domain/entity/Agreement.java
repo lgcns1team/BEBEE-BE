@@ -3,6 +3,8 @@ package com.lgcns.bebee.match.domain.entity;
 import com.lgcns.bebee.common.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
+import com.lgcns.bebee.match.presentation.dto.DayEngagementTimeDTO;
+import com.lgcns.bebee.match.presentation.dto.TermEngagementTimeDTO;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,6 +25,15 @@ public class Agreement extends BaseTimeEntity {
     @Tsid
     @Column(name = "agreement_id")
     private Long id;
+
+    @Column(nullable = false)
+    private Long postId;
+
+    @Column(nullable = false)
+    private Long disabledId;
+
+    @Column(nullable = false)
+    private Long helperId;
 
     @Column(nullable = false)
     private Integer unitHoney;
@@ -53,20 +64,25 @@ public class Agreement extends BaseTimeEntity {
     private List<AgreementHelpCategory> helpCategories= new ArrayList<>();
 
     @OneToOne(mappedBy = "agreement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private AgreementEngagementTimeDay day;
+    private AgreementPeriod period;
 
-    @OneToOne(mappedBy = "agreement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private AgreementEngagementTimeTerm term;
+    @OneToMany(mappedBy = "agreement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AgreementSchedule> schedules = new ArrayList<>();
 
     @Column
     private Boolean isVolunteer;
 
     public static Agreement create(
+            Long postId,
+            Long disabledId,
+            Long helperId,
             EngagementType type,
             Boolean isVolunteer,
             Integer unitHoney,
             Integer totalHoney,
             String region,
+            DayEngagementTimeDTO dayTime,
+            TermEngagementTimeDTO termTime,
             List<Long> helpCategoryIds
     ) {
         if (isVolunteer) {
@@ -75,6 +91,9 @@ public class Agreement extends BaseTimeEntity {
         }
 
         Agreement agreement = new Agreement();
+        agreement.postId = postId;
+        agreement.disabledId = disabledId;
+        agreement.helperId = helperId;
         agreement.type = type;
         agreement.isVolunteer = isVolunteer;
         agreement.unitHoney = unitHoney;
@@ -84,6 +103,44 @@ public class Agreement extends BaseTimeEntity {
         agreement.status = AgreementStatus.BEFORE;
         agreement.isDayComplete = Boolean.FALSE;
         agreement.isTermComplete = Boolean.FALSE;
+
+        if (type == EngagementType.DAY && dayTime != null) {
+            // DAY 타입: period 생성 및 주입
+            AgreementPeriod period = AgreementPeriod.create(
+                    dayTime.getEngagementDate(),
+                    dayTime.getEngagementDate()
+            );
+            period.assignToAgreement(agreement);
+            agreement.period = period;
+
+            // DAY 타입: schedule 생성 및 주입
+            AgreementSchedule schedule = AgreementSchedule.create(
+                    dayTime.getEngagementDate().getDayOfWeek(),
+                    dayTime.getStartTime(),
+                    dayTime.getEndTime()
+            );
+            schedule.assignToAgreement(agreement);
+            agreement.schedules.add(schedule);
+        } else if (type == EngagementType.TERM && termTime != null) {
+            // TERM 타입: period 생성 및 주입
+            AgreementPeriod period = AgreementPeriod.create(
+                    termTime.getStartDate(),
+                    termTime.getEndDate()
+            );
+            period.assignToAgreement(agreement);
+            agreement.period = period;
+
+            // TERM 타입: schedules 생성 및 주입
+            termTime.getSchedules().forEach(scheduleDTO -> {
+                AgreementSchedule schedule = AgreementSchedule.create(
+                        scheduleDTO.getDayOfWeek(),
+                        scheduleDTO.getStartTime(),
+                        scheduleDTO.getEndTime()
+                );
+                schedule.assignToAgreement(agreement);
+                agreement.schedules.add(schedule);
+            });
+        }
 
         helpCategoryIds.forEach(helpCategoryId -> {
             String categoryName = com.lgcns.bebee.match.domain.entity.vo.HelpCategoryType.getNameById(helpCategoryId);

@@ -354,11 +354,16 @@ class ConfirmAgreementUseCaseTest {
 
     private Agreement createMockAgreement(Long agreementId, AgreementStatus status) throws Exception {
         Agreement agreement = Agreement.create(
+                postId,
+                helperId,
+                disabledId,
                 EngagementType.DAY,
                 false,
                 200,
                 200,
                 "서울특별시 강동구",
+                null,
+                null,
                 List.of(1L, 2L)
         );
 

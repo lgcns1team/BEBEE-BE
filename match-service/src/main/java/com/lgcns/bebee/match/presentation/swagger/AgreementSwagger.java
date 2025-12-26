@@ -2,7 +2,7 @@ package com.lgcns.bebee.match.presentation.swagger;
 
 import com.lgcns.bebee.match.presentation.dto.req.AgreementCreateReqDTO;
 import com.lgcns.bebee.match.presentation.dto.req.AgreementRefuseReqDTO;
-import com.lgcns.bebee.match.presentation.dto.res.AgreementConfirmReqDTO;
+import com.lgcns.bebee.match.presentation.dto.req.AgreementConfirmReqDTO;
 import com.lgcns.bebee.match.presentation.dto.res.AgreementConfirmResDTO;
 import com.lgcns.bebee.match.presentation.dto.res.AgreementCreateResDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,19 +52,58 @@ public interface AgreementSwagger {
                             schema = @Schema(implementation = AgreementCreateReqDTO.class),
                             examples = {
                                 @ExampleObject(
-                                        name = "매칭 확인서 생성 요청 예시",
+                                        name = "하루도움 매칭 확인서 생성 요청 예시",
                                         value = """
                                                 {
-                                                  "memberId": 101,
-                                                  "type": "DAY",
-                                                  "isVolunteer": false,
-                                                  "unitHoney": 100,
-                                                  "totalHoney": 100,
-                                                  "region": "서울특별시 강남구 논현동",
-                                                  "helpCategoryIds": [1, 2]
+                                                    "postId": 404,
+                                                	"helperId": 101,
+                                                    "disabledId": 202,
+                                                    "type": "DAY",
+                                                    "isVolunteer": false,
+                                                    "helpCategoryIds": [1, 2],
+                                                    "unitHoney": 200,
+                                                    "totalHoney": 200,
+                                                    "region": "서울특별시 중구 장충동",
+                                                    "engagementTime": {
+                                                        "engagementDate": "2025-12-28",
+                                                        "startTime": "10:00:00",
+                                                        "endTime": "12:00:00"
+                                                    }
                                                 }
                                                 """
-                                )
+                                ),
+                                    @ExampleObject(
+                                            name = "지속도움 매칭 확인서 생성 요청 예시",
+                                            value = """
+                                                    {
+                                                         "postId": 505,
+                                                     	"helperId": 101,
+                                                         "disabledId": 202,
+                                                         "type": "TERM",
+                                                         "isVolunteer": false,
+                                                         "helpCategoryIds": [7],
+                                                         "unitHoney": 200,
+                                                         "totalHoney": 1200,
+                                                         "region": "서울특별시 중구 장충동",
+                                                          "engagementTime": {
+                                                             "startDate": "2026-01-01",
+                                                             "endDate": "2026-01-31",
+                                                             "schedules": [
+                                                                 {
+                                                                     "dayOfWeek": "MONDAY",
+                                                                     "startTime": "09:00:00",
+                                                                     "endTime": "11:00:00"
+                                                                 },
+                                                                 {
+                                                                     "dayOfWeek": "WEDNESDAY",
+                                                                     "startTime": "14:00:00",
+                                                                     "endTime": "16:00:00"
+                                                                 }
+                                                             ]
+                                                         }
+                                                     }
+                                                """
+                                    )
                             }
                     )
             )
@@ -100,7 +139,7 @@ public interface AgreementSwagger {
                                         name = "매칭 확인서 거절 요청 예시",
                                         value = """
                                                 {
-                                                  "helperId": 101
+                                                  "helperId": 101,
                                                 }
                                                 """
                                 )
