@@ -61,7 +61,7 @@ public interface AgreementSwagger {
                                                   "unitHoney": 100,
                                                   "totalHoney": 100,
                                                   "region": "서울특별시 강남구 논현동",
-                                                  "helpCategoryIds": [1, 2]
+                                                  "helpCategoryIds": [1, 2],
                                                 }
                                                 """
                                 )
