@@ -188,6 +188,8 @@ class RefuseAgreementUseCaseTest {
                 200,
                 200,
                 "서울특별시 강동구",
+                null,
+                null,
                 List.of(1L, 2L)
         );
 
