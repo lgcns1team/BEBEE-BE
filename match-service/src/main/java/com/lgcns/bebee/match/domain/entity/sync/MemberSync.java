@@ -41,6 +41,9 @@ public class MemberSync {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal sweetness;
 
+    @Column(nullable = false)
+    private String legalDongCode;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
