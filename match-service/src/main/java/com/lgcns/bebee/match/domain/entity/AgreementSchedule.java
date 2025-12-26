@@ -34,16 +34,18 @@ public class AgreementSchedule extends BaseTimeEntity {
     private LocalTime endTime;
 
     public static AgreementSchedule create(
-            Agreement agreement,
             DayOfWeek dayOfWeek,
             LocalTime startTime,
             LocalTime endTime
     ) {
         AgreementSchedule schedule = new AgreementSchedule();
-        schedule.agreement = agreement;
         schedule.dayOfWeek = dayOfWeek;
         schedule.startTime = startTime;
         schedule.endTime = endTime;
         return schedule;
+    }
+
+    protected void assignToAgreement(Agreement agreement) {
+        this.agreement = agreement;
     }
 }
