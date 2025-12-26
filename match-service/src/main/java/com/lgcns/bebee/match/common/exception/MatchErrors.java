@@ -1,4 +1,4 @@
-package com.lgcns.bebee.match.common.exception;
+package com.lgcns.bebee.match.exception;
 
 import com.lgcns.bebee.common.exception.DomainException;
 import com.lgcns.bebee.common.exception.ErrorInfo;

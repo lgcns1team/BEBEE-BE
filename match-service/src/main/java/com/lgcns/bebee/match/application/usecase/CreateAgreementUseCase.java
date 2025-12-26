@@ -64,6 +64,8 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
                 param.getUnitHoney(),
                 param.getTotalHoney(),
                 param.getRegion(),
+                param.getDayEngagementTime(),
+                param.getTermEngagementTime(),
                 param.getHelpCategoryIds()
         );
 
@@ -76,7 +78,9 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
     @Getter
     @RequiredArgsConstructor
     public static class Param implements Params {
-        private final Long memberId;
+        private final Long postId;
+        private final Long helperId;
+        private final Long disabledId;
         private final EngagementType type;
         private final Boolean isVolunteer;
         private final Integer unitHoney;
