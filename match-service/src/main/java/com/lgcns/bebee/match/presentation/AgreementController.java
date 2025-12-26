@@ -37,7 +37,7 @@ public class AgreementController implements AgreementSwagger {
 
     @PatchMapping("/{agreementId}/refuse")
     public ResponseEntity<Void> refuseAgreement(
-            @PathVariable Long agreementId,
+            @PathVariable String agreementId,
             @RequestBody AgreementRefuseReqDTO request
             ) {
 
@@ -49,7 +49,7 @@ public class AgreementController implements AgreementSwagger {
 
     @PatchMapping("/{agreementId}/confirm")
     public ResponseEntity<AgreementConfirmResDTO> confirmAgreement(
-            @PathVariable Long agreementId,
+            @PathVariable String agreementId,
             @RequestBody AgreementConfirmReqDTO request
     ) {
         ConfirmAgreementUseCase.Param param = request.toParam(agreementId);

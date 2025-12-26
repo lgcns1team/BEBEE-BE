@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AgreementRefuseReqDTO {
 
-    private Long helperId;
-    private Long agreementId;
+    private String helperId;
+    private String agreementId;
 
-    public RefuseAgreementUseCase.Param toParam(Long agreementId) {
+    public RefuseAgreementUseCase.Param toParam(String agreementId) {
         return new RefuseAgreementUseCase.Param(
-                helperId,
-                agreementId
+                Long.parseLong(helperId),
+                Long.parseLong(agreementId)
         );
     }
 }

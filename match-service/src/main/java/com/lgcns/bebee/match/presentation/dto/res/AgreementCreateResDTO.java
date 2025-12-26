@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AgreementCreateResDTO {
 
-    private Long agreementId;
+    private String agreementId;
     private AgreementStatus status;
     private LocalDate confirmationDate;
     private EngagementType type;
@@ -32,7 +32,7 @@ public class AgreementCreateResDTO {
     public static AgreementCreateResDTO from(CreateAgreementUseCase.Result result) {
 
         return new AgreementCreateResDTO(
-                result.getAgreementId(),
+                String.valueOf(result.getAgreementId()),
                 result.getStatus(),
                 result.getConfirmationDate(),
                 result.getType(),

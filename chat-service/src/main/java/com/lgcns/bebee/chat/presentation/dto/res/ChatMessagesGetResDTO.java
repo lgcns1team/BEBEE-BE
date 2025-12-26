@@ -20,7 +20,7 @@ public record ChatMessagesGetResDTO(
         boolean hasNext,
 
         @Schema(description = "다음 페이지 조회를 위한 커서 ID (hasNext가 true일 때만 제공)", example = "1234567890", nullable = true)
-        Long nextChatId
+        String nextChatId
 ) {
     public static ChatMessagesGetResDTO from(List<Chat> messages, boolean hasNext, Long nextChatId) {
         List<ChatMessageDTO> messageDTOs = messages.stream()
@@ -30,7 +30,7 @@ public record ChatMessagesGetResDTO(
         return ChatMessagesGetResDTO.builder()
                 .messages(messageDTOs)
                 .hasNext(hasNext)
-                .nextChatId(nextChatId)
+                .nextChatId(String.valueOf(nextChatId))
                 .build();
     }
 
@@ -39,10 +39,10 @@ public record ChatMessagesGetResDTO(
     @Schema(description = "채팅 메시지 상세 정보")
     public record ChatMessageDTO(
             @Schema(description = "메시지 ID (TSID)", example = "1234567890")
-            Long id,
+            String id,
 
             @Schema(description = "발신자 ID", example = "100")
-            Long senderId,
+            String senderId,
 
             @Schema(description = "텍스트 메시지 내용", example = "안녕하세요", nullable = true)
             String textContent,
@@ -54,7 +54,7 @@ public record ChatMessagesGetResDTO(
             List<String> attachments,
 
             @Schema(description = "매칭 확인서 ID (매칭 확인서 메시지인 경우)", example = "5001", nullable = true)
-            Long agreementId,
+            String agreementId,
 
             @Schema(description = "매칭 타입 (매칭 확인서 메시지인 경우)", example = "TERM", allowableValues = {"DAY", "TERM"}, nullable = true)
             String matchType,
@@ -93,7 +93,7 @@ public record ChatMessagesGetResDTO(
             Chat.MatchConfirmationContent matchConfirmation = chat.getMatchConfirmationContent();
 
             // MatchConfirmationContent가 없는 경우 처리
-            Long agreementId = null;
+            String agreementId = null;
             String matchType = null;
             String startDate = null;
             String endDate = null;
@@ -106,7 +106,7 @@ public record ChatMessagesGetResDTO(
             String matchStatus = null;
 
             if (matchConfirmation != null) {
-                agreementId = matchConfirmation.getAgreementId();
+                agreementId = String.valueOf(matchConfirmation.getAgreementId());
                 matchType = matchConfirmation.getType().name();
                 startDate = matchConfirmation.getStartDate();
                 endDate = matchConfirmation.getEndDate();
@@ -138,8 +138,8 @@ public record ChatMessagesGetResDTO(
             }
 
             return ChatMessageDTO.builder()
-                    .id(chat.getId())
-                    .senderId(chat.getSenderId())
+                    .id(String.valueOf(chat.getId()))
+                    .senderId(String.valueOf(chat.getSenderId()))
                     .textContent(chat.getTextContent())
                     .type(chat.getType().name())
                     .attachments(chat.getAttachments())

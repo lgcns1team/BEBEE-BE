@@ -22,7 +22,7 @@ public record ChatroomsGetResDTO(
         boolean hasNext,
 
         @Schema(description = "다음 페이지 조회를 위한 커서 ID (hasNext가 true일 때만 제공)", example = "1234567890", nullable = true)
-        Long nextChatroomId
+        String nextChatroomId
 ) {
     public static ChatroomsGetResDTO from(GetChatroomsUseCase.Result result, Long currentMemberId) {
         List<ChatroomDTO> chatroomDTOs = result.getChatrooms().stream()
@@ -32,7 +32,7 @@ public record ChatroomsGetResDTO(
         return ChatroomsGetResDTO.builder()
                 .chatrooms(chatroomDTOs)
                 .hasNext(result.getHasNext())
-                .nextChatroomId(result.getNextChatroomId())
+                .nextChatroomId(String.valueOf(result.getNextChatroomId()))
                 .build();
     }
 
@@ -41,13 +41,13 @@ public record ChatroomsGetResDTO(
     @Schema(description = "채팅방 상세 정보")
     public record ChatroomDTO(
             @Schema(description = "채팅방 ID", example = "1234567890")
-            Long chatroomId,
+            String chatroomId,
 
             @Schema(description = "채팅방 제목", example = "이동 도우미 구해요!!", nullable = true)
             String title,
 
             @Schema(description = "상대방 ID", example = "200")
-            Long otherId,
+            String otherId,
 
             @Schema(description = "상대방 닉네임", example = "홍길동")
             String otherNickname,
@@ -72,9 +72,9 @@ public record ChatroomsGetResDTO(
                     : chatroom.getMember1();
 
             return ChatroomDTO.builder()
-                    .chatroomId(chatroom.getId())
+                    .chatroomId(String.valueOf(chatroom.getId()))
                     .title(chatroom.getTitle())
-                    .otherId(otherMember.getId())
+                    .otherId(String.valueOf(otherMember.getId()))
                     .otherNickname(otherMember.getNickname())
                     .otherProfileImageUrl(otherMember.getProfileImageUrl())
                     .otherSweetness(otherMember.getSweetness())
