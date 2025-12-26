@@ -1,4 +1,4 @@
-package com.lgcns.bebee.match.common.exception;
+package com.lgcns.bebee.match.exception;
 
 import com.lgcns.bebee.common.exception.DomainException;
 import com.lgcns.bebee.common.exception.ErrorInfo;
@@ -15,8 +15,8 @@ public enum MatchErrors implements ErrorInfo {
     AGREEMENT_NOT_FOUND("매칭 확인서를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     FORBIDDEN("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
     ALREADY_CONFIRMED_AGREEMENT("이미 수락된 매칭 확인서입니다.", HttpStatus.CONFLICT),
-    CANNOT_REFUSE_CONFIRMED_AGREEMENT("이미 수락된 매칭 확인서는 거절할 수 없습니다.", HttpStatus.CONFLICT)
-    ;
+    CANNOT_REFUSE_CONFIRMED_AGREEMENT("이미 수락된 매칭 확인서는 거절할 수 없습니다.", HttpStatus.CONFLICT),
+    ALREADY_MATCHED("이미 매칭이 성사된 요청입니다.", HttpStatus.CONFLICT);
 
     private final String desc;
     private final HttpStatus httpStatus;

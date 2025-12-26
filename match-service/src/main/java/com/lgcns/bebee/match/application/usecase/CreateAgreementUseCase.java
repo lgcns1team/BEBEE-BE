@@ -3,14 +3,18 @@ package com.lgcns.bebee.match.application.usecase;
 import com.lgcns.bebee.common.application.Params;
 import com.lgcns.bebee.common.application.UseCase;
 import com.lgcns.bebee.common.exception.InvalidParamException;
+import com.lgcns.bebee.match.domain.entity.MatchMemberSync;
+import com.lgcns.bebee.match.domain.entity.vo.MemberRole;
 import com.lgcns.bebee.match.common.exception.MatchInvalidParamErrors;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
+import com.lgcns.bebee.match.domain.repository.AgreementRepository;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
-import com.lgcns.bebee.match.domain.repository.AgreementRepository;
-import com.lgcns.bebee.match.domain.service.MatchReader;
-import com.lgcns.bebee.match.presentation.dto.res.AgreementHelpCategoryDTO;
+import com.lgcns.bebee.match.domain.service.MemberReader;
+import com.lgcns.bebee.match.common.exception.MatchErrors;
+import com.lgcns.bebee.match.common.exception.MatchInvalidParamErrors;
+import com.lgcns.bebee.match.presentation.dto.AgreementHelpCategoryDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,14 +28,29 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Param, CreateAgreementUseCase.Result> {
+
     private final AgreementRepository agreementRepository;
-    private final MatchReader matchReader;
+    private final MemberReader memberReader;
 
     @Transactional
     @Override
     public Result execute(Param param) {
         // 파라미터 검증
         param.validate();
+
+        // 생성하려는 사용자 검증, 장애인 유저인지 확인
+        MatchMemberSync member = memberReader.getById(param.getDisabledId());
+        if (member.getRole() != MemberRole.DISABLED) {
+            throw MatchErrors.ONLY_DISABLED_MEMBERS_ALLOWED.toException();
+        }
+
+        // 이미 성사된 매칭이면 새로 생성 불가
+        agreementRepository.findByPostId(param.getPostId())
+                .ifPresent(existingAgreement -> {
+                    if (existingAgreement.getStatus() == AgreementStatus.CONFIRMED) {
+                        throw MatchErrors.ALREADY_MATCHED.toException();
+                    }
+                });
 
         // 매칭 확인서 생성
         Agreement agreement = Agreement.create(
