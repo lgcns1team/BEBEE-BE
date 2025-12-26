@@ -75,12 +75,15 @@ class CreateAgreementUseCaseTest {
                     5000,
                     5000,
                     "서울특별시 중구",
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
             Agreement savedAgreement = createMockAgreement(1L, 5000, 5000);
 
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
+            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
 
             // When
             CreateAgreementUseCase.Result result = useCase.execute(param);
@@ -108,12 +111,16 @@ class CreateAgreementUseCaseTest {
                     10000,
                     150000,
                     "경기도 성남시",
+                    null,
+                    null,
                     List.of(3L, 4L)
             );
 
             Agreement savedAgreement = createMockAgreementWithType(2L, EngagementType.TERM, 10000, 150000, true);
 
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
+            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+
 
             // When
             CreateAgreementUseCase.Result result = useCase.execute(param);
@@ -139,10 +146,14 @@ class CreateAgreementUseCaseTest {
                     500,
                     500,
                     "서울특별시 중구",
+                    null,
+                    null,
                     List.of(3L)
             );
 
             when(agreementRepository.save(any(Agreement.class))).thenAnswer(invocation -> invocation.getArgument(0));
+            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+
 
             // When
             CreateAgreementUseCase.Result result = useCase.execute(param);
@@ -175,6 +186,8 @@ class CreateAgreementUseCaseTest {
                     -1000, // 음수
                     5000,
                     "서울특별시",
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
@@ -197,6 +210,8 @@ class CreateAgreementUseCaseTest {
                     5000,
                     -1000, // 음수
                     "서울특별시",
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
@@ -219,6 +234,8 @@ class CreateAgreementUseCaseTest {
                     5000,
                     5000,
                     null, // region null
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
@@ -241,6 +258,8 @@ class CreateAgreementUseCaseTest {
                     5000,
                     5000,
                     "", // 빈 문자열
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
@@ -264,6 +283,8 @@ class CreateAgreementUseCaseTest {
                     5000,
                     5000,
                     longRegion,
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
@@ -286,6 +307,8 @@ class CreateAgreementUseCaseTest {
                     5000,
                     5000,
                     "서울특별시",
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
@@ -308,6 +331,8 @@ class CreateAgreementUseCaseTest {
                     5000,
                     5000,
                     "서울특별시",
+                    null,
+                    null,
                     null // helpCategoryIds null
             );
 
@@ -330,6 +355,8 @@ class CreateAgreementUseCaseTest {
                     5000,
                     5000,
                     "서울특별시",
+                    null,
+                    null,
                     List.of()
             );
 
@@ -358,12 +385,16 @@ class CreateAgreementUseCaseTest {
                     5000,
                     5000,
                     regionWith50Chars,
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
             Agreement savedAgreement = createMockAgreement(1L, 5000, 5000);
 
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
+            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+
 
             // When
             CreateAgreementUseCase.Result result = useCase.execute(param);
@@ -386,12 +417,16 @@ class CreateAgreementUseCaseTest {
                     0, // 0
                     0,
                     "서울특별시",
+                    null,
+                    null,
                     List.of(1L, 2L)
             );
 
             Agreement savedAgreement = createMockAgreement(1L, 0, 0);
 
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
+            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+
 
             // When
             CreateAgreementUseCase.Result result = useCase.execute(param);
@@ -414,6 +449,8 @@ class CreateAgreementUseCaseTest {
                 5000,
                 5000,
                 "서울특별시",
+                null,
+                null,
                 List.of(1L, 2L)
         );
     }
@@ -431,6 +468,8 @@ class CreateAgreementUseCaseTest {
                 unitHoney,
                 totalHoney,
                 "서울특별시",
+                null,
+                null,
                 List.of(1L, 2L)
         );
 
@@ -461,6 +500,8 @@ class CreateAgreementUseCaseTest {
                 unitHoney,
                 totalHoney,
                 "서울특별시",
+                null,
+                null,
                 List.of(1L, 2L)
         );
 
