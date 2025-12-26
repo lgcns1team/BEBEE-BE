@@ -63,10 +63,8 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
             log.info("만료된 토큰입니다.");
             throw TOKEN_EXPIRED.toException();
         } catch (JwtException e) {
-            log.warn("유효하지 않 JWT 토큰입니다. {}", e.getMessage());
+            log.warn("유효하지 않은 JWT 토큰입니다. {}", e.getMessage());
             throw INVALID_TOKEN.toException();
         }
     }
 }
-
-
