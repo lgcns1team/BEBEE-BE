@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS `post_schedule`;
 DROP TABLE IF EXISTS `post_period`;
 DROP TABLE IF EXISTS `post`;
 DROP TABLE IF EXISTS `agreement`;
+DROP TABLE IF EXISTS `match_member_sync`;
 
 -- CREATE TABLES
 
