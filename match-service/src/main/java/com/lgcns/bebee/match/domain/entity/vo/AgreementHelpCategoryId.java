@@ -3,11 +3,12 @@ package com.lgcns.bebee.match.domain.entity.vo;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
 @Getter
-public class AgreementHelpCategoryId {
+public class AgreementHelpCategoryId implements Serializable {
     private Long agreementId;
     private Long helpCategoryId;
 

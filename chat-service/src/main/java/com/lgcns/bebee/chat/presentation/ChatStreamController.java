@@ -27,13 +27,13 @@ public class ChatStreamController {
         Long senderId = Long.parseLong(principal.getName());
 
         SendChatMessageUseCase.Param param = new SendChatMessageUseCase.Param(
-                request.chatroomId(),
+                Long.parseLong(request.chatroomId()),
                 senderId,
-                request.receiverId(),
+                Long.parseLong(request.receiverId()),
                 request.textContent(),
                 request.chatType(),
                 request.attachments(),
-                request.agreementId(), request.matchType(), request.startDate(), request.endDate(),
+                Long.parseLong(request.agreementId()), request.matchType(), request.startDate(), request.endDate(),
                 request.scheduleDays(), request.scheduleStartTimes(), request.scheduleEndTimes(),
                 request.location(),
                 request.unitPoints(), request.totalPoints(),

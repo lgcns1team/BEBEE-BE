@@ -1,10 +1,12 @@
-package com.lgcns.bebee.match.presentation.dto;
+package com.lgcns.bebee.match.presentation.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
+import com.lgcns.bebee.match.presentation.dto.DayEngagementTimeDTO;
+import com.lgcns.bebee.match.presentation.dto.TermEngagementTimeDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AgreementCreateResDTO {
 
-    private Long agreementId;
+    private String agreementId;
     private AgreementStatus status;
     private LocalDate confirmationDate;
     private EngagementType type;
@@ -46,7 +48,7 @@ public class AgreementCreateResDTO {
     public static AgreementCreateResDTO from(CreateAgreementUseCase.Result result) {
 
         return new AgreementCreateResDTO(
-                result.getAgreementId(),
+                String.valueOf(result.getAgreementId()),
                 result.getStatus(),
                 result.getConfirmationDate(),
                 result.getType(),

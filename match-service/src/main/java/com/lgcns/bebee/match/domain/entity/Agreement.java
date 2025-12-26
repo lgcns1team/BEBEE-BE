@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lgcns.bebee.match.exception.MatchErrors.ALREADY_CONFIRMED_AGREEMENT;
+import static com.lgcns.bebee.match.common.exception.MatchErrors.ALREADY_CONFIRMED_AGREEMENT;
 
 @Entity
 @Getter

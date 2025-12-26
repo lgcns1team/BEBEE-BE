@@ -1,6 +1,10 @@
 package com.lgcns.bebee.match.presentation.swagger;
 
-import com.lgcns.bebee.match.presentation.dto.*;
+import com.lgcns.bebee.match.presentation.dto.req.AgreementCreateReqDTO;
+import com.lgcns.bebee.match.presentation.dto.req.AgreementRefuseReqDTO;
+import com.lgcns.bebee.match.presentation.dto.req.AgreementConfirmReqDTO;
+import com.lgcns.bebee.match.presentation.dto.res.AgreementConfirmResDTO;
+import com.lgcns.bebee.match.presentation.dto.res.AgreementCreateResDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -123,7 +127,7 @@ public interface AgreementSwagger {
                     required = true,
                     example = "791168241386394999"
             )
-            Long agreementId,
+            String agreementId,
 
             @RequestBody(
                     required = true,
@@ -180,7 +184,7 @@ public interface AgreementSwagger {
                     required = true,
                     example = "791168241386394999"
             )
-            Long agreementId,
+            String agreementId,
 
             @RequestBody(
                     required = true,

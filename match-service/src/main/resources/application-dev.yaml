@@ -1,0 +1,125 @@
+# ========================================
+# Match Service 개발 환경 설정 파일
+# ========================================
+#
+# 개발 환경에서 사용되는 설정입니다.
+# application.yml의 기본 설정을 오버라이드 합니다.
+#
+# 환경 변수 사용:
+# - ${환경변수명}: 기본값 없이 환경 변수 사용
+# - ${환경변수명:기본값}: 환경 변수가 없을 때 기본값 사용
+
+server:
+  port: ${MATCH_SERVICE_PORT:8080}
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT:3306}/${MATCH_DB_NAME:bebee_match}?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
+    username: ${DB_USERNAME:}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 1800000
+
+  # JPA (Java Persistence API) 설정
+  jpa:
+    # Hibernate 설정
+    hibernate:
+      # 데이터베이스 스키마 자동 생성 설정 (환경 변수에서 가져오거나 기본값 update 사용)
+      # update: 엔티티 변경사항을 자동으로 데이터베이스에 반영
+      # create: 애플리케이션 시작 시 테이블을 새로 생성 (기존 데이터 삭제)
+      # validate: 엔티티와 데이터베이스 스키마 일치 여부만 검증
+      # none: 자동 스키마 생성 비활성화
+      ddl-auto: ${HIBERNATE_DDL_AUTO:none}
+
+      # SQL 쿼리 로그 출력 설정 (환경 변수에서 가져오거나 기본값 true 사용)
+      show-sql: ${SHOW_SQL:false}
+
+      # Hibernate 추가 속성 설정
+      properties:
+        hibernate:
+          # SQL 쿼리 포맷팅 설정 (환경 변수에서 가져오거나 기본값 true 사용)
+          # 가독성을 위해 들여쓰기 적용
+          format_sql: ${FORMAT_SQL:false}
+
+  data:
+    # Redis 설정
+    redis:
+      # Redis Host
+      host: ${REDIS_HOST:}
+      # Redis Port
+      port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PASSWORD:}
+
+  # Flyway 설정
+  flyway:
+    # Flyway 활성화
+    enabled: true
+    # 마이그레이션 파일 위치
+    locations:
+      - classpath:db/migration
+      - classpath:db/seed
+    # 파일 인코딩
+    encoding: UTF-8
+    # 기존 DB에 적용 시 baseline 생성
+    baseline-on-migrate: true
+    # Baseline 버전
+    baseline-version: 0
+    # 마이그레이션 전 검증
+    validate-on-migrate: true
+    # 순서 엄격히 지킴
+    out-of-order: false
+    # 플레이스홀더 비활성화
+    placeholder-replacement: false
+    # clean 명령 비활성화 (안전)
+    # clean-disabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+  api:
+    host: "${SPRINGDOC_API_HOST:}"
+    desc: "${SPRINGDOC_API_DESC:}"
+
+tsid:
+  node:
+    id: "${NODE_ID:0}"
+
+# CORS (Cross-Origin Resource Sharing) 설정
+cors:
+  allowed-origin-patterns: "${CORS_ALLOWED_ORIGINS:http://localhost:[*],https://localhost:[*]}"
+  allowed-methods: "${CORS_ALLOWED_METHODS:GET,POST,PUT,PATCH,DELETE,OPTIONS}"
+  allowed-headers: "${CORS_ALLOWED_HEADERS:*}"
+  exposed-headers: "${CORS_EXPOSED_HEADERS:}"
+  allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+  max-age: ${CORS_MAX_AGE:3600}
+
+# 로깅 설정
+logging:
+  level:
+    # 루트 로그 레벨 설정 (환경 변수에서 가져오거나 기본값 info 사용)
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+
+    # P6Spy SQL 로그 레벨
+    p6spy: INFO
+
+    # Hibernate SQL 쿼리 로그 레벨 (debug: 상세한 쿼리 정보 출력)
+    org.hibernate.SQL: INFO
+
+    # 애플리케이션 서비스 패키지 로그 레벨
+    com.lgcns.bebee.match: ${LOGGING_LEVEL_SERVICE:INFO}

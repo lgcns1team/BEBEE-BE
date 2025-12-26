@@ -22,7 +22,7 @@ import org.mockito.quality.Strictness;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 

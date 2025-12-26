@@ -48,7 +48,7 @@ public interface ChatroomSwagger {
                     description = "채팅방 ID",
                     example = "1"
             )
-            @RequestParam Long chatroomId,
+            @RequestParam String chatroomId,
 
             @Parameter(
                     description = """
@@ -58,7 +58,7 @@ public interface ChatroomSwagger {
                             """,
                     example = "1234567890"
             )
-            @RequestParam(required = false) Long lastChatId,
+            @RequestParam(required = false) String lastChatId,
 
             @Parameter(
                     description = "한 번에 조회할 메시지 개수",
@@ -100,7 +100,7 @@ public interface ChatroomSwagger {
                     required = true,
                     example = "100"
             )
-            @RequestParam Long currentMemberId,
+            @RequestParam String currentMemberId,
 
             @Parameter(
                     description = """
@@ -110,7 +110,7 @@ public interface ChatroomSwagger {
                             """,
                     example = "1234567890"
             )
-            @RequestParam(required = false) Long lastChatroomId,
+            @RequestParam(required = false) String lastChatroomId,
 
             @Parameter(
                     description = "한 번에 조회할 채팅방 개수",
@@ -169,20 +169,20 @@ public interface ChatroomSwagger {
                     description = "기존 채팅방 ID (선택)",
                     example = "1"
             )
-            @RequestParam(required = false) Long chatroomId,
+            @RequestParam(required = false) String chatroomId,
 
             @Parameter(
                     description = "현재 사용자(본인) ID (필수, 임시 용도, 나중에 토큰에서 처리)",
                     required = true,
                     example = "100"
             )
-            @RequestParam Long currentMemberId,
+            @RequestParam String currentMemberId,
 
             @Parameter(
                     description = "상대방 ID (chatroomId가 없을 때 필수)",
                     example = "200"
             )
-            @RequestParam(required = false) Long otherMemberId,
+            @RequestParam(required = false) String otherMemberId,
 
             @Parameter(
                     description = """
