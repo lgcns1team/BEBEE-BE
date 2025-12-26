@@ -48,7 +48,7 @@ public interface ChatroomSwagger {
                     description = "채팅방 ID",
                     example = "1"
             )
-            @RequestParam Long chatroomId,
+            @RequestParam String chatroomId,
 
             @Parameter(
                     description = """
@@ -58,7 +58,7 @@ public interface ChatroomSwagger {
                             """,
                     example = "1234567890"
             )
-            @RequestParam(required = false) Long lastChatId,
+            @RequestParam(required = false) String lastChatId,
 
             @Parameter(
                     description = "한 번에 조회할 메시지 개수",

@@ -40,14 +40,14 @@ public class ChatroomController implements ChatroomSwagger {
 
     @GetMapping("/list")
     public ResponseEntity<ChatroomsGetResDTO> getChatrooms(
-            @RequestParam Long currentMemberId,
-            @RequestParam(required = false) Long lastChatroomId,
+            @RequestParam String currentMemberId,
+            @RequestParam(required = false) String lastChatroomId,
             @RequestParam(defaultValue = "20") Integer count
     ) {
-        GetChatroomsUseCase.Param param = new GetChatroomsUseCase.Param(currentMemberId, lastChatroomId, count);
+        GetChatroomsUseCase.Param param = new GetChatroomsUseCase.Param(Long.parseLong(currentMemberId), Long.parseLong(lastChatroomId), count);
         GetChatroomsUseCase.Result result = getChatroomsUseCase.execute(param);
 
-        ChatroomsGetResDTO response = ChatroomsGetResDTO.from(result, currentMemberId);
+        ChatroomsGetResDTO response = ChatroomsGetResDTO.from(result, Long.parseLong(currentMemberId));
 
         return ResponseEntity.ok(response);
     }
