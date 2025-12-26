@@ -17,6 +17,7 @@ import java.time.LocalDate;
  * 회원 Sync 테이블
  */
 @Entity
+@Table(name = "match_member_sync")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatchMemberSync extends BaseTimeEntity {

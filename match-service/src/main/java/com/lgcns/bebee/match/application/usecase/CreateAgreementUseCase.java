@@ -5,15 +5,12 @@ import com.lgcns.bebee.common.application.UseCase;
 import com.lgcns.bebee.common.exception.InvalidParamException;
 import com.lgcns.bebee.match.domain.entity.MatchMemberSync;
 import com.lgcns.bebee.match.domain.entity.vo.MemberRole;
-import com.lgcns.bebee.match.domain.repository.MatchMemberSyncRepository;
-import com.lgcns.bebee.match.domain.repository.MatchRepository;
-import com.lgcns.bebee.match.domain.service.MatchReader;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
-import com.lgcns.bebee.match.domain.entity.Match;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
+import com.lgcns.bebee.match.domain.service.MemberReader;
 import com.lgcns.bebee.match.exception.MatchErrors;
 import com.lgcns.bebee.match.exception.MatchInvalidParamErrors;
 import com.lgcns.bebee.match.presentation.dto.AgreementHelpCategoryDTO;
@@ -32,7 +29,7 @@ import java.util.List;
 public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Param, CreateAgreementUseCase.Result> {
 
     private final AgreementRepository agreementRepository;
-    private final MatchMemberSyncRepository matchMemberSyncRepository;
+    private final MemberReader memberReader;
 
     @Transactional
     @Override
@@ -41,15 +38,24 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         param.validate();
 
         // 생성하려는 사용자 검증, 장애인 유저인지 확인
-        MatchMemberSync member = matchMemberSyncRepository.findById(param.getMemberId())
-                .orElseThrow(() -> MatchErrors.MEMBER_NOT_FOUND.toException());
-
+        MatchMemberSync member = memberReader.getById(param.getDisabledId());
         if (member.getRole() != MemberRole.DISABLED) {
             throw MatchErrors.ONLY_DISABLED_MEMBERS_ALLOWED.toException();
         }
 
+        // 이미 성사된 매칭이면 새로 생성 불가
+        agreementRepository.findByPostId(param.getPostId())
+                .ifPresent(existingAgreement -> {
+                    if (existingAgreement.getStatus() == AgreementStatus.CONFIRMED) {
+                        throw MatchErrors.ALREADY_MATCHED.toException();
+                    }
+                });
+
         // 매칭 확인서 생성
         Agreement agreement = Agreement.create(
+                param.getPostId(),
+                param.getHelperId(),
+                param.getDisabledId(),
                 param.getType(),
                 param.getIsVolunteer(),
                 param.getUnitHoney(),
@@ -67,7 +73,9 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
     @Getter
     @RequiredArgsConstructor
     public static class Param implements Params {
-        private final Long memberId;
+        private final Long postId;
+        private final Long helperId;
+        private final Long disabledId;
         private final EngagementType type;
         private final Boolean isVolunteer;
         private final Integer unitHoney;
@@ -77,7 +85,13 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
 
         @Override
         public boolean validate() {
-            if (!ParamValidator.isValidId(memberId)) {
+            if (!ParamValidator.isValidId(postId)) {
+                throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "postId");
+            }
+            if (!ParamValidator.isValidId(helperId)) {
+                throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "helperId");
+            }
+            if (!ParamValidator.isValidId(disabledId)) {
                 throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "memberId");
             }
             if (!ParamValidator.isNotNull(type)) {
