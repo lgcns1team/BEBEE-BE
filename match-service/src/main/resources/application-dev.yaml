@@ -98,7 +98,7 @@ springdoc:
 
 tsid:
   node:
-    id: ${NODE_ID:0}
+    id: "${NODE_ID:0}"
 
 # CORS (Cross-Origin Resource Sharing) 설정
 cors:

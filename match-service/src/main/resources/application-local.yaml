@@ -103,6 +103,11 @@ cors:
   allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
   max-age: ${CORS_MAX_AGE:3600}
 
+
+tsid:
+  node:
+    id: "${NODE_ID:0}"
+
 # 로깅 설정
 logging:
   level:
