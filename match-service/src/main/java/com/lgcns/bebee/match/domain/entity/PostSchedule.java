@@ -31,4 +31,16 @@ public class PostSchedule extends BaseTimeEntity {
 
     @Column(nullable = false)
     private LocalTime endTime;
+
+    public static PostSchedule create(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
+        PostSchedule schedule = new PostSchedule();
+        schedule.dayOfWeek = dayOfWeek;
+        schedule.startTime = startTime;
+        schedule.endTime = endTime;
+        return schedule;
+    }
+
+    protected void assignToPost(Post post) {
+        this.post = post;
+    }
 }

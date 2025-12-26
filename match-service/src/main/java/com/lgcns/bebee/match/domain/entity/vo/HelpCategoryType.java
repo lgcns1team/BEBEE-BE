@@ -20,6 +20,13 @@ public enum HelpCategoryType {
     private final Long id;
     private final String name;
 
+    public static HelpCategoryType fromId(Long id) {
+        return Arrays.stream(values())
+                .filter(type -> type.id.equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid help category id: " + id));
+    }
+
     public static String getNameById(Long id) {
         return Arrays.stream(values())
                 .filter(type -> type.id.equals(id))

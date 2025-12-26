@@ -24,4 +24,16 @@ public class PostImage extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int sequence;
+
+    public static PostImage create(String imageUrl, int sequence){
+        PostImage image = new PostImage();
+        image.imageUrl = imageUrl;
+        image.sequence = sequence;
+
+        return image;
+    }
+
+    protected void assignToPost(Post post){
+        this.post = post;
+    }
 }
