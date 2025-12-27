@@ -8,9 +8,9 @@ on:
       - 'common-data/**'
       - 'chat-service/**'
       - 'match-service/**'
-      #      - 'member-service/**'
+      - 'member-service/**'
       - 'notification-service/**'
-      #      - 'payment-service/**'
+      - 'payment-service/**'
       - 'file-service/**'
       - 'build.gradle'
 
@@ -29,9 +29,9 @@ jobs:
         service:
           - chat
           - match
-          #          - member
+          - member
           - notification
-    #          - payment
+          - payment
           - file
 
     permissions:
@@ -144,6 +144,42 @@ jobs:
             SPRING_PROFILES_ACTIVE=dev
             AWS_S3_ACCESS_KEY= $${{ secrets.AWS_S3_ACCESS_KEY }}
             AWS_S3_SECRET_KEY= $${{ secrets.AWS_S3_SECRET_KEY }}
+            SPRINGDOC_API_DESC="임시 GCP 개발 서버"
+
+      - name: Deploy to Cloud Run (Member Service)
+        if: steps.changes.outputs.src == 'true' && matrix.service == 'member'
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: bebee-member
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE_TAG }}
+          flags: '--allow-unauthenticated --timeout=300s'
+          env_vars: |
+            SPRING_PROFILES_ACTIVE=dev
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=3306
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=6379
+            SPRINGDOC_API_DESC="임시 GCP 개발 서버"
+
+      - name: Deploy to Cloud Run (Payment Service)
+        if: steps.changes.outputs.src == 'true' && matrix.service == 'payment'
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: bebee-payment
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE_TAG }}
+          flags: '--allow-unauthenticated --timeout=300s'
+          env_vars: |
+            SPRING_PROFILES_ACTIVE=dev
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=3306
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=6379
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
 
       - name: Deploy to Cloud Run (Notification Service)
