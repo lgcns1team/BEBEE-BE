@@ -80,8 +80,8 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
   issuer: ${JWT_ISSUER:bebee}
-  access-token-expires-time-in: ${JWT_ACCESS_TOKEN_EXPIRES_IN}
-  refresh-token-expires-time-in: ${JWT_REFRESH_TOKEN_EXPIRES_IN}
+  access-token-expires-time-in: ${JWT_ACCESS_TOKEN_EXPIRES_IN:900}
+  refresh-token-expires-time-in: ${JWT_REFRESH_TOKEN_EXPIRES_IN:86400}
 
 # CORS (Cross-Origin Resource Sharing) 설정
 cors:
