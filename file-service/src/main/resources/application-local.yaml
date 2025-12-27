@@ -1,0 +1,39 @@
+# ========================================
+# File Service 개발 환경 설정 파일
+# ========================================
+#
+# 로컬 개발 환경에서 사용되는 설정입니다.
+# application.yml의 기본 설정을 오버라이드합니다.
+#
+# 환경 변수 사용:
+# - ${환경변수명}: 기본값 없이 환경 변수 사용
+# - ${환경변수명:기본값}: 환경 변수가 없을 때 기본값 사용
+
+server:
+  port: ${FILE_SERVICE_PORT:8086}
+
+spring:
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_S3_ACCESS_KEY:}
+        secret-key: ${AWS_S3_SECRET_KEY:}
+      region:
+        static: ${AWS_REGION:ap-northeast-2}
+      s3:
+        bucket: ${AWS_S3_BUCKET:bebee-dev-images}
+        # 파일 접근 베이스 URL (개발: S3 직접 URL, 운영: CloudFront URL)
+        base-url: ${AWS_S3_BASE_URL:}
+        # Presigned URL 만료 시간 (분 단위, 기본값: 10분)
+        presigned-url-expiration-minutes: ${AWS_S3_PRESIGNED_URL_EXPIRATION_MINUTES:10}
+      stack:
+        auto: false
+
+
+# 로깅 설정
+logging:
+  level:
+    # 루트 로그 레벨 설정 (환경 변수에서 가져오거나 기본값 info 사용)
+    root: ${LOGGING_LEVEL_ROOT:info}
+
+    com.lgcns.bebee.file: ${LOGGING_LEVEL_SERVICE:info}
