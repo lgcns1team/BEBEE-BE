@@ -142,8 +142,9 @@ jobs:
           flags: '--allow-unauthenticated --timeout=300s'
           env_vars: |
             SPRING_PROFILES_ACTIVE=dev
-            AWS_S3_ACCESS_KEY= $${{ secrets.AWS_S3_ACCESS_KEY }}
-            AWS_S3_SECRET_KEY= $${{ secrets.AWS_S3_SECRET_KEY }}
+            AWS_S3_ACCESS_KEY=$${{ secrets.AWS_S3_ACCESS_KEY }}
+            AWS_S3_SECRET_KEY=$${{ secrets.AWS_S3_SECRET_KEY }}
+            AWS_REGION=ap-northeast-2
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
 
       - name: Deploy to Cloud Run (Member Service)
