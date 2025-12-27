@@ -164,6 +164,7 @@ jobs:
             REDIS_HOST=${{ secrets.REDIS_HOST }}
             REDIS_PORT=6379
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
+            JWT_SECRET=
 
       - name: Deploy to Cloud Run (Payment Service)
         if: steps.changes.outputs.src == 'true' && matrix.service == 'payment'
