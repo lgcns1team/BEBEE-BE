@@ -5,7 +5,7 @@ import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.application.usecase.RefuseAgreementUseCase;
 import com.lgcns.bebee.match.presentation.dto.req.AgreementCreateReqDTO;
 import com.lgcns.bebee.match.presentation.dto.req.AgreementRefuseReqDTO;
-import com.lgcns.bebee.match.presentation.dto.res.AgreementConfirmReqDTO;
+import com.lgcns.bebee.match.presentation.dto.req.AgreementConfirmReqDTO;
 import com.lgcns.bebee.match.presentation.dto.res.AgreementConfirmResDTO;
 import com.lgcns.bebee.match.presentation.dto.res.AgreementCreateResDTO;
 import com.lgcns.bebee.match.presentation.swagger.AgreementSwagger;

@@ -240,4 +240,24 @@ CREATE TABLE `application`
             ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- 14. Member Sync 테이블
+CREATE TABLE `match_member_sync`
+(
+    `member_id`         BIGINT          NOT NULL PRIMARY KEY,
+    `nickname`          VARCHAR(10)     NOT NULL,
+    `gender`            ENUM('MALE','FEMALE','NONE') NOT NULL DEFAULT 'NONE',
+    `birth_date`        DATE            NOT NULL,
+    `role`              ENUM('ADMIN','DISABLED','HELPER') NOT NULL,
+    `status`            VARCHAR(20)     NOT NULL,
+    `profile_image_url` VARCHAR(255)    NULL,
+    `address_road`      VARCHAR(255)    NULL,
+    `latitude`          DECIMAL(10,7)   NOT NULL,
+    `longitude`         DECIMAL(10,7)   NOT NULL,
+    `district_code`     CHAR(10)        NOT NULL,
+    `created_at`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT `UQ_MEMBER_NICK`  UNIQUE (`nickname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 SET FOREIGN_KEY_CHECKS = 1;
