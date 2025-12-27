@@ -1,8 +1,10 @@
 rootProject.name = 'bebee'
 
 include 'common'
+include 'common-data'
 include 'member-service'
 include 'match-service'
 include 'chat-service'
 include 'payment-service'
 include 'notification-service'
+include 'file-service'
