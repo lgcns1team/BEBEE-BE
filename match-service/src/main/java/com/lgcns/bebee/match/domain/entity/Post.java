@@ -1,6 +1,6 @@
 package com.lgcns.bebee.match.domain.entity;
 
-import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import com.lgcns.bebee.common.data.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.entity.vo.PostStatus;
 import io.hypersistence.utils.hibernate.id.Tsid;

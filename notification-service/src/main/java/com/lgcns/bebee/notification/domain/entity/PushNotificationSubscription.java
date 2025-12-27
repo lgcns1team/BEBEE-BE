@@ -1,6 +1,6 @@
 package com.lgcns.bebee.notification.domain.entity;
 
-import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import com.lgcns.bebee.common.data.domain.BaseTimeEntity;
 import com.lgcns.bebee.notification.domain.entity.vo.DeviceType;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;

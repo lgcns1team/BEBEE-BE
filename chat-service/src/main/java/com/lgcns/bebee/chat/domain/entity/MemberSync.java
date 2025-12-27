@@ -1,6 +1,6 @@
 package com.lgcns.bebee.chat.domain.entity;
 
-import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import com.lgcns.bebee.common.data.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

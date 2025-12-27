@@ -1,6 +1,6 @@
 package com.lgcns.bebee.match.domain.entity;
 
-import com.lgcns.bebee.common.domain.BaseTimeEntity;
+import com.lgcns.bebee.common.data.domain.BaseTimeEntity;
 import com.lgcns.bebee.match.domain.entity.vo.PostHelpCategoryId;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
