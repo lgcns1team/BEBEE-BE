@@ -13,6 +13,7 @@ COPY build.gradle settings.gradle ./
 # [중요] 의존성(라이브러리) 캐싱을 위해 필요한 모듈을 먼저 복사합니다.
 # 1. 공통 모듈 (match-service가 의존하는 경우 필수)
 COPY common ./common
+COPY common-data ./common-data
 
 # 2. 빌드할 타겟 서비스 모듈 (현재 서비스)
 COPY match-service ./match-service

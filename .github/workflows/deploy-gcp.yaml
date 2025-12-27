@@ -5,11 +5,13 @@ on:
     branches: ["develop"]
     paths:
       - 'common/**'
+      - 'common-data/**'
       - 'chat-service/**'
       - 'match-service/**'
       #      - 'member-service/**'
       - 'notification-service/**'
       #      - 'payment-service/**'
+      - 'file-service/**'
       - 'build.gradle'
 
 env:
@@ -30,6 +32,7 @@ jobs:
           #          - member
           - notification
     #          - payment
+          - file
 
     permissions:
       contents: 'read'
@@ -48,6 +51,7 @@ jobs:
             src:
               - '${{ matrix.service }}-service/**'
               - 'common/**'
+              - 'common-data/**'
               - 'build.gradle'
               - 'settings.gradle'
 
@@ -92,11 +96,11 @@ jobs:
           workload_identity_provider: '${{ secrets.GCP_WIF_PROVIDER }}'
           service_account: '${{ secrets.GCP_SA_EMAIL }}'
 
-      - name: Deploy to Cloud Run (General Services)
-        if: steps.changes.outputs.src == 'true' && matrix.service != 'notification'
+      - name: Deploy to Cloud Run (Chat Service)
+        if: steps.changes.outputs.src == 'true' && matrix.service == 'chat'
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: bebee-${{ matrix.service }}
+          service: bebee-chat
           region: ${{ env.REGION }}
           image: ${{ env.IMAGE_TAG }}
           flags: '--allow-unauthenticated --timeout=300s'
@@ -106,17 +110,47 @@ jobs:
             DB_PORT=3306
             DB_USERNAME=${{ secrets.DB_USERNAME }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            MONGODB_HOST=${{ secrets.MONGODB_HOST }}
-            MONGODB_PORT=27017
             REDIS_HOST=${{ secrets.REDIS_HOST }}
             REDIS_PORT=6379
+            SPRINGDOC_API_DESC="임시 GCP 개발 서버"
+
+      - name: Deploy to Cloud Run (Match Service)
+        if: steps.changes.outputs.src == 'true' && matrix.service == 'match'
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: bebee-match
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE_TAG }}
+          flags: '--allow-unauthenticated --timeout=300s'
+          env_vars: |
+            SPRING_PROFILES_ACTIVE=dev
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=3306
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=6379
+            SPRINGDOC_API_DESC="임시 GCP 개발 서버"
+
+      - name: Deploy to Cloud Run (File Service)
+        if: steps.changes.outputs.src == 'true' && matrix.service == 'file'
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: bebee-file
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE_TAG }}
+          flags: '--allow-unauthenticated --timeout=300s'
+          env_vars: |
+            SPRING_PROFILES_ACTIVE=dev
+            AWS_S3_ACCESS_KEY= $${{ secrets.AWS_S3_ACCESS_KEY }}
+            AWS_S3_SECRET_KEY= $${{ secrets.AWS_S3_SECRET_KEY }}
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
 
       - name: Deploy to Cloud Run (Notification Service)
         if: steps.changes.outputs.src == 'true' && matrix.service == 'notification'
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: bebee-${{ matrix.service }}
+          service: bebee-notification
           region: ${{ env.REGION }}
           image: ${{ env.IMAGE_TAG }}
           flags: '--allow-unauthenticated --timeout=300s'
@@ -128,8 +162,6 @@ jobs:
             DB_PORT=3306
             DB_USERNAME=${{ secrets.DB_USERNAME }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            MONGODB_HOST=${{ secrets.MONGODB_HOST }}
-            MONGODB_PORT=27017
             REDIS_HOST=${{ secrets.REDIS_HOST }}
             REDIS_PORT=6379
             SPRINGDOC_API_DESC="임시 GCP 개발 서버"
