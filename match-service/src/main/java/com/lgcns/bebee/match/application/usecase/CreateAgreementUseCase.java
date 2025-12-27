@@ -56,9 +56,6 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
 
         // 매칭 확인서 생성
         Agreement agreement = Agreement.create(
-                param.getPostId(),
-                param.getHelperId(),
-                param.getDisabledId(),
                 param.getType(),
                 param.getIsVolunteer(),
                 param.getUnitHoney(),
