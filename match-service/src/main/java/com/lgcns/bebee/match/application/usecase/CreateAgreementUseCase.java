@@ -3,20 +3,19 @@ package com.lgcns.bebee.match.application.usecase;
 import com.lgcns.bebee.common.application.Params;
 import com.lgcns.bebee.common.application.UseCase;
 import com.lgcns.bebee.common.exception.InvalidParamException;
-import com.lgcns.bebee.match.domain.entity.MatchMemberSync;
-import com.lgcns.bebee.match.domain.entity.vo.MemberRole;
+import com.lgcns.bebee.match.common.exception.MatchErrors;
 import com.lgcns.bebee.match.common.exception.MatchInvalidParamErrors;
+import com.lgcns.bebee.match.domain.entity.sync.MemberSync;
+import com.lgcns.bebee.match.domain.entity.sync.Role;
 import com.lgcns.bebee.match.common.util.ParamValidator;
 import com.lgcns.bebee.match.domain.entity.Agreement;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
-import com.lgcns.bebee.match.domain.service.MemberReader;
-import com.lgcns.bebee.match.common.exception.MatchErrors;
-import com.lgcns.bebee.match.common.exception.MatchInvalidParamErrors;
-import com.lgcns.bebee.match.presentation.dto.AgreementHelpCategoryDTO;
+import com.lgcns.bebee.match.domain.service.MemberManager;
 import com.lgcns.bebee.match.presentation.dto.DayEngagementTimeDTO;
 import com.lgcns.bebee.match.presentation.dto.TermEngagementTimeDTO;
+import com.lgcns.bebee.match.presentation.dto.res.AgreementHelpCategoryDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +31,7 @@ import java.util.List;
 public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Param, CreateAgreementUseCase.Result> {
 
     private final AgreementRepository agreementRepository;
-    private final MemberReader memberReader;
+    private final MemberManager memberManager;
 
     @Transactional
     @Override
@@ -41,8 +40,9 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         param.validate();
 
         // 생성하려는 사용자 검증, 장애인 유저인지 확인
-        MatchMemberSync member = memberReader.getById(param.getDisabledId());
-        if (member.getRole() != MemberRole.DISABLED) {
+        MemberSync member = memberManager.findExistingMember(param.getDisabledId());
+
+        if (member.getRole() != Role.DISABLED) {
             throw MatchErrors.ONLY_DISABLED_MEMBERS_ALLOWED.toException();
         }
 
@@ -56,6 +56,9 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
 
         // 매칭 확인서 생성
         Agreement agreement = Agreement.create(
+                param.getPostId(),
+                param.getHelperId(),
+                param.getDisabledId(),
                 param.getType(),
                 param.getIsVolunteer(),
                 param.getUnitHoney(),
@@ -75,7 +78,9 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
     @Getter
     @RequiredArgsConstructor
     public static class Param implements Params {
-        private final Long memberId;
+        private final Long postId;
+        private final Long helperId;
+        private final Long disabledId;
         private final EngagementType type;
         private final Boolean isVolunteer;
         private final Integer unitHoney;
@@ -87,7 +92,13 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
 
         @Override
         public boolean validate() {
-            if (!ParamValidator.isValidId(memberId)) {
+            if (!ParamValidator.isValidId(postId)) {
+                throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "postId");
+            }
+            if (!ParamValidator.isValidId(helperId)) {
+                throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "helperId");
+            }
+            if (!ParamValidator.isValidId(disabledId)) {
                 throw new InvalidParamException(MatchInvalidParamErrors.REQUIRED_FIELD, "memberId");
             }
             if (!ParamValidator.isNotNull(type)) {

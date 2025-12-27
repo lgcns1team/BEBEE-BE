@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
+import com.lgcns.bebee.match.presentation.dto.DayEngagementTimeDTO;
+import com.lgcns.bebee.match.presentation.dto.TermEngagementTimeDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
