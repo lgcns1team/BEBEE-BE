@@ -19,9 +19,6 @@ dependencies {
     // Spring Web - REST API 개발
     api 'org.springframework.boot:spring-boot-starter-web'
 
-    // JPA (Java Persistence API) - 데이터베이스 ORM
-    api 'org.springframework.boot:spring-boot-starter-data-jpa'
-
     // Spring Security - 공통 인증/인가 컴포넌트(Jwt 필터 등)를 위해 필요
 //    api 'org.springframework.boot:spring-boot-starter-security'
 
@@ -29,22 +26,6 @@ dependencies {
     api 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
-    // QueryDSL - JPA 쿼리 작성을 위한 런타임 라이브러리
-    api 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-    // QueryDSL - Q-클래스 생성 및 JPA 환경 인식을 위한 Annotation Processor 설정
-    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
-    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
-
-    // Hibernate 유틸리티 - TSID 를 포함한 JPA 매핑 확장
-    api "io.hypersistence:hypersistence-utils-hibernate-63:3.12.0"
-
-    // P6Spy - SQL 로깅 및 파라미터 바인딩 라이브러리
-    api 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
-
-    // MongoDB BSON - ObjectId 벤치마크 테스트
-    implementation "org.mongodb:bson:5.6.1"
 
     // Spring Doc Openapi - OpenApi Doc 과 Swagger UI 라이브러리
     api "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14"

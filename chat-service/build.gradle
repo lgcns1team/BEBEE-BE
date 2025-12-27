@@ -13,6 +13,7 @@ plugins {
 
 dependencies {
 	implementation project(":common")
+	implementation project(":common-data")
 
 	// MySQL Connector - MySQL 데이터베이스 연결
 	runtimeOnly 'com.mysql:mysql-connector-j:9.5.0'
@@ -20,7 +21,7 @@ dependencies {
 	// Spring Data MongoDB - Spring Data 환경과 통합된 MongoDB 클라이언트
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-	// Lettuce Redis Client - Netty 기반 고성 Non-blocking Redis 클라이언트
+	// Lettuce Redis Client - Netty 기반 고성능 Non-blocking Redis 클라이언트
 	implementation "io.lettuce:lettuce-core:7.1.0.RELEASE"
 
 	// QueryDSL - Q-클래스 생성 및 JPA 환경 인식을 위한 Annotation Processor 설정
@@ -31,10 +32,10 @@ dependencies {
 	// Spring Websocket - 웹소켓 연결 및 STOMP 프로토콜 지원
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-	// Spring Actuator - 어플리케이 모니터링 및 관리 엔드포인트를 제공
+	// Spring Actuator - 어플리케이션 모니터링 및 관리 엔드포인트를 제공
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-	// flyway - DB migration tool, DB 스키 관리를 자동화하 체계적으로 수행할 수 있게 도와준다.
+	// flyway - DB migration tool, DB 스키마 관리를 자동화하여 체계적으로 수행할 수 있게 도와준다.
 	implementation 'org.flywaydb:flyway-core:11.18.0'
 	implementation 'org.flywaydb:flyway-mysql:11.18.0'
 }
@@ -43,15 +44,15 @@ dependencies {
 
 // Querydsl Q-Class 생성 경로
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
-// common 모듈 Q-Class 경로
-def commonQuerydslDir = project(':common').file('build/generated/querydsl')
+// common-data 모듈 Q-Class 경로
+def commonDataQuerydslDir = project(':common-data').file('build/generated/querydsl')
 
-// sourceSets 블록을 수정하, 현재 모듈의 경로 common 모듈의 경로 모두 포함한다.
+// sourceSets 블록을 수정하여 현재 모듈의 경로와 common-data 모듈의 경로 모두 포함한다.
 sourceSets {
 	main {
 		java {
 			srcDirs += querydslDir
-			srcDirs += commonQuerydslDir
+			srcDirs += commonDataQuerydslDir
 		}
 	}
 }
@@ -64,7 +65,7 @@ tasks.named('compileJava') {
 // Clean 태스크 정의 - QClass 삭제
 clean {
 	delete file(querydslDir)
-  delete commonQuerydslDir
+	delete commonDataQuerydslDir
 }
 
 // flyway 설정 정보

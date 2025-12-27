@@ -1,6 +1,6 @@
 package com.lgcns.bebee.match.common.config;
 
-import com.lgcns.bebee.common.config.BaseTSIDConfig;
+import com.lgcns.bebee.common.data.config.BaseTSIDConfig;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

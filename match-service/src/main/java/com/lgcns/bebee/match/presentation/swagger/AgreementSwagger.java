@@ -55,20 +55,13 @@ public interface AgreementSwagger {
                                         name = "하루도움 매칭 확인서 생성 요청 예시",
                                         value = """
                                                 {
-                                                    "postId": 404,
-                                                	"helperId": 101,
-                                                    "disabledId": 202,
-                                                    "type": "DAY",
-                                                    "isVolunteer": false,
-                                                    "helpCategoryIds": [1, 2],
-                                                    "unitHoney": 200,
-                                                    "totalHoney": 200,
-                                                    "region": "서울특별시 중구 장충동",
-                                                    "engagementTime": {
-                                                        "engagementDate": "2025-12-28",
-                                                        "startTime": "10:00:00",
-                                                        "endTime": "12:00:00"
-                                                    }
+                                                  "memberId": 101,
+                                                  "type": "DAY",
+                                                  "isVolunteer": false,
+                                                  "unitHoney": 100,
+                                                  "totalHoney": 100,
+                                                  "region": "서울특별시 강남구 논현동",
+                                                  "helpCategoryIds": [1, 2],
                                                 }
                                                 """
                                 ),

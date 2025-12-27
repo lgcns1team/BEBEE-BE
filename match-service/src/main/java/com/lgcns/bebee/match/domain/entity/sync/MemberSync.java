@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "match_member_sync")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberSync {

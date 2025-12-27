@@ -1,4 +1,4 @@
-package com.lgcns.bebee.common.config;
+package com.lgcns.bebee.common.data.config;
 
 import io.hypersistence.tsid.TSID;
 import lombok.extern.slf4j.Slf4j;
