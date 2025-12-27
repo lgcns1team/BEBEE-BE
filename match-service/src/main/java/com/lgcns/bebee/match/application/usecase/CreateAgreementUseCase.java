@@ -40,9 +40,8 @@ public class CreateAgreementUseCase implements UseCase<CreateAgreementUseCase.Pa
         param.validate();
 
         // 생성하려는 사용자 검증, 장애인 유저인지 확인
-        MemberSync member = memberManager.findExistingMember(param.getDisabledId());
-
-        if (member.getRole() != Role.DISABLED) {
+        MatchMemberSync member = memberReader.getById(param.getDisabledId());
+        if (member.getRole() != MemberRole.DISABLED) {
             throw MatchErrors.ONLY_DISABLED_MEMBERS_ALLOWED.toException();
         }
 

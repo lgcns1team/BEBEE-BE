@@ -81,6 +81,8 @@ public class Agreement extends BaseTimeEntity {
             Integer unitHoney,
             Integer totalHoney,
             String region,
+            DayEngagementTimeDTO dayTime,
+            TermEngagementTimeDTO termTime,
             List<Long> helpCategoryIds
     ) {
         if (isVolunteer) {
