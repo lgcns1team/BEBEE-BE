@@ -59,9 +59,9 @@ public interface AgreementSwagger {
                                         """,
                                         value = """
                                                 {
-                                                    "postId": 404,
-                                                	"helperId": 101,
-                                                    "disabledId": 202,
+                                                    "postId": "404",
+                                                	"helperId": "101",
+                                                    "disabledId": "202",
                                                     "type": "DAY",
                                                     "isVolunteer": false,
                                                     "helpCategoryIds": [1, 2],
@@ -87,9 +87,9 @@ public interface AgreementSwagger {
                                             """,
                                             value = """
                                                     {
-                                                         "postId": 505,
-                                                     	"helperId": 101,
-                                                         "disabledId": 202,
+                                                         "postId": "505",
+                                                     	"helperId": "101",
+                                                         "disabledId": "202",
                                                          "type": "TERM",
                                                          "isVolunteer": false,
                                                          "helpCategoryIds": [7],
@@ -150,7 +150,7 @@ public interface AgreementSwagger {
                                         name = "매칭 확인서 거절 요청 예시",
                                         value = """
                                                 {
-                                                  "helperId": 101,
+                                                  "helperId": "101",
                                                 }
                                                 """
                                 )
@@ -207,11 +207,11 @@ public interface AgreementSwagger {
                                         name = "매칭 확인서 수락 예시",
                                         value = """
                                                 {
-                                                	"helperId": 101,
-                                                    "disabledId": 202,
+                                                	"helperId": "101",
+                                                    "disabledId": "202",
                                                     "postId": 1,
                                                     "title": "식사 보조 도우미분 구해요",
-                                                    "chatRoomId": 303
+                                                    "chatRoomId": "303"
                                                 }
                                                 """
                                 )
