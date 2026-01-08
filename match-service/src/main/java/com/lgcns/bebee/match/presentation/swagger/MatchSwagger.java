@@ -1,5 +1,6 @@
 package com.lgcns.bebee.match.presentation.swagger;
 
+import com.lgcns.bebee.common.annotation.CurrentMember;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.presentation.dto.res.MatchCalendarGetResDTO;
 import com.lgcns.bebee.match.presentation.dto.res.MatchesByDateGetResDTO;
@@ -172,7 +173,7 @@ public interface MatchSwagger {
     })
     ResponseEntity<MatchesByDateGetResDTO> getMatchesByDate(
             @Parameter(hidden = true)
-            @RequestParam Long memberId,
+            @CurrentMember Long memberId,
 
             @Parameter(
                     description = "캘린더에서 선택한 날짜",
@@ -232,7 +233,7 @@ public interface MatchSwagger {
     })
     ResponseEntity<MatchCalendarGetResDTO> getActiveDayByMonth(
             @Parameter(hidden = true)
-            @RequestParam Long memberId,
+            @CurrentMember Long memberId,
 
             @Parameter(
                     description = "캘린더에서 선택한 연도",
