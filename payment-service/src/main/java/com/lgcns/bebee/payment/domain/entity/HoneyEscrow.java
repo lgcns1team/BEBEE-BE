@@ -63,4 +63,11 @@ public class HoneyEscrow extends BaseTimeEntity {
         return honeyEscrow;
     }
 
+    /**
+     * 계좌로 인출 (도우미)
+     */
+    public void transfer(Long amount) {
+        this.completedAt = LocalDateTime.now();
+        this.amount -= amount;
+    }
 }
