@@ -19,6 +19,7 @@ public enum PaymentErrors implements ErrorInfo {
     ESCROW_NOT_FOUND("꿀 보관소를 찾을 수 없습니다."),
 
     MATCH_NOT_FOUND("매칭 정보를 찾을 수 없습니다."),
+    AGREEMENT_NOT_FOUND("매칭 확인서 정보를 찾을 수 없습니다."),
 
     TOSS_API_ERROR("토스페이먼츠 API 호출에 실패했습니다."),
     TOSS_API_TIMEOUT("토스페이먼츠 API 응답 시간 초과"),

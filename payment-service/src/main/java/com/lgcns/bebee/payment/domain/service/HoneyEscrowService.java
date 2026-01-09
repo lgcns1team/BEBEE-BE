@@ -1,6 +1,7 @@
 package com.lgcns.bebee.payment.domain.service;
 
 import com.lgcns.bebee.payment.common.exception.PaymentErrors;
+import com.lgcns.bebee.payment.domain.entity.HoneyEscrow;
 import com.lgcns.bebee.payment.domain.repository.HoneyEscrowRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,9 @@ public class HoneyEscrowService {
         return true;
     }
 
-
+    @Transactional(readOnly = true)
+    public HoneyEscrow findByMatch_MatchId(Long matchId) {
+        return honeyEscrowRepository.findByMatch_MatchId(matchId)
+                .orElseThrow(() -> PaymentErrors.ESCROW_NOT_FOUND.toException());
+    }
 }
