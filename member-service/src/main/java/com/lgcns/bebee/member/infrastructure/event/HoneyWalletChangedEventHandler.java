@@ -1,8 +1,6 @@
 package com.lgcns.bebee.member.infrastructure.event;
 
 import com.lgcns.bebee.common.data.event.EventHandler;
-import com.lgcns.bebee.common.data.event.EventType;
-import com.lgcns.bebee.common.data.event.match.EngagementCompletedEvent;
 import com.lgcns.bebee.common.data.event.payment.HoneyWalletChangedEvent;
 import com.lgcns.bebee.member.domain.entity.sync.MemberHoneyWalletSync;
 import com.lgcns.bebee.member.domain.repository.HoneyWalletRepository;
