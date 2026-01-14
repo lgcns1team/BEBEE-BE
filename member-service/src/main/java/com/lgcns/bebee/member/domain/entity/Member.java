@@ -87,7 +87,8 @@ public class Member extends BaseTimeEntity {
             String addressRoad,
             BigDecimal latitude,
             BigDecimal longitude,
-            String districtCode) {
+            String districtCode,
+            String introduction) {
         Member member = new Member();
         member.email = email;
         member.password = encodedPassword;
@@ -102,7 +103,8 @@ public class Member extends BaseTimeEntity {
         member.latitude = latitude;
         member.longitude = longitude;
         member.districtCode = districtCode;
-        // profileImageUrl, introduction, sweetness 는 기본값 사용
+        member.introduction = introduction;
+        // profileImageUrl, sweetness 는 기본값 사용
         return member;
     }
 

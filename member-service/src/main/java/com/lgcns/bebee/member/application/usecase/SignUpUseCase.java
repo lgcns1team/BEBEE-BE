@@ -62,7 +62,8 @@ public class SignUpUseCase implements UseCase<SignUpUseCase.Param, SignUpUseCase
                 params.getAddressRoad(),
                 params.getLatitude(),
                 params.getLongitude(),
-                params.getDistrictCode());
+                params.getDistrictCode(),
+                params.getIntroduction());
 
         Member savedMember = memberRepository.save(newMember);
 
@@ -145,8 +146,9 @@ public class SignUpUseCase implements UseCase<SignUpUseCase.Param, SignUpUseCase
         private final BigDecimal longitude;
         private final String districtCode;
 
-        // HELPER용: 도움 유형 목록
+        // HELPER/DISABLED 공통: 도움 유형 목록, 자기소개
         private final java.util.List<String> helpTypes;
+        private final String introduction;
 
         // DISABLED용: 장애 유형, 등급 및 설명
         private final String disabilityType;

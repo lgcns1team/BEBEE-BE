@@ -283,8 +283,8 @@ public class DocumentVerificationService {
      * @return LOW(의심 낮음) / MID(중간) / HIGH(의심 높음)
      */
     private String decideSystemFlag(int score) {
-        if (score >= 90)
-            return "LOW"; // 위변조 의심 낮음 (자동 통과)
+        if (score >= 80)
+            return "LOW"; // 위변조 의심 낮음 (자동 통과) - 기준 완화: 90 -> 80
         if (score >= 60)
             return "MID"; // 중간 (관리자 검토 필요)
         return "HIGH"; // 의심 높음 (가입 차단)

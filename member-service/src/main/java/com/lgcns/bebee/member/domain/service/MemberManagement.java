@@ -62,7 +62,8 @@ public class MemberManagement {
             String addressRoad,
             BigDecimal latitude,
             BigDecimal longitude,
-            String districtCode) {
+            String districtCode,
+            String introduction) {
         passwordPolicyValidator.validate(rawPassword);
         String encodedPassword = passwordEncoder.encode(rawPassword);
 
@@ -78,6 +79,7 @@ public class MemberManagement {
                 addressRoad,
                 latitude,
                 longitude,
-                districtCode);
+                districtCode,
+                introduction);
     }
 }

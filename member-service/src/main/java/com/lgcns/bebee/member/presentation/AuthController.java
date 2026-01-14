@@ -49,6 +49,7 @@ public class AuthController implements AuthSwagger {
                 reqDTO.getLongitude(),
                 reqDTO.getDistrictCode(),
                 reqDTO.getHelpTypes(),
+                reqDTO.getIntroduction(),
                 reqDTO.getDisabilityType(),
                 reqDTO.getDisabilityGrade(),
                 reqDTO.getDisabilityDescription(),
