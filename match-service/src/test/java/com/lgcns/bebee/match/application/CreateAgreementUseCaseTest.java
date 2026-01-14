@@ -1,14 +1,17 @@
 package com.lgcns.bebee.match.application;
 
+import com.lgcns.bebee.common.data.event.DomainEventPublisher;
 import com.lgcns.bebee.common.exception.InvalidParamException;
 import com.lgcns.bebee.match.application.usecase.CreateAgreementUseCase;
 import com.lgcns.bebee.match.domain.entity.Agreement;
+import com.lgcns.bebee.match.domain.entity.Post;
 import com.lgcns.bebee.match.domain.entity.sync.MemberSync;
 import com.lgcns.bebee.match.domain.entity.sync.Role;
 import com.lgcns.bebee.match.domain.entity.vo.AgreementStatus;
 import com.lgcns.bebee.match.domain.entity.vo.EngagementType;
 import com.lgcns.bebee.match.domain.repository.AgreementRepository;
 import com.lgcns.bebee.match.domain.service.MemberManager;
+import com.lgcns.bebee.match.domain.service.PostManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,12 +43,20 @@ class CreateAgreementUseCaseTest {
     @Mock
     private MemberManager memberManager;
 
+    @Mock
+    private PostManager postManager;
+
+    @Mock
+    private DomainEventPublisher eventPublisher;
+
     @InjectMocks
     private CreateAgreementUseCase useCase;
 
     private Long postId;
     private Long helperId;
     private Long disabledId;
+    private Long chatroomId;
+    private LocalDateTime createdAt;
 
 
     @BeforeEach
@@ -52,10 +64,15 @@ class CreateAgreementUseCaseTest {
         postId = 1L;
         helperId = 2L;
         disabledId = 3L;
+        chatroomId = 100L;
+        createdAt = LocalDateTime.now();
 
         MemberSync mockMember = mock(MemberSync.class);
         when(mockMember.getRole()).thenReturn(Role.DISABLED);
         when(memberManager.findExistingMember(disabledId)).thenReturn(mockMember);
+
+        Post mockPost = mock(Post.class);
+        when(postManager.findSinglePost(any())).thenReturn(mockPost);
     }
 
     @Nested
@@ -72,18 +89,20 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    5000,
-                    5000,
+                    5000L,
+                    5000L,
                     "서울특별시 중구",
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
-            Agreement savedAgreement = createMockAgreement(1L, 5000, 5000);
+            Agreement savedAgreement = createMockAgreement(1L, 5000L, 5000L);
 
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
-            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+            when(agreementRepository.findByPostId(any())).thenReturn(List.of());
 
             // When
             CreateAgreementUseCase.Result result = useCase.execute(param);
@@ -108,18 +127,20 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.TERM,
                     true,
-                    10000,
-                    150000,
+                    10000L,
+                    150000L,
                     "경기도 성남시",
                     null,
                     null,
-                    List.of(3L, 4L)
+                    List.of(3L, 4L),
+                    chatroomId,
+                    createdAt
             );
 
-            Agreement savedAgreement = createMockAgreementWithType(2L, EngagementType.TERM, 10000, 150000, true);
+            Agreement savedAgreement = createMockAgreementWithType(2L, EngagementType.TERM, 10000L, 150000L, true);
 
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
-            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+            when(agreementRepository.findByPostId(any())).thenReturn(List.of());
 
 
             // When
@@ -143,16 +164,18 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     true,
-                    500,
-                    500,
+                    500L,
+                    500L,
                     "서울특별시 중구",
                     null,
                     null,
-                    List.of(3L)
+                    List.of(3L),
+                    chatroomId,
+                    createdAt
             );
 
             when(agreementRepository.save(any(Agreement.class))).thenAnswer(invocation -> invocation.getArgument(0));
-            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+            when(agreementRepository.findByPostId(any())).thenReturn(List.of());
 
 
             // When
@@ -183,12 +206,14 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    -1000, // 음수
-                    5000,
+                    -1000L, // 음수
+                    5000L,
                     "서울특별시",
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
             // When & Then
@@ -207,12 +232,14 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    5000,
-                    -1000, // 음수
+                    5000L,
+                    -1000L, // 음수
                     "서울특별시",
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
             // When & Then
@@ -231,12 +258,14 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    5000,
-                    5000,
+                    5000L,
+                    5000L,
                     null, // region null
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
             // When & Then
@@ -255,12 +284,14 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    5000,
-                    5000,
+                    5000L,
+                    5000L,
                     "", // 빈 문자열
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
             // When & Then
@@ -280,12 +311,14 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    5000,
-                    5000,
+                    5000L,
+                    5000L,
                     longRegion,
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
             // When & Then
@@ -304,12 +337,14 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     null, // type null
                     false,
-                    5000,
-                    5000,
+                    5000L,
+                    5000L,
                     "서울특별시",
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
             // When & Then
@@ -328,12 +363,14 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    5000,
-                    5000,
+                    5000L,
+                    5000L,
                     "서울특별시",
                     null,
                     null,
-                    null // helpCategoryIds null
+                    null, // helpCategoryIds null
+                    chatroomId,
+                    createdAt
             );
 
             // When & Then
@@ -352,12 +389,14 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    5000,
-                    5000,
+                    5000L,
+                    5000L,
                     "서울특별시",
                     null,
                     null,
-                    List.of()
+                    List.of(),
+                    chatroomId,
+                    createdAt
             );
 
             // When & Then
@@ -382,18 +421,20 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    5000,
-                    5000,
+                    5000L,
+                    5000L,
                     regionWith50Chars,
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
-            Agreement savedAgreement = createMockAgreement(1L, 5000, 5000);
+            Agreement savedAgreement = createMockAgreement(1L, 5000L, 5000L);
 
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
-            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+            when(agreementRepository.findByPostId(any())).thenReturn(List.of());
 
 
             // When
@@ -414,18 +455,20 @@ class CreateAgreementUseCaseTest {
                     disabledId,
                     EngagementType.DAY,
                     false,
-                    0, // 0
-                    0,
+                    0L, // 0
+                    0L,
                     "서울특별시",
                     null,
                     null,
-                    List.of(1L, 2L)
+                    List.of(1L, 2L),
+                    chatroomId,
+                    createdAt
             );
 
-            Agreement savedAgreement = createMockAgreement(1L, 0, 0);
+            Agreement savedAgreement = createMockAgreement(1L, 0L, 0L);
 
             when(agreementRepository.save(any(Agreement.class))).thenReturn(savedAgreement);
-            when(agreementRepository.findByPostId(any())).thenReturn(java.util.Optional.empty());
+            when(agreementRepository.findByPostId(any())).thenReturn(List.of());
 
 
             // When
@@ -451,7 +494,9 @@ class CreateAgreementUseCaseTest {
                 "서울특별시",
                 null,
                 null,
-                List.of(1L, 2L)
+                List.of(1L, 2L),
+                chatroomId,
+                createdAt
         );
     }
 

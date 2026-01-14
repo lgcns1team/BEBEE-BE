@@ -1,5 +1,6 @@
 package com.lgcns.bebee.match.application;
 
+import com.lgcns.bebee.common.data.event.DomainEventPublisher;
 import com.lgcns.bebee.common.exception.InvalidParamException;
 import com.lgcns.bebee.match.application.usecase.RefuseAgreementUseCase;
 import com.lgcns.bebee.match.common.exception.MatchErrors;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -34,22 +36,31 @@ class RefuseAgreementUseCaseTest {
     @Mock
     private AgreementReader agreementReader;
 
+    @Mock
+    private DomainEventPublisher eventPublisher;
+
     @InjectMocks
     private RefuseAgreementUseCase useCase;
 
-    private Long memberId;
+    private Long currentMemberId;
     private Long agreementId;
     private Long postId;
     private Long helperId;
     private Long disabledId;
+    private Long chatroomId;
+    private Long chatId;
+    private LocalDateTime createdAt;
 
     @BeforeEach
     void setUp() {
-        memberId = 101L;  // 도우미
+        currentMemberId = 101L;  // 도우미 (Helper who refuses)
         agreementId = 999888777666L;
         postId = 1L;
         helperId = 101L;
         disabledId = 202L;
+        chatroomId = 303L;
+        chatId = 404L;
+        createdAt = LocalDateTime.now();
     }
 
     @Nested
@@ -60,10 +71,7 @@ class RefuseAgreementUseCaseTest {
         @DisplayName("BEFORE 상태에서 거절 성공")
         void shouldRefuseAgreement_whenStatusIsBefore() throws Exception {
             // Given
-            RefuseAgreementUseCase.Param param = new RefuseAgreementUseCase.Param(
-                    memberId,
-                    agreementId
-            );
+            RefuseAgreementUseCase.Param param = createValidParam();
 
             Agreement mockAgreement = createMockAgreement(agreementId, AgreementStatus.BEFORE);
 
@@ -80,10 +88,7 @@ class RefuseAgreementUseCaseTest {
         @DisplayName("REFUSED 상태에서 다시 거절 가능")
         void shouldRefuseAgreement_whenStatusIsRefused() throws Exception {
             // Given
-            RefuseAgreementUseCase.Param param = new RefuseAgreementUseCase.Param(
-                    memberId,
-                    agreementId
-            );
+            RefuseAgreementUseCase.Param param = createValidParam();
 
             Agreement mockAgreement = createMockAgreement(agreementId, AgreementStatus.REFUSED);
 
@@ -106,8 +111,12 @@ class RefuseAgreementUseCaseTest {
         void shouldThrowException_whenAgreementIdIsNull() {
             // Given
             RefuseAgreementUseCase.Param param = new RefuseAgreementUseCase.Param(
-                    memberId,
-                    null
+                    currentMemberId,
+                    disabledId,
+                    null,
+                    chatroomId,
+                    chatId,
+                    createdAt
             );
 
             // When & Then
@@ -123,8 +132,12 @@ class RefuseAgreementUseCaseTest {
         void shouldThrowException_whenAgreementIdIsZeroOrNegative() {
             // Given
             RefuseAgreementUseCase.Param param = new RefuseAgreementUseCase.Param(
-                    memberId,
-                    0L
+                    currentMemberId,
+                    disabledId,
+                    0L,
+                    chatroomId,
+                    chatId,
+                    createdAt
             );
 
             // When & Then
@@ -142,10 +155,7 @@ class RefuseAgreementUseCaseTest {
         @DisplayName("Agreement가 존재하지 않으면 MatchException 발생")
         void shouldThrowException_whenAgreementNotFound() {
             // Given
-            RefuseAgreementUseCase.Param param = new RefuseAgreementUseCase.Param(
-                    memberId,
-                    agreementId
-            );
+            RefuseAgreementUseCase.Param param = createValidParam();
 
             when(agreementReader.getById(agreementId))
                     .thenThrow(MatchErrors.MATCH_NOT_FOUND.toException());
@@ -161,10 +171,7 @@ class RefuseAgreementUseCaseTest {
         @DisplayName("CONFIRMED 상태에서 거절하면 MatchException 발생")
         void shouldThrowException_whenStatusIsConfirmed() throws Exception {
             // Given
-            RefuseAgreementUseCase.Param param = new RefuseAgreementUseCase.Param(
-                    memberId,
-                    agreementId
-            );
+            RefuseAgreementUseCase.Param param = createValidParam();
 
             Agreement mockAgreement = createMockAgreement(agreementId, AgreementStatus.CONFIRMED);
 
@@ -174,9 +181,38 @@ class RefuseAgreementUseCaseTest {
             assertThatThrownBy(() -> useCase.execute(param))
                     .isInstanceOf(MatchException.class);
         }
+
+        @Test
+        @DisplayName("장애인이 본인의 계약서를 거절하려고 하면 MatchException 발생")
+        void shouldThrowException_whenDisabledTriesToRefuse() throws Exception {
+            // Given - currentMemberId가 disabledId와 동일한 경우
+            RefuseAgreementUseCase.Param param = new RefuseAgreementUseCase.Param(
+                    disabledId,  // currentMemberId = disabledId
+                    disabledId,
+                    agreementId,
+                    chatroomId,
+                    chatId,
+                    createdAt
+            );
+
+            // When & Then
+            assertThatThrownBy(() -> useCase.execute(param))
+                    .isInstanceOf(MatchException.class);
+        }
     }
 
     // ========== 헬퍼 메서드 ==========
+
+    private RefuseAgreementUseCase.Param createValidParam() {
+        return new RefuseAgreementUseCase.Param(
+                currentMemberId,
+                disabledId,
+                agreementId,
+                chatroomId,
+                chatId,
+                createdAt
+        );
+    }
 
     private Agreement createMockAgreement(Long agreementId, AgreementStatus status) throws Exception {
         Agreement agreement = Agreement.create(
