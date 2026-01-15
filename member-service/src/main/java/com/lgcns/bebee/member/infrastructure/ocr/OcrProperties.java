@@ -13,16 +13,16 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class OcrProperties {
-    
+
     /**
      * OCR 서비스 기본 URL
      * 배포 환경: 게이트웨이를 통해 접근 (https://api.be-bee.link/ocr)
      * 로컬 환경: http://localhost:8086
      */
     private String baseUrl = "https://api.be-bee.link/ocr";
-    
+
     /**
      * 타임아웃 (밀리초)
      */
-    private int timeout = 60000;
+    private int timeout = 120000;
 }
